@@ -16,15 +16,58 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN,
+        startDestination = Routes.ONBOARDING,
         modifier = Modifier.padding(padding),
     ) {
+        // 온보딩
+        composable(
+            route = Routes.ONBOARDING
+        ) { }
+
+        // 회원가입
+        composable(
+            route = Routes.REGISTER
+        ) { }
+
+        // 로그인
+        composable(
+            route = Routes.LOGIN
+        ) { }
+
+        // 메인화면
+        composable(
+            route = Routes.MAIN
+        ) { }
+
+        // 애니멀페이지
+        composable(
+            route = Routes.ANIMAL_DETAIL
+        ) { }
+
+        // 알림
+        composable(
+            route = Routes.NOTIFICATION
+        ) { }
+
+        // 등록하기
+        composable(
+            route = Routes.ADD
+        ) { }
+
+        // 마이페이지
+        composable(
+            route = Routes.MYPAGE
+        ) { }
+
+        // 설정
+        composable(
+            route = Routes.SETTING
+        ) { }
 
     }
 }
 
 object Routes {
-    // 온보딩, 회원가입, 로그인, 메인화면, 애니멀페이지, 알림 , add
     const val ONBOARDING = "onboarding"
     const val REGISTER = "register"
     const val LOGIN = "login"
