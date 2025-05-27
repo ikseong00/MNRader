@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.screen.mypage.components
+package com.example.mnrader.ui.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
