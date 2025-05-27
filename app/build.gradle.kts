@@ -45,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -75,5 +76,9 @@ dependencies {
     // NaverMap
     implementation(libs.map.sdk)
     implementation(libs.naver.map.compose)
+
+    // Location
+    implementation(libs.play.services.location)
+    implementation(libs.naver.map.location)
 
 }
