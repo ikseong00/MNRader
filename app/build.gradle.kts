@@ -1,7 +1,14 @@
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+}
+
+val properties = Properties().apply {
+    load(project.rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -16,6 +23,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Naver Map API 키 설정
+        manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"].toString()
     }
 
     buildTypes {
@@ -36,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -64,5 +74,13 @@ dependencies {
 
     // Permission
     implementation(libs.accompanist.permissions)
+
+    // NaverMap
+    implementation(libs.map.sdk)
+    implementation(libs.naver.map.compose)
+
+    // Location
+    implementation(libs.play.services.location)
+    implementation(libs.naver.map.location)
 
 }
