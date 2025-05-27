@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -62,5 +63,9 @@ dependencies {
 
     // Permission
     implementation(libs.accompanist.permissions)
+
+    // NaverMap
+    implementation(libs.map.sdk)
+    implementation(libs.naver.map.compose)
 
 }
