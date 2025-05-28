@@ -1,8 +1,6 @@
 package com.example.mnrader.ui.onboarding.screen
 
-import android.R.attr.text
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
