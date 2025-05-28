@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
 @Composable
 fun MainNavHost(
@@ -23,7 +24,13 @@ fun MainNavHost(
         // 온보딩
         composable(
             route = Routes.ONBOARDING
-        ) { }
+        ) {
+            OnboardingScreen(
+                padding = padding,
+                navigateToLogin = { navController.navigate(Routes.LOGIN) },
+                navigateToSignUp = { navController.navigate(Routes.REGISTER) }
+            )
+        }
 
         // 회원가입
         composable(
