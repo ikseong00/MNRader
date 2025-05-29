@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,9 +33,14 @@ data class Scrap(
     val imageUrl: String
 )
 
+val dummyScraps = listOf(
+    Scrap("scrap1", "치와와", "서울 광진구", "2024.06.07", "https://example.com/dog.png"),
+    Scrap("scrap2", "고양이", "서울 동작구", "2025.04.01", "https://example.com/cat.png")
+)
+
 @Composable
 fun MyScrapSection(
-    scraps: List<Scrap>,
+    scraps: List<Scrap> = dummyScraps,
     scrapClick: (String) -> Unit,
     allScrapClick: () -> Unit
 ) {
@@ -45,18 +51,25 @@ fun MyScrapSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+            ) {
             Text("스크랩", style = MaterialTheme.typography.titleMedium)
-            TextButton(onClick = allScrapClick) {
-                Text("전체보기 >")
+            // '전체보기 >' 버튼
+            Row(
+                modifier = Modifier
+                    .clickable(onClick = allScrapClick)
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("전체보기", color = Color(0xFF8E8E93))
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = "전체보기",
+                    tint = Color(0xFF8E8E93)
+                )
             }
         }
-
-        val scraps = listOf(
-            Triple("치와와", "서울 광진구", "scrap1"),
-            Triple("고양이", "서울 동작구", "scrap2")
-        )
 
         scraps.forEach {
             ScrapItem(it, onClick = { scrapClick(it.id) })
@@ -90,4 +103,11 @@ fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
 
         Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null)
     }
+
+    // 밑줄 구분자
+    HorizontalDivider(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        thickness = 0.5.dp,
+        color = Color(0xFF8E8E93)
+    )
 }
