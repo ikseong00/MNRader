@@ -51,6 +51,16 @@ fun MainNavHost(
             route = Routes.ANIMAL_DETAIL
         ) { }
 
+        // 내가 올린 게시물
+        composable(
+            route = Routes.POST_LIST
+        ) { }
+
+        // 내가 스크랩 한 게시물
+        composable(
+            route = Routes.SCRAP_LIST
+        ) { }
+
         // 알림
         composable(
             route = Routes.NOTIFICATION
@@ -80,6 +90,8 @@ object Routes {
     const val LOGIN = "login"
     const val MAIN = "main"
     const val ANIMAL_DETAIL = "animal_detail"
+    const val POST_LIST = "post_list"
+    const val SCRAP_LIST = "scrap_list"
     const val NOTIFICATION = "notification"
     const val ADD = "add"
     const val MYPAGE = "mypage"
