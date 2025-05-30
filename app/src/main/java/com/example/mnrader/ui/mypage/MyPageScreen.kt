@@ -12,9 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.navigation.Routes
 
 @Composable
-fun MyPageScreen(viewModel: MyPageViewModel = viewModel()) {
+fun MyPageScreen(
+    navController: NavHostController,
+    viewModel: MyPageViewModel = viewModel()
+) {
     // 예시: 로그인된 사용자 이메일
     val loggedInEmail = "123@konkuk.ac.kr"
 
@@ -37,7 +43,9 @@ fun MyPageScreen(viewModel: MyPageViewModel = viewModel()) {
 
         OwningPetSection(
             pets = pets,
-            onPetClick = { println("Clicked pet: ${it.name}") }
+            onPetClick = { pet ->
+                navController.navigate("animal_detail/${pet.id}")
+            }
         )
 
         MyPostSection(
@@ -57,5 +65,7 @@ fun MyPageScreen(viewModel: MyPageViewModel = viewModel()) {
 @Preview(showBackground = true)
 @Composable
 private fun MyPageScreenPreview() {
-    MyPageScreen()
+    // 임시 NavController (Preview용)
+    val fakeNavController = rememberNavController()
+    MyPageScreen(navController = fakeNavController)
 }

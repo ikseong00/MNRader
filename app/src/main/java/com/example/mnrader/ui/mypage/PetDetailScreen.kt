@@ -111,8 +111,13 @@ fun PetDetailScreen(pet: Pet) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PetDetailScreenPreview() {
-    //PetDetailScreen(pet = selectedPet)
+    val previewPet = Pet(
+        id = "preview1",
+        name = "흰둥이",
+        imageUrl = "https://example.com/dog1.png"
+    )
+    PetDetailScreen(pet = previewPet)
 }

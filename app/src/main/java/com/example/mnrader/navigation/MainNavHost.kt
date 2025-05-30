@@ -1,14 +1,25 @@
 package com.example.mnrader.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.mnrader.ui.mypage.MyPageScreen
+import com.example.mnrader.ui.mypage.Pet
+import com.example.mnrader.ui.mypage.PetDetailScreen
+import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MainNavHost(
     navController: NavHostController,
@@ -46,10 +57,30 @@ fun MainNavHost(
             route = Routes.MAIN
         ) { }
 
-        // 애니멀페이지
+        // 동물 상세보기 페이지
         composable(
-            route = Routes.ANIMAL_DETAIL
-        ) { }
+            route = Routes.ANIMAL_DETAIL_WITH_ARG,
+            arguments = listOf(navArgument("petId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val petId = backStackEntry.arguments?.getString("petId")
+
+            val parentEntry = remember(backStackEntry) {
+                // MyPageScreen이 사용한 ViewModel의 NavBackStackEntry
+                navController.getBackStackEntry(Routes.MYPAGE)
+            }
+            // MyPageScreen의 viewmodel 인스턴스 재사용
+            // MyPageScreen에서 생성된 pets데이터 사용하기 위해
+            val viewModel: MyPageViewModel = viewModel(parentEntry)
+
+            val pet = viewModel.pets.value.find { it.id == petId }
+
+            if (pet != null) {
+                PetDetailScreen(pet = pet)
+            } else {
+                Text("해당 동물을 찾을 수 없습니다.")
+            }
+        }
+
 
         // 내가 올린 게시물
         composable(
@@ -74,7 +105,10 @@ fun MainNavHost(
         // 마이페이지
         composable(
             route = Routes.MYPAGE
-        ) { }
+        ) {
+            MyPageScreen(navController = navController)
+        }
+
 
         // 설정
         composable(
@@ -89,7 +123,7 @@ object Routes {
     const val REGISTER = "register"
     const val LOGIN = "login"
     const val MAIN = "main"
-    const val ANIMAL_DETAIL = "animal_detail"
+    const val ANIMAL_DETAIL_WITH_ARG = "animal_detail/{petId}"
     const val POST_LIST = "post_list"
     const val SCRAP_LIST = "scrap_list"
     const val NOTIFICATION = "notification"
