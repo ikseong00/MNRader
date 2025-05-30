@@ -25,16 +25,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.R
 
 @Composable
-fun PetDetailScreen() {
+fun PetDetailScreen(pet: Pet) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // 동물 정보 요약
+        // 동물 이미지 + 이름 카드
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,30 +46,29 @@ fun PetDetailScreen() {
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
-                    painter = painterResource(R.drawable.dog_icon),
+                    painter = rememberAsyncImagePainter(pet.imageUrl),
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("강아지", fontSize = 16.sp)
+                Text(pet.name, fontSize = 16.sp)
             }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-
         Text("동물 정보 바꾸기", fontSize = 16.sp)
-
         Spacer(modifier = Modifier.height(8.dp))
 
+        // 수정 드롭다운 및 필드들
         DropdownLabel("동물 종류", listOf("강아지", "고양이"))
         DropdownLabel("품종", listOf("몰티즈", "푸들"))
         DropdownLabel("성별", listOf("수컷", "암컷"))
 
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
-            value = "1개월",
+            value = "1개월",  // 현재는 하드코딩된 예시
             onValueChange = {},
             label = { Text("나이") },
             modifier = Modifier.fillMaxWidth()
@@ -76,7 +76,7 @@ fun PetDetailScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
-            value = "흰색, 사람이랑 친함",
+            value = "흰색, 사람이랑 친함",  // 현재는 하드코딩된 예시
             onValueChange = {},
             label = { Text("특징") },
             modifier = Modifier.fillMaxWidth()
@@ -94,7 +94,7 @@ fun PetDetailScreen() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.dog_icon),
+                painter = rememberAsyncImagePainter(pet.imageUrl),
                 contentDescription = null,
                 modifier = Modifier.size(48.dp)
             )
@@ -114,5 +114,5 @@ fun PetDetailScreen() {
 @Preview
 @Composable
 private fun PetDetailScreenPreview() {
-    PetDetailScreen()
+    //PetDetailScreen(pet = selectedPet)
 }

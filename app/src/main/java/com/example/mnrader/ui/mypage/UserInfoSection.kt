@@ -27,6 +27,8 @@ fun UserInfoSection(
     location: String,
     modifier: Modifier = Modifier
 ) {
+    val city = location.split(" ").firstOrNull() ?: location
+
     Row(
         modifier = Modifier.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -43,7 +45,7 @@ fun UserInfoSection(
 
         Column {
             Text(email, style = MaterialTheme.typography.bodyLarge)
-            Text(location, style = MaterialTheme.typography.bodySmall, color = Color(0xFF8E8E93))
+            Text(city, style = MaterialTheme.typography.bodySmall, color = Color(0xFF8E8E93))
         }
 
         Spacer(modifier.weight(1f))

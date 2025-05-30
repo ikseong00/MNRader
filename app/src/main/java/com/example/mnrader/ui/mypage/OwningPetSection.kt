@@ -1,51 +1,50 @@
 package com.example.mnrader.ui.mypage
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mnrader.R
 
-//
+//todo user가 등록한 동물의 개수를 구해야 함
 @Composable
-fun OwningPetSection(modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row {
-            Text("보유중인 동물", fontSize = 20.sp)
-            //Spacer(Modifier.weight(1f))
-
-        }
-
+fun OwningPetSection(
+    pets: List<Pet>,
+    onPetClick: (Pet) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Text("보유중인 동물", fontSize = 20.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            PetCard("강아지", R.drawable.dog_icon, modifier = Modifier.weight(1f))
-            PetCard("고양이", R.drawable.cat_icon, modifier = Modifier.weight(1f))
+        pets.chunkedPairs().forEach { rowPets ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                rowPets.forEach { pet ->
+                    PetCard(pet = pet, modifier = Modifier.weight(1f)) {
+                        onPetClick(pet)
+                    }
+                }
+
+                // 짝수 맞추기 위해 빈 공간 추가
+                if (rowPets.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
+
+fun <T> List<T>.chunkedPairs(): List<List<T>> =
+    this.chunked(2)

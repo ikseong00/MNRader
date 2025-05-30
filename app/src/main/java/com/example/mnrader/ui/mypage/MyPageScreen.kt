@@ -5,56 +5,51 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MyPageScreen(modifier: Modifier = Modifier) {
-    // dummy 데이터
-    val dummyPosts = listOf(
-        MyPost(
-            id = "1",
-            name = "인절미",
-            gender = "암컷",
-            region = "서울 광진구",
-            date = "2025-03-24",
-            imageUrl = "https://example.com/dog.png"
-        )
-    )
+fun MyPageScreen(viewModel: MyPageViewModel = viewModel()) {
+    // 예시: 로그인된 사용자 이메일
+    val loggedInEmail = "123@konkuk.ac.kr"
 
-    val dummyScraps = listOf(
-        Scrap(
-            id = "scrap1",
-            title = "치와와",
-            region = "서울 광진구",
-            date = "2024.06.07",
-            imageUrl = "https://example.com/dog.png"
-        ),
-        Scrap(
-            id = "scrap2",
-            title = "고양이",
-            region = "서울 동작구",
-            date = "2025.04.01",
-            imageUrl = "https://example.com/cat.png"
-        )
-    )
+    // 화면 진입 시 이메일 기반 데이터 로딩
+    LaunchedEffect(loggedInEmail) {
+        viewModel.loadDummyUserData(loggedInEmail)
+    }
 
-    Column (
-        modifier = modifier
+    val user by viewModel.user.collectAsState()
+    val pets by viewModel.pets.collectAsState()
+    val posts by viewModel.posts.collectAsState()
+    val scraps by viewModel.scraps.collectAsState()
+
+    Column(
+        modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        UserInfoSection(email = "123konkuk@konkuk.ac.kr", location = "서울 광진구")
-        OwningPetSection()
-        MyPostSection(
-            posts = dummyPosts,
-            postClick = { postId -> println("Clicked post: $postId") },
-            allPostsClick = { println("Clicked 전체보기 for posts") }
+        UserInfoSection(email = user.email, location = user.region)
+
+        OwningPetSection(
+            pets = pets,
+            onPetClick = { println("Clicked pet: ${it.name}") }
         )
+
+        MyPostSection(
+            posts = posts,
+            postClick = { println("Clicked post: $it") },
+            allPostsClick = { println("전체보기 post") }
+        )
+
         MyScrapSection(
-            scraps = dummyScraps,
-            scrapClick = { scrapId -> println("Clicked scrap: $scrapId") },
-            allScrapClick = { println("Clicked 전체보기 for scraps") }
+            scraps = scraps,
+            scrapClick = { println("Clicked scrap: $it") },
+            allScrapClick = { println("전체보기 scrap") }
         )
     }
 }
