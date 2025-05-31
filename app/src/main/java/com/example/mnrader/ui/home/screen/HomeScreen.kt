@@ -18,15 +18,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.home.component.HomeAnimalList
 import com.example.mnrader.ui.home.component.HomeFilter
@@ -34,18 +33,20 @@ import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
 import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.theme.Green2
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.rememberCameraPositionState
 
-
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
+    viewModel: HomeViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val scrollState = rememberScrollState()
-    var isExpanded by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState()
     cameraPositionState.position = CameraPosition(
         LatLng(37.5407, 127.0791),
@@ -67,17 +68,20 @@ fun HomeScreen(
         HomeFilter(
             onLocationClick = { /*TODO*/ },
             onBreedClick = { /*TODO*/ },
-            onWitnessClick = { /*TODO*/ },
-            onLostClick = { /*TODO*/ },
-            onProtectClick = { /*TODO*/ }
+            onWitnessClick = { viewModel.setWitnessShown(it) },
+            onLostClick = { viewModel.setLostShown(it) },
+            onProtectClick = { viewModel.setProtectShown(it) },
+            isWitnessShown = uiState.isWitnessShown,
+            isLostShown = uiState.isLostShown,
+            isProtectShown = uiState.isProtectShown,
         )
         Spacer(Modifier.height(15.dp))
         MapComponent(
-            isExpanded = isExpanded,
+            isExpanded = uiState.isExpanded,
             cameraPositionState = cameraPositionState,
             animalDataList = HomeAnimalData.dummyHomeAnimalData,
         )
-        if (!isExpanded) {
+        if (!uiState.isExpanded) {
             MNRaderButton(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -85,7 +89,7 @@ fun HomeScreen(
                     .padding(bottom = 12.dp),
                 text = "전체보기",
             ) {
-                isExpanded = true
+                viewModel.setExpanded(true)
             }
             HomeAnimalList(
                 animalDataList = HomeAnimalData.dummyHomeAnimalData,
@@ -94,7 +98,7 @@ fun HomeScreen(
             )
         }
     }
-    if (isExpanded) {
+    if (uiState.isExpanded) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,7 +121,7 @@ fun HomeScreen(
                         shape = CircleShape
                     ),
                 onClick = {
-                    isExpanded = false
+                    viewModel.setExpanded(false)
                 }
             ) {
                 Icon(

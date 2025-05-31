@@ -18,9 +18,12 @@ fun HomeFilter(
     modifier: Modifier = Modifier,
     onLocationClick: (String) -> Unit = {},
     onBreedClick: (String) -> Unit = {},
-    onWitnessClick: () -> Unit = {},
-    onLostClick: () -> Unit = {},
-    onProtectClick: () -> Unit = {}
+    isWitnessShown: Boolean,
+    onWitnessClick: (Boolean) -> Unit = {},
+    isLostShown: Boolean,
+    onLostClick: (Boolean) -> Unit = {},
+    isProtectShown: Boolean,
+    onProtectClick: (Boolean) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     Row(
@@ -40,14 +43,17 @@ fun HomeFilter(
         )
         FilterChip(
             text = "목격한 동물",
+            isShown = isWitnessShown,
             onClick = onWitnessClick
         )
         FilterChip(
             text = "실종 동물",
+            isShown = isLostShown,
             onClick = onLostClick
         )
         FilterChip(
             text = "보호중",
+            isShown = isProtectShown,
             onClick = onProtectClick
         )
     }
@@ -57,5 +63,14 @@ fun HomeFilter(
 @Preview(showBackground = true)
 @Composable
 private fun HomeFilterPreview() {
-    HomeFilter()
+    HomeFilter(
+        isWitnessShown = true,
+        isLostShown = false,
+        isProtectShown = true,
+        onLocationClick = {},
+        onBreedClick = {},
+        onWitnessClick = {},
+        onLostClick = {},
+        onProtectClick = {}
+    )
 }

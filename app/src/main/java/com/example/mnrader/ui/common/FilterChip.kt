@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mnrader.ui.theme.Green2
 
 @Composable
 fun FilterChip(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit = { }
+    isShown: Boolean = true,
+    onClick: (Boolean) -> Unit = { }
 ) {
     Row(
         modifier = modifier
@@ -32,7 +35,10 @@ fun FilterChip(
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFFCAC4D0)
             )
-            .clickable(onClick = onClick),
+            .clickable { onClick(isShown) }
+            .background(
+                if (isShown) Green2 else Color.White, shape = RoundedCornerShape(8.dp)
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(

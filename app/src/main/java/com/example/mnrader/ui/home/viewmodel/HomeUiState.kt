@@ -12,5 +12,6 @@ data class HomeUiState(
     var isWitnessShown: Boolean = true,
     var isExpanded: Boolean = false,
     val notificationCount: Int = 0,
-    var currentPinAnimal: HomeAnimalData? = null
+    var currentPinAnimal: HomeAnimalData? = null,
+    val shownAnimalDataList: List<HomeAnimalData> = emptyList()
 )

@@ -31,6 +31,7 @@ import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.model.HomeAnimalData
 import com.example.mnrader.ui.home.model.HomeAnimalData.Companion.dummyHomeAnimalData
 import com.example.mnrader.ui.theme.MNRaderTheme
+import com.example.mnrader.ui.util.noRippleClickable
 
 @Composable
 fun HomeAnimalItem(
@@ -42,8 +43,8 @@ fun HomeAnimalItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { onItemClick(animalData) },
+            .clickable { onItemClick(animalData) }
+            .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(19.dp),
     ) {
         AsyncImage(
@@ -78,7 +79,7 @@ fun HomeAnimalItem(
                         tint = Color(0xFFFFC30F),
                         modifier = Modifier
                             .size(24.dp)
-                            .clickable {
+                            .noRippleClickable {
                                 onBookmarkClick(animalData)
                             }
                     )
@@ -89,7 +90,7 @@ fun HomeAnimalItem(
                         tint = Color(0xFFB3B3B3),
                         modifier = Modifier
                             .size(24.dp)
-                            .clickable {
+                            .noRippleClickable {
                                 onBookmarkClick(animalData)
                             }
                     )
