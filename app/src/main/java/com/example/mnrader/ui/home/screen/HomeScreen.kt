@@ -42,6 +42,7 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
+    navigateToAnimalDetail: (Int) -> Unit = {},
     viewModel: HomeViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -79,7 +80,7 @@ fun HomeScreen(
         MapComponent(
             isExpanded = uiState.isExpanded,
             cameraPositionState = cameraPositionState,
-            animalDataList = HomeAnimalData.dummyHomeAnimalData,
+            animalDataList = uiState.shownAnimalDataList,
         )
         if (!uiState.isExpanded) {
             MNRaderButton(
@@ -92,9 +93,13 @@ fun HomeScreen(
                 viewModel.setExpanded(true)
             }
             HomeAnimalList(
-                animalDataList = HomeAnimalData.dummyHomeAnimalData,
-                onAnimalClick = { /*TODO*/ },
-                onBookmarkClick = { /*TODO*/ },
+                animalDataList = uiState.shownAnimalDataList,
+                onAnimalClick = { animalData ->
+                    navigateToAnimalDetail(animalData.id.toInt())
+                },
+                onBookmarkClick = { animalData ->
+                    viewModel.setBookmark(animalData)
+                },
             )
         }
     }
