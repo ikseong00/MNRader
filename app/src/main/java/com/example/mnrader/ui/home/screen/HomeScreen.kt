@@ -60,12 +60,22 @@ fun HomeScreen(
             .padding(padding)
             .verticalScroll(state = scrollState)
     ) {
-        HomeTopBar()
+        HomeTopBar(
+            onNotificationClick = { /*TODO*/ },
+        )
         Spacer(Modifier.height(5.dp))
-        HomeFilter()
+        HomeFilter(
+            onLocationClick = { /*TODO*/ },
+            onBreedClick = { /*TODO*/ },
+            onWitnessClick = { /*TODO*/ },
+            onLostClick = { /*TODO*/ },
+            onProtectClick = { /*TODO*/ }
+        )
         Spacer(Modifier.height(15.dp))
         MapComponent(
-            isExpanded = isExpanded
+            isExpanded = isExpanded,
+            cameraPositionState = cameraPositionState,
+            animalDataList = HomeAnimalData.dummyHomeAnimalData,
         )
         if (!isExpanded) {
             MNRaderButton(
@@ -79,6 +89,8 @@ fun HomeScreen(
             }
             HomeAnimalList(
                 animalDataList = HomeAnimalData.dummyHomeAnimalData,
+                onAnimalClick = { /*TODO*/ },
+                onBookmarkClick = { /*TODO*/ },
             )
         }
     }
@@ -93,7 +105,8 @@ fun HomeScreen(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 100.dp)
                     .shadow(2.dp),
-                animalData = HomeAnimalData.dummyHomeAnimalData.first()
+                animalData = HomeAnimalData.dummyHomeAnimalData.first(),
+                onItemClick = { /*TODO*/ }
             )
             IconButton(
                 modifier = Modifier

@@ -2,6 +2,7 @@ package com.example.mnrader.ui.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,8 @@ import com.example.mnrader.ui.theme.MNRaderTheme
 @Composable
 fun MapAnimalInfo(
     modifier: Modifier = Modifier,
-    animalData: HomeAnimalData
+    animalData: HomeAnimalData,
+    onItemClick: (HomeAnimalData) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -35,6 +37,7 @@ fun MapAnimalInfo(
                 color = Color.White,
                 shape = RoundedCornerShape(16.dp)
             )
+            .clickable { onItemClick(animalData) }
             .padding(horizontal = 20.dp, vertical = 15.dp),
         horizontalArrangement = Arrangement.spacedBy(19.dp),
     ) {

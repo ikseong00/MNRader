@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mnrader.ui.home.model.HomeAnimalData
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.MapProperties
@@ -25,6 +25,7 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 fun ColumnScope.MapComponent(
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
+    animalDataList: List<HomeAnimalData> = emptyList(),
     cameraPositionState: CameraPositionState = rememberCameraPositionState()
 ) {
     // 건국대학교 위치 (위도: 37.5407, 경도: 127.0791)
@@ -47,10 +48,6 @@ fun ColumnScope.MapComponent(
             ),
         cameraPositionState = cameraPositionState,
         properties = mapProperties,
-        onMapLoaded = {
-            // 맵이 로드된 후 카메라 위치 설정
-            cameraPositionState.position = CameraPosition(konkukUniversity, 15.0)
-        }
     ) {
         // 건국대학교 위치에 마커 표시
         Marker(
@@ -59,6 +56,15 @@ fun ColumnScope.MapComponent(
                 position = konkukUniversity,
             )
         )
+
+        animalDataList.forEachIndexed { index, animalData ->
+            Marker(
+                captionText = animalData.name,
+                state = MarkerState(
+                    position = animalData.latLng
+                )
+            )
+        }
     }
 }
 

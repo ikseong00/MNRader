@@ -1,15 +1,11 @@
 package com.example.mnrader.ui.common
 
-import android.R.attr.text
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -50,7 +46,7 @@ fun FilterChip(
 fun DropdownFilterChip(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit = { }
+    onClick: (String) -> Unit = { }
 ) {
     Row(
         modifier = modifier
@@ -60,7 +56,8 @@ fun DropdownFilterChip(
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFFCAC4D0)
             )
-            .clickable(onClick = onClick),
+//            .clickable(onClick = onClick) // TODO
+        ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {

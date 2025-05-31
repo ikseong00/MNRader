@@ -16,6 +16,11 @@ import com.example.mnrader.ui.common.FilterChip
 @Composable
 fun HomeFilter(
     modifier: Modifier = Modifier,
+    onLocationClick: (String) -> Unit = {},
+    onBreedClick: (String) -> Unit = {},
+    onWitnessClick: () -> Unit = {},
+    onLostClick: () -> Unit = {},
+    onProtectClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     Row(
@@ -26,19 +31,24 @@ fun HomeFilter(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         DropdownFilterChip(
-            text = "지역",// TODO: 클릭 이벤트 처리
+            text = "지역",
+            onClick = { onLocationClick(it) }
         )
         DropdownFilterChip(
-            text = "품종",// TODO: 클릭 이벤트 처리
+            text = "품종",
+            onClick = { onBreedClick(it) }
         )
         FilterChip(
-            text = "목격한 동물"
+            text = "목격한 동물",
+            onClick = onWitnessClick
         )
         FilterChip(
-            text = "실종 동물"
+            text = "실종 동물",
+            onClick = onLostClick
         )
         FilterChip(
-            text = "보호중"
+            text = "보호중",
+            onClick = onProtectClick
         )
     }
 }

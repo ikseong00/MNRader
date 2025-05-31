@@ -1,6 +1,7 @@
 package com.example.mnrader.ui.home.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +22,10 @@ import com.example.mnrader.R
 import com.example.mnrader.ui.theme.MNRaderTheme
 
 @Composable
-fun HomeTopBar(modifier: Modifier = Modifier) {
+fun HomeTopBar(
+    modifier: Modifier = Modifier,
+    onNotificationClick: () -> Unit = {},
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,7 +59,8 @@ fun HomeTopBar(modifier: Modifier = Modifier) {
         Icon(
             modifier = modifier
                 .padding(end = 18.dp)
-                .size(24.dp),
+                .size(24.dp)
+                .clickable { onNotificationClick() },
             painter = painterResource(R.drawable.ic_home_notification),
             contentDescription = null,
             tint = Color.Unspecified

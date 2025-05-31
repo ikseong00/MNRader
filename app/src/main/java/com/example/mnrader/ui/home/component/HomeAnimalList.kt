@@ -2,6 +2,7 @@ package com.example.mnrader.ui.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,12 +35,15 @@ import com.example.mnrader.ui.theme.MNRaderTheme
 @Composable
 fun HomeAnimalItem(
     modifier: Modifier = Modifier,
-    animalData: HomeAnimalData
+    animalData: HomeAnimalData,
+    onItemClick: (HomeAnimalData) -> Unit = {},
+    onBookmarkClick: (HomeAnimalData) -> Unit = {}
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onItemClick(animalData) },
         horizontalArrangement = Arrangement.spacedBy(19.dp),
     ) {
         AsyncImage(
@@ -72,14 +76,22 @@ fun HomeAnimalItem(
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         tint = Color(0xFFFFC30F),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                onBookmarkClick(animalData)
+                            }
                     )
                 } else {
                     Icon(
                         painter = painterResource(R.drawable.ic_outline_star_24),
                         contentDescription = null,
                         tint = Color(0xFFB3B3B3),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                onBookmarkClick(animalData)
+                            }
                     )
                 }
             }
@@ -118,7 +130,9 @@ fun HomeAnimalItem(
 @Composable
 fun HomeAnimalList(
     modifier: Modifier = Modifier,
-    animalDataList: List<HomeAnimalData>
+    animalDataList: List<HomeAnimalData>,
+    onAnimalClick: (HomeAnimalData) -> Unit = {},
+    onBookmarkClick: (HomeAnimalData) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -169,7 +183,9 @@ fun HomeAnimalList(
 
         animalDataList.forEachIndexed { index, animalData ->
             HomeAnimalItem(
-                animalData = animalData
+                animalData = animalData,
+                onItemClick = { onAnimalClick(it) },
+                onBookmarkClick = { onBookmarkClick(it) },
             )
             HorizontalDivider(
                 color = Color.Black.copy(alpha = 0.1f)
