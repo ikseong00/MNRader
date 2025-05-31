@@ -1,14 +1,9 @@
 package com.example.mnrader.ui.home.component
 
-import android.R.attr.onClick
-import android.R.attr.text
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,7 +22,7 @@ fun HomeFilter(
         modifier = modifier
             .horizontalScroll(scrollState)
             .shadow(1.dp)
-            .padding(vertical = 7.dp),
+            .padding(vertical = 7.dp, horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         DropdownFilterChip(
