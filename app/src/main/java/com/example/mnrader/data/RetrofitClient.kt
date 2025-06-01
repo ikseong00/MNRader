@@ -2,6 +2,7 @@ package com.example.mnrader.data
 
 import com.example.mnrader.BuildConfig
 import com.example.mnrader.data.service.DataPortalService
+import com.example.mnrader.data.service.NaverService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,6 +27,15 @@ object RetrofitClient {
 
     val dataPortalService: DataPortalService by lazy {
         dataPortalRetrofit.create(DataPortalService::class.java)
+    }
+
+    val naverService: NaverService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.NAVER_BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NaverService::class.java)
     }
 
 }
