@@ -23,4 +23,8 @@ object RetrofitClient {
             .build()
     }
 
+    val dataPortalService: DataPortalService by lazy {
+        dataPortalRetrofit.create(DataPortalService::class.java)
+    }
+
 }
