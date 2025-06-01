@@ -27,6 +27,8 @@ android {
         buildConfigField("String", "DATA_PORTAL_BASE_URL", properties["DATA_PORTAL_BASE_URL"].toString())
         buildConfigField("String", "DATA_PORTAL_SERVICE_KEY", properties["DATA_PORTAL_SERVICE_KEY"].toString())
         buildConfigField("String", "NAVER_BASE_URL", properties["NAVER_BASE_URL"].toString())
+        buildConfigField("String", "NAVER_CLIENT_ID", properties["NAVER_CLIENT_ID"].toString())
+        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", properties["NAVER_MAP_CLIENT_SECRET"].toString())
 
     }
 
