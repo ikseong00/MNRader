@@ -6,8 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Scrap(
     val id: String,
-    val name: String,
+    val pet: Pet,
     val region: String,
-    val date: String,
-    val imageUrl: String
+    val date: String
 ) : Parcelable

@@ -28,78 +28,18 @@ class MyPageViewModel : ViewModel() {
     // dummy data 함수
     fun loadDummyUserData(email: String) {
         viewModelScope.launch {
-            when (email) {
-                "123@konkuk.ac.kr" -> {
-                    _user.value = User(email, "서울 광진구")
-                    _pets.value = listOf(
-                        Pet(
-                            id = "1",
-                            name = "흰둥이",
-                            imageUrl = "https://example.com/dog1.png",
-                            species = "강아지",
-                            breed = "말티즈",
-                            gender = "암컷",
-                            age = "2개월",
-                            description = "활발하고 사람을 좋아함"
-                        ),
-                        Pet(
-                            id = "2",
-                            name = "버찌",
-                            imageUrl = "https://example.com/cat1.png",
-                            species = "고양이",
-                            breed = "코숏",
-                            gender = "수컷",
-                            age = "1살",
-                            description = "조용하고 얌전함"
-                        ),
-                        Pet(
-                            id = "3",
-                            name = "부끄",
-                            imageUrl = "https://example.com/dog2.png",
-                            species = "강아지",
-                            breed = "푸들",
-                            gender = "수컷",
-                            age = "3개월",
-                            description = "소심하지만 애교가 많음"
-                        )
-                    )
-                    _posts.value = listOf(
-                        Post("1", "흰둥이", "암컷", "서울", "2025-03-24", "https://example.com/dog.png")
-                    )
-                    _scraps.value = listOf(
-                        Scrap("scrap1", "치와와", "서울", "2024.06.07", "https://example.com/dog.png"),
-                        Scrap("scrap2", "도비", "서울", "2025.04.01", "https://example.com/cat.png")
-                    )
-                }
+            if (email == "123@konkuk.ac.kr") {
+                val pet1 = Pet("1", "인절미", "https://example.com/dog.png", "강아지", "말티즈", "암컷", "2개월", "사람을 좋아함", null, "실종")
+                val pet2 = Pet("2", "치와와", "https://example.com/dog2.png", "강아지", "치와와", "수컷", "3개월", "짖음", null, "보호중")
+                val pet3 = Pet("3", "고양이", "https://example.com/cat.png", "고양이", "코숏", "암컷", "1살", "얌전함", null, "목격중")
 
-                "blue@konkuk.ac.kr" -> {
-                    _user.value = User(email, "서울 ")
-                    _pets.value = listOf(
-                        Pet(
-                            id = "1",
-                            name = "말티즈",
-                            imageUrl = "https://example.com/maltese.png",
-                            species = "강아지",
-                            breed = "말티즈",
-                            gender = "암컷",
-                            age = "5개월",
-                            description = "털이 하얗고 순함"
-                        )
-                    )
-                    _posts.value = listOf(
-                        Post("2", "초코", "수컷", "서울 ", "2025-02-11", "https://example.com/choco.png")
-                    )
-                    _scraps.value = listOf(
-                        Scrap("scrap3", "코숏", "서울 ", "2025.01.17", "https://example.com/kitty.png")
-                    )
-                }
-
-                else -> {
-                    _user.value = User(email, "서울")
-                    _pets.value = emptyList()
-                    _posts.value = emptyList()
-                    _scraps.value = emptyList()
-                }
+                _pets.value = listOf(pet1, pet2, pet3)
+                _posts.value = listOf(Post("p1", pet1, "서울 광진구", "2025-03-24"))
+                _scraps.value = listOf(
+                    Scrap("s1", pet2, "서울 광진구", "2024.06.07"),
+                    Scrap("s2", pet3, "서울 동작구", "2025.04.01")
+                )
+                _user.value = User(email, "서울 광진구")
             }
         }
     }

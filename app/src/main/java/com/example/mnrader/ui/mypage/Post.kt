@@ -6,9 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Post(
     val id: String,
-    val name: String,
-    val gender: String,
+    val pet: Pet,
     val region: String,
-    val date: String,
-    val imageUrl: String
+    val date: String
 ) : Parcelable

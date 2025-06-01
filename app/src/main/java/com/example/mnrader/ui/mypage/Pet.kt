@@ -6,11 +6,12 @@ import kotlinx.parcelize.Parcelize
 data class Pet (
     val id: String,
     val name: String,
-    val imageUrl: String, // 서버에 저장된 동물 이미지
+    val imageUrl: String,
     val species: String,
     val breed: String,
     val gender: String,
     val age: String,
     val description: String,
-    val imageUri: String? = null // 로컬에서 선택한 업로드용 이미지
-):Parcelable
+    val imageUri: String? = null,
+    val status: String = ""  // 실종, 보호중, 목격중 외에는 공란
+) : Parcelable

@@ -45,26 +45,7 @@ fun PostListScreen(
 
         LazyColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
             items(posts) { post ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { }
-                        .padding(vertical = 12.dp)
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(post.imageUrl),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .padding(end = 12.dp)
-                    )
-                    Column {
-                        Text(text = post.name, fontSize = 16.sp)
-                        Text(text = "성별 ${post.gender}", fontSize = 14.sp, color = Color.Gray)
-                        Text(text = "지역: ${post.region}", fontSize = 14.sp, color = Color.Gray)
-                        Text(text = post.date, fontSize = 12.sp, color = Color.Gray)
-                    }
-                }
+                PostItem(post = post, onClick = { /* TODO */ })
             }
         }
     }
@@ -73,28 +54,33 @@ fun PostListScreen(
 @Preview(showBackground = true)
 @Composable
 fun PostListScreenPreview() {
-    PostListScreenPreviewContent()
-}
+    val pet1 = Pet(
+        id = "1",
+        name = "진돗개",
+        imageUrl = "https://example.com/jindo.png",
+        species = "개",
+        breed = "진돗개",
+        gender = "수컷",
+        age = "4",
+        description = "사나움",
+        status = "실종"
+    )
 
-@Composable
-private fun PostListScreenPreviewContent() {
+    val pet2 = Pet(
+        id = "2",
+        name = "러시안블루",
+        imageUrl = "https://example.com/russianblue.png",
+        species = "고양이",
+        breed = "러시안블루",
+        gender = "암컷",
+        age = "2",
+        description = "얌전함",
+        status = "보호중"
+    )
+
     val dummyPosts = listOf(
-        Post(
-            id = "1",
-            name = "진돗개",
-            gender = "수컷",
-            region = "부산 해운대구",
-            date = "2025.06.01",
-            imageUrl = "https://example.com/jindo.png"
-        ),
-        Post(
-            id = "2",
-            name = "러시안블루",
-            gender = "암컷",
-            region = "서울 서초구",
-            date = "2025.05.29",
-            imageUrl = "https://example.com/russianblue.png"
-        )
+        Post(id = "1", pet = pet1, region = "부산 해운대구", date = "2025.06.01"),
+        Post(id = "2", pet = pet2, region = "서울 서초구", date = "2025.05.29")
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
