@@ -1,15 +1,23 @@
 package com.example.mnrader.RegisterScreens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,10 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.R
 import com.example.mnrader.model.RegisterScreens
 import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
@@ -28,28 +40,99 @@ import com.example.mnrader.navigation.RegisterTopBar
 @Composable
 fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel) {
     var selected by remember { mutableStateOf("") }
+    val customButtonColor = Color(0xFF89C5A9)
+    val animalList = listOf(
+        Pair("강아지", R.drawable.dog),
+        Pair("고양이", R.drawable.cat),
+        Pair("기타동물", R.drawable.rabbit)
+    )
+    Scaffold(
+        topBar = {
+            RegisterTopBar(
+                onBackClick = {
+//                    navController.popBackStack()
+                },
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
-        RegisterTopBar(
-            onBackClick = { navController.popBackStack() },
-            currentStep = 3 // 여기서 단계 조정: 1~5
-        )
-        Box(modifier = Modifier.fillMaxSize()
-            .padding(horizontal = 10.dp),
-            contentAlignment = Alignment.Center) {
-            Column(Modifier.fillMaxSize().padding(16.dp)) {
-                listOf("강아지", "고양이", "기타동물").forEach {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(selected = selected == it, onClick = { selected = it })
-                        Text(it)
+                currentStep = 3
+            )
+        },
+        bottomBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column {
+                    Button(
+                        onClick = {
+                            viewModel.registerData =
+                                viewModel.registerData.copy(animalType = selected)
+                            navController.navigate(RegisterScreens.ReportOrLost.route)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("다음")
+                    }
+                    TextButton(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "되돌아가기",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                     }
                 }
+            }
+        }
+    ) { innerPadding ->
+        // 가운데 내용
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+               modifier =  Modifier.fillMaxSize()
+            ) {
+                animalList.forEach { (label, imageRes) ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .background(color = Color.LightGray)
+                            .clickable {
+                                selected = label
+                            }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                        ) {
+                            RadioButton(
+                                selected = selected == label,
+                                onClick = { selected = label }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(text = label)
+                            Spacer(modifier = Modifier.weight(0.5f))
+                            androidx.compose.foundation.Image(
+                                painter = painterResource(id = imageRes),
+                                contentDescription = label,
+                                modifier = Modifier.size(80.dp)
+                            )
 
-                Button(onClick = {
-                    viewModel.registerData = viewModel.registerData.copy(animalType = selected)
-                    navController.navigate(RegisterScreens.ReportOrLost.route)
-                }, modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) {
-                    Text("다음")
+                        }
+                    }
                 }
             }
         }
