@@ -75,10 +75,11 @@ fun MainNavHost(
             val pet = viewModel.pets.value.find { it.id == petId }
 
             if (pet != null) {
-                PetDetailScreen(pet = pet)
+                PetDetailScreen(pet = pet, viewModel = viewModel)
             } else {
                 Text("해당 동물을 찾을 수 없습니다.")
             }
+
         }
 
 

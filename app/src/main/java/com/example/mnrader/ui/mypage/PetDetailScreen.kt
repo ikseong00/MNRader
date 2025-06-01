@@ -1,57 +1,89 @@
 package com.example.mnrader.ui.mypage
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.mnrader.R
+import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 
 @Composable
-fun PetDetailScreen(pet: Pet) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // 동물 이미지 + 이름 카드
+fun PetDetailScreen(
+    pet: Pet,
+    viewModel: MyPageViewModel
+) {
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var species by remember { mutableStateOf(pet.species) }
+    var breedQuery by remember { mutableStateOf(TextFieldValue(pet.breed)) }
+    var gender by remember { mutableStateOf(pet.gender) }
+    var age by remember { mutableStateOf(pet.age) }
+    var description by remember { mutableStateOf(pet.description) }
+
+    val breedExamples = mapOf(
+        "강아지" to listOf("말티즈", "치와와", "푸들", "포메라니안", "요크셔 테리어"),
+        "고양이" to listOf("코리안 숏헤어", "러시안 블루", "먼치킨", "스코티시 폴드"),
+        "햄스터" to listOf("골든 햄스터", "드워프 햄스터"),
+        "거북이" to listOf("러시안 육지거북", "헤르만 육지거북"),
+        "토끼" to listOf("미니 렉스", "라이언헤드")
+    )
+
+    val filteredBreeds = breedExamples[species]?.filter {
+        it.contains(breedQuery.text, ignoreCase = true)
+    } ?: emptyList()
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri = uri
+    }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
+
+        // 프로필 상단
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .border(1.dp, Color.LightGray)
+                .background(Color.White)
+                .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(12.dp))
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = rememberAsyncImagePainter(pet.imageUrl),
-                    contentDescription = null,
+                Box(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape)
-                )
+                        .background(Color(0xFFE0E0E0)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val imagePainter = rememberAsyncImagePainter(
+                        selectedImageUri ?: pet.imageUri ?: pet.imageUrl
+                    )
+                    Image(
+                        painter = imagePainter,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(pet.name, fontSize = 16.sp)
             }
@@ -61,25 +93,68 @@ fun PetDetailScreen(pet: Pet) {
         Text("동물 정보 바꾸기", fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 수정 드롭다운 및 필드들
-        DropdownLabel("동물 종류", listOf("강아지", "고양이"))
-        DropdownLabel("품종", listOf("몰티즈", "푸들"))
-        DropdownLabel("성별", listOf("수컷", "암컷"))
-
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = "1개월",  // 현재는 하드코딩된 예시
-            onValueChange = {},
-            label = { Text("나이") },
-            modifier = Modifier.fillMaxWidth()
+        // 동물 종류
+        DropdownSelector(
+            label = "동물 종류",
+            options = breedExamples.keys.toList(),
+            selected = species,
+            onSelected = {
+                species = it
+                breedQuery = TextFieldValue("")
+            }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+
+        // 품종
         OutlinedTextField(
-            value = "흰색, 사람이랑 친함",  // 현재는 하드코딩된 예시
-            onValueChange = {},
-            label = { Text("특징") },
+            value = breedQuery,
+            onValueChange = { breedQuery = it },
+            label = { Text("품종", color = Color.Gray) },
             modifier = Modifier.fillMaxWidth()
+        )
+        if (breedQuery.text.isNotBlank()) {
+            filteredBreeds.forEach { breed ->
+                Text(
+                    text = breed,
+                    modifier = Modifier
+                        .clickable { breedQuery = TextFieldValue(breed) }
+                        .padding(vertical = 4.dp),
+                    fontSize = 14.sp
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 성별
+        DropdownSelector(
+            label = "성별",
+            options = listOf("수컷", "암컷"),
+            selected = gender,
+            onSelected = { gender = it }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 나이
+        OutlinedTextField(
+            value = age,
+            onValueChange = { age = it },
+            label = { Text("나이", color = Color.Gray) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(unfocusedTextColor = Color.Gray)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 특징
+        OutlinedTextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text("특징", color = Color.Gray) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(unfocusedTextColor = Color.Gray)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -89,20 +164,31 @@ fun PetDetailScreen(pet: Pet) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .border(1.dp, Color.LightGray)
+                .clickable { galleryLauncher.launch("image/*") }
+                .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(12.dp))
                 .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(pet.imageUrl),
-                contentDescription = null,
-                modifier = Modifier.size(48.dp)
+            val previewPainter = rememberAsyncImagePainter(
+                selectedImageUri ?: pet.imageUri ?: pet.imageUrl
             )
+            Image(painter = previewPainter, contentDescription = null, modifier = Modifier.size(48.dp))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = { /* 저장 처리 */ },
+            onClick = {
+                viewModel.updatePet(
+                    pet.copy(
+                        species = species,
+                        breed = breedQuery.text,
+                        gender = gender,
+                        age = age,
+                        description = description,
+                        imageUri = selectedImageUri?.toString()
+                    )
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA5D6A7))
         ) {
@@ -117,7 +203,12 @@ private fun PetDetailScreenPreview() {
     val previewPet = Pet(
         id = "preview1",
         name = "흰둥이",
-        imageUrl = "https://example.com/dog1.png"
+        imageUrl = "https://example.com/dog1.png",
+        species = "강아지",
+        breed = "말티즈",
+        gender = "수컷",
+        age = "8개월",
+        description = "사람을 좋아함"
     )
-    PetDetailScreen(pet = previewPet)
+    // PetDetailScreen(pet = previewPet, viewModel = MyPageViewModel())
 }

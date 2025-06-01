@@ -32,10 +32,36 @@ class MyPageViewModel : ViewModel() {
                 "123@konkuk.ac.kr" -> {
                     _user.value = User(email, "서울 광진구")
                     _pets.value = listOf(
-                        Pet("1", "흰둥이", "https://example.com/dog1.png"),
-                        Pet("2", "버찌", "https://example.com/cat1.png"),
-                        Pet("3", "부끄", "https://example.com/dog2.png")
-
+                        Pet(
+                            id = "1",
+                            name = "흰둥이",
+                            imageUrl = "https://example.com/dog1.png",
+                            species = "강아지",
+                            breed = "말티즈",
+                            gender = "암컷",
+                            age = "2개월",
+                            description = "활발하고 사람을 좋아함"
+                        ),
+                        Pet(
+                            id = "2",
+                            name = "버찌",
+                            imageUrl = "https://example.com/cat1.png",
+                            species = "고양이",
+                            breed = "코숏",
+                            gender = "수컷",
+                            age = "1살",
+                            description = "조용하고 얌전함"
+                        ),
+                        Pet(
+                            id = "3",
+                            name = "부끄",
+                            imageUrl = "https://example.com/dog2.png",
+                            species = "강아지",
+                            breed = "푸들",
+                            gender = "수컷",
+                            age = "3개월",
+                            description = "소심하지만 애교가 많음"
+                        )
                     )
                     _posts.value = listOf(
                         MyPost("1", "흰둥이", "암컷", "서울", "2025-03-24", "https://example.com/dog.png")
@@ -49,7 +75,16 @@ class MyPageViewModel : ViewModel() {
                 "blue@konkuk.ac.kr" -> {
                     _user.value = User(email, "서울 ")
                     _pets.value = listOf(
-                        Pet("1", "말티즈", "https://example.com/maltese.png")
+                        Pet(
+                            id = "1",
+                            name = "말티즈",
+                            imageUrl = "https://example.com/maltese.png",
+                            species = "강아지",
+                            breed = "말티즈",
+                            gender = "암컷",
+                            age = "5개월",
+                            description = "털이 하얗고 순함"
+                        )
                     )
                     _posts.value = listOf(
                         MyPost("2", "초코", "수컷", "서울 ", "2025-02-11", "https://example.com/choco.png")
@@ -68,6 +103,13 @@ class MyPageViewModel : ViewModel() {
             }
         }
     }
+
+    // PetDetailScreen 저장버튼 클릭 시 실행
+    fun updatePet(updatedPet: Pet) {
+        val updatedList = pets.value.map { if (it.id == updatedPet.id) updatedPet else it }
+        _pets.value = updatedList
+    }
+
 
     /*
     실제 서비스 구조 함수
