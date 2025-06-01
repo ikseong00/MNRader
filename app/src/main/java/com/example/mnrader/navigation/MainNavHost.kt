@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
 @Composable
@@ -17,7 +18,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ONBOARDING,
+        startDestination = Routes.MAIN,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -44,12 +45,24 @@ fun MainNavHost(
         // 메인화면
         composable(
             route = Routes.MAIN
-        ) { }
+        ) {
+            HomeScreen(
+                padding = padding,
+                navigateToAnimalDetail = { animalId ->
+                    navController.navigate("animal_detail/{animalId}")
+                }
+            )
+        }
 
         // 애니멀페이지
         composable(
             route = Routes.ANIMAL_DETAIL
-        ) { }
+        ) { navBackStackEntry ->
+
+            // 애니멀 ID를 가져오기
+            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toIntOrNull()
+            // AnimalDetailScreen(id = animalId)
+        }
 
         // 알림
         composable(
@@ -79,7 +92,7 @@ object Routes {
     const val REGISTER = "register"
     const val LOGIN = "login"
     const val MAIN = "main"
-    const val ANIMAL_DETAIL = "animal_detail"
+    const val ANIMAL_DETAIL = "animal_detail/{animalId}"
     const val NOTIFICATION = "notification"
     const val ADD = "add"
     const val MYPAGE = "mypage"

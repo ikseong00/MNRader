@@ -81,4 +81,8 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.naver.map.location)
 
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
 }
