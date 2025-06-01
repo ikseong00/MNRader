@@ -34,7 +34,6 @@ import com.example.mnrader.ui.home.component.HomeFilter
 import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
-import com.example.mnrader.ui.home.model.HomeAnimalData
 import com.example.mnrader.ui.home.viewmodel.HomeVieWModelFactory
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.theme.Green2
@@ -95,6 +94,7 @@ fun HomeScreen(
             isExpanded = uiState.isExpanded,
             cameraPositionState = cameraPositionState,
             animalDataList = uiState.shownAnimalDataList,
+            onMarkerClick = { viewModel.setSelectedAnimal(it) },
         )
         if (!uiState.isExpanded) {
             MNRaderButton(
@@ -123,18 +123,21 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            MapAnimalInfo(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 100.dp)
-                    .shadow(2.dp),
-                animalData = HomeAnimalData.dummyHomeAnimalData.first(),
-                onItemClick = { /*TODO*/ }
-            )
+            val selectedAnimal = uiState.selectedAnimal
+            if (selectedAnimal != null) {
+                MapAnimalInfo(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 100.dp)
+                        .shadow(2.dp),
+                    animalData = selectedAnimal,
+                    onItemClick = { /*TODO*/ }
+                )
+            }
             IconButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 60.dp)
+                    .padding(bottom = 40.dp)
                     .background(
                         color = Green2,
                         shape = CircleShape

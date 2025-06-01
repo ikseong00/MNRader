@@ -12,7 +12,7 @@ interface DataPortalService {
     suspend fun getAbandonedAnimals(
         @Query("serviceKey") serviceKey: String = BuildConfig.DATA_PORTAL_SERVICE_KEY,
         @Query("_type") type: String = "json",
-        @Query("bgnde") startDate: String = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-        @Query("endde") endDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        @Query("bgnde") startDate: String = LocalDate.now().minusMonths(7).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        @Query("endde") endDate: String = LocalDate.now().minusMonths(6).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
     ): AbandonedResponseDto
 }

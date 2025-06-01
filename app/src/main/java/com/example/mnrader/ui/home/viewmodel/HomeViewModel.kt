@@ -34,6 +34,12 @@ class HomeViewModel(
 //        }
     }
 
+    fun setSelectedAnimal(animalData: HomeAnimalData) {
+        _uiState.update { currentState ->
+            currentState.copy(selectedAnimal = animalData)
+        }
+    }
+
     private fun getDataPortalAnimalData() {
         viewModelScope.launch {
             dataPortalRepository.fetchAbandonedAnimals().fold(

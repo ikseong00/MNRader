@@ -50,7 +50,7 @@ fun MapAnimalInfo(
                     shape = CircleShape,
                     color = animalData.type.color
                 ),
-            model = "https://picsum.photos/200/300",
+            model = animalData.imageUrl,
             contentDescription = null,
         )
 
