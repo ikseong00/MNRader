@@ -1,6 +1,7 @@
 package com.example.mnrader.ui.home.model
 
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.clustering.ClusteringKey
 
 data class HomeAnimalData(
     val id: Long = 0L,
@@ -12,7 +13,9 @@ data class HomeAnimalData(
     val type: AnimalDataType,
     var latLng: LatLng = LatLng(37.5407, 127.0791),
     var isBookmarked: Boolean = false
-) {
+): ClusteringKey {
+    override fun getPosition(): LatLng = this.latLng
+
     companion object {
         val dummyHomeAnimalData = listOf(
             HomeAnimalData(
