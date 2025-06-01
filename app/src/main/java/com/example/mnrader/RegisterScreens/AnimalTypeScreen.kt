@@ -50,7 +50,7 @@ fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel)
         topBar = {
             RegisterTopBar(
                 onBackClick = {
-//                    navController.popBackStack()
+                    navController.popBackStack()
                 },
 
                 currentStep = 3
