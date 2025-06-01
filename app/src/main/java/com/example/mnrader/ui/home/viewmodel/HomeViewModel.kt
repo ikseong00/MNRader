@@ -1,13 +1,17 @@
 package com.example.mnrader.ui.home.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.mnrader.data.repository.DataPortalRepository
+import com.example.mnrader.mapper.toUiModel
 import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.model.HomeAnimalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val dataPortalRepository: DataPortalRepository
@@ -17,10 +21,29 @@ class HomeViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
+        getDataPortalAnimalData()
         _uiState.update {
             it.copy(
                 animalDataList = HomeAnimalData.dummyHomeAnimalData,
                 shownAnimalDataList = HomeAnimalData.dummyHomeAnimalData
+            )
+        }
+    }
+
+    private fun getDataPortalAnimalData() {
+        viewModelScope.launch {
+            dataPortalRepository.fetchAbandonedAnimals().fold(
+                onSuccess = { animalDataList ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            animalDataList = currentState.animalDataList + animalDataList.toUiModel(),
+                            shownAnimalDataList = currentState.shownAnimalDataList + animalDataList.toUiModel()
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    Log.d("HomeViewModel", "getDataPortalAnimalData: $error")
+                }
             )
         }
     }

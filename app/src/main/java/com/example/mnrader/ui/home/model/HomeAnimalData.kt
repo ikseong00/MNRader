@@ -4,7 +4,7 @@ import com.naver.maps.geometry.LatLng
 
 data class HomeAnimalData(
     val id: Long = 0L,
-    val imageUrl: String,
+    val imageUrl: String?,
     val name: String,
     val gender: Gender,
     val location: String,

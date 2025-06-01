@@ -56,7 +56,7 @@ fun HomeAnimalItem(
                     shape = CircleShape,
                     color = animalData.type.color
                 ),
-            model = "https://picsum.photos/200/300",
+            model = animalData.imageUrl?.let { "https://picsum.photos/200/300" },
             contentDescription = null,
         )
 

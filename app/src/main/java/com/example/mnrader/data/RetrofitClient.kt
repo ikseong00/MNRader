@@ -1,6 +1,7 @@
 package com.example.mnrader.data
 
 import com.example.mnrader.BuildConfig
+import com.example.mnrader.data.service.DataPortalService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

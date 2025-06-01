@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.repository.DataPortalRepository
 import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.home.component.HomeAnimalList
 import com.example.mnrader.ui.home.component.HomeFilter
@@ -33,6 +34,7 @@ import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
 import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.viewmodel.HomeVieWModelFactory
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.theme.Green2
 import com.naver.maps.geometry.LatLng
@@ -43,7 +45,9 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 fun HomeScreen(
     padding: PaddingValues,
     navigateToAnimalDetail: (Int) -> Unit = {},
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = viewModel(
+        factory = HomeVieWModelFactory(DataPortalRepository())
+    ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
