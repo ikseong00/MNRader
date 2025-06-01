@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mnrader.data.repository.DataPortalRepository
+import com.example.mnrader.data.repository.NaverRepository
 import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.home.component.HomeAnimalList
 import com.example.mnrader.ui.home.component.HomeFilter
@@ -46,7 +47,9 @@ fun HomeScreen(
     padding: PaddingValues,
     navigateToAnimalDetail: (Int) -> Unit = {},
     viewModel: HomeViewModel = viewModel(
-        factory = HomeVieWModelFactory(DataPortalRepository())
+        factory = HomeVieWModelFactory(
+            DataPortalRepository(), NaverRepository()
+        )
     ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -64,7 +67,14 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .verticalScroll(state = scrollState)
+            .then(
+                if (uiState.isExpanded) {
+                    Modifier
+                } else {
+                    Modifier
+                        .verticalScroll(state = scrollState)
+                }
+            )
     ) {
         HomeTopBar(
             onNotificationClick = { /*TODO*/ },

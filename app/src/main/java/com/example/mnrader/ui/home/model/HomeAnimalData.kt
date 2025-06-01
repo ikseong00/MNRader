@@ -10,7 +10,7 @@ data class HomeAnimalData(
     val location: String,
     val date: String,
     val type: AnimalDataType,
-    val latLng: LatLng = LatLng(37.5407, 127.0791),
+    var latLng: LatLng = LatLng(37.5407, 127.0791),
     var isBookmarked: Boolean = false
 ) {
     companion object {
