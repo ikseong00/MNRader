@@ -25,14 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
-data class Scrap(
-    val id: String,
-    val title: String,
-    val region: String,
-    val date: String,
-    val imageUrl: String
-)
-
 val dummyScraps = listOf(
     Scrap("scrap1", "치와와", "서울 광진구", "2024.06.07", "https://example.com/dog.png"),
     Scrap("scrap2", "고양이", "서울 동작구", "2025.04.01", "https://example.com/cat.png")
@@ -97,7 +89,7 @@ fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(12.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            Text("${scrap.title} / ${scrap.region}")
+            Text("${scrap.name} / ${scrap.region}")
             Text(scrap.date, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
         }
 

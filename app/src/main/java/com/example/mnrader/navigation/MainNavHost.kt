@@ -16,6 +16,8 @@ import androidx.navigation.navArgument
 import com.example.mnrader.ui.mypage.MyPageScreen
 import com.example.mnrader.ui.mypage.Pet
 import com.example.mnrader.ui.mypage.PetDetailScreen
+import com.example.mnrader.ui.mypage.PostListScreen
+import com.example.mnrader.ui.mypage.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
@@ -28,7 +30,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ONBOARDING,
+        startDestination = Routes.MYPAGE, // ONBOARDING변경
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -82,16 +84,27 @@ fun MainNavHost(
 
         }
 
-
         // 내가 올린 게시물
         composable(
             route = Routes.POST_LIST
-        ) { }
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Routes.MYPAGE)
+            }
+            val viewModel: MyPageViewModel = viewModel(parentEntry)
+            PostListScreen(navController = navController, viewModel = viewModel)
+        }
 
         // 내가 스크랩 한 게시물
         composable(
             route = Routes.SCRAP_LIST
-        ) { }
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Routes.MYPAGE)
+            }
+            val viewModel: MyPageViewModel = viewModel(parentEntry)
+            ScrapListScreen(navController = navController, viewModel = viewModel)
+        }
 
         // 알림
         composable(

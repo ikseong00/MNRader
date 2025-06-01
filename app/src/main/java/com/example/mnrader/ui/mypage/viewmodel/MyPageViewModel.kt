@@ -1,11 +1,11 @@
 package com.example.mnrader.ui.mypage.viewmodel
 
-import com.example.mnrader.ui.mypage.MyPost
 import com.example.mnrader.ui.mypage.Pet
 import com.example.mnrader.ui.mypage.Scrap
 import com.example.mnrader.ui.mypage.User
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mnrader.ui.mypage.Post
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,8 +19,8 @@ class MyPageViewModel : ViewModel() {
     private val _pets = MutableStateFlow<List<Pet>>(emptyList())
     val pets: StateFlow<List<Pet>> = _pets.asStateFlow()
 
-    private val _posts = MutableStateFlow<List<MyPost>>(emptyList())
-    val posts: StateFlow<List<MyPost>> = _posts.asStateFlow()
+    private val _posts = MutableStateFlow<List<Post>>(emptyList())
+    val posts: StateFlow<List<Post>> = _posts.asStateFlow()
 
     private val _scraps = MutableStateFlow<List<Scrap>>(emptyList())
     val scraps: StateFlow<List<Scrap>> = _scraps.asStateFlow()
@@ -64,7 +64,7 @@ class MyPageViewModel : ViewModel() {
                         )
                     )
                     _posts.value = listOf(
-                        MyPost("1", "흰둥이", "암컷", "서울", "2025-03-24", "https://example.com/dog.png")
+                        Post("1", "흰둥이", "암컷", "서울", "2025-03-24", "https://example.com/dog.png")
                     )
                     _scraps.value = listOf(
                         Scrap("scrap1", "치와와", "서울", "2024.06.07", "https://example.com/dog.png"),
@@ -87,7 +87,7 @@ class MyPageViewModel : ViewModel() {
                         )
                     )
                     _posts.value = listOf(
-                        MyPost("2", "초코", "수컷", "서울 ", "2025-02-11", "https://example.com/choco.png")
+                        Post("2", "초코", "수컷", "서울 ", "2025-02-11", "https://example.com/choco.png")
                     )
                     _scraps.value = listOf(
                         Scrap("scrap3", "코숏", "서울 ", "2025.01.17", "https://example.com/kitty.png")

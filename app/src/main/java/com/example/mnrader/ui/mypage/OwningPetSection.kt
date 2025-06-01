@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mnrader.R
 
-//todo user가 등록한 동물의 개수를 구해야 함
 @Composable
 fun OwningPetSection(
     pets: List<Pet>,

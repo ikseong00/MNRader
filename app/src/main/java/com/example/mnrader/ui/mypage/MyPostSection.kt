@@ -33,18 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
-data class MyPost(
-    val id: String,
-    val name: String,
-    val gender: String,
-    val region: String,
-    val date: String,
-    val imageUrl: String
-)
-
 @Composable
 fun MyPostSection(
-    posts: List<MyPost>,
+    posts: List<Post>,
     postClick: (postId: String) -> Unit,
     allPostsClick: () -> Unit
 ) {
@@ -77,7 +68,7 @@ fun MyPostSection(
         }
 
         posts.forEach {
-            MyPostItem(it, onClick = { postClick(it.id) })
+            PostItem(it, onClick = { postClick(it.id) })
         }
 
     }
@@ -85,7 +76,7 @@ fun MyPostSection(
 
 // 게시물 정보
 @Composable
-fun MyPostItem(post: MyPost, onClick: () -> Unit) {
+fun PostItem(post: Post, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,7 +120,7 @@ fun MyPostItem(post: MyPost, onClick: () -> Unit) {
 }
 
 val dummyPosts = listOf(
-    MyPost(
+    Post(
         id = "1",
         name = "인절미",
         gender = "암컷",
