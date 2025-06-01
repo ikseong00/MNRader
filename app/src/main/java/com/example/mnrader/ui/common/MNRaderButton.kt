@@ -1,7 +1,7 @@
 package com.example.mnrader.ui.common
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
+import android.R.attr.onClick
+import android.R.attr.text
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,9 +22,9 @@ import com.example.mnrader.ui.theme.MNRaderTheme
 @Composable
 fun MNRaderButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { },
     text: String,
-    cornerShape: Dp = 8.dp
+    cornerShape: Dp = 8.dp,
+    onClick: () -> Unit = { },
 ) {
     Button(
         modifier = modifier,

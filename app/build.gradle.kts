@@ -1,4 +1,5 @@
 import java.util.Properties
+import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.application)
@@ -81,6 +82,10 @@ dependencies {
     // Location
     implementation(libs.play.services.location)
     implementation(libs.naver.map.location)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     // Network
     implementation(libs.retrofit)
