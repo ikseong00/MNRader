@@ -45,8 +45,8 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
         topBar = {
             RegisterTopBar(
                 onBackClick = {
-//                    navController.popBackStack()
-                              },
+                    navController.popBackStack()
+                },
 
                 currentStep = 2
             )
