@@ -21,7 +21,7 @@ fun Animals(modifier: Modifier = Modifier) {
     ) {
         Icon(
             imageVector = Icons.Default.Person,
-            contentDescription = "",
+            contentDescription = null,
             tint = Color.Blue,
             modifier = Modifier
                 .size(150.dp)
