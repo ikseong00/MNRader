@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage
+package com.example.mnrader.ui.mypage.Screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +15,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.navigation.Routes
+import com.example.mnrader.ui.mypage.component.MyPostSection
+import com.example.mnrader.ui.mypage.component.MyScrapSection
+import com.example.mnrader.ui.mypage.component.OwningPetSection
+import com.example.mnrader.ui.mypage.component.UserInfoSection
 
 @Composable
 fun MyPageScreen(
@@ -50,14 +54,18 @@ fun MyPageScreen(
 
         MyPostSection(
             posts = posts,
-            postClick = { println("Clicked post: $it") },
-            allPostsClick = { println("전체보기 post") }
+            postClick = { postId -> println("Clicked post: $postId") },
+            allPostsClick = {
+                navController.navigate(Routes.POST_LIST)
+            }
         )
 
         MyScrapSection(
             scraps = scraps,
-            scrapClick = { println("Clicked scrap: $it") },
-            allScrapClick = { println("전체보기 scrap") }
+            scrapClick = { scrapId -> println("Clicked scrap: $scrapId") },
+            allScrapClick = {
+                navController.navigate(Routes.SCRAP_LIST)
+            }
         )
     }
 }

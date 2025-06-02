@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage
+package com.example.mnrader.ui.mypage.dataclass
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

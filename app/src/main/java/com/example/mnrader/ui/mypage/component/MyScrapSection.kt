@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage
+package com.example.mnrader.ui.mypage.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.mnrader.ui.mypage.dataclass.Pet
+import com.example.mnrader.ui.mypage.dataclass.Scrap
 import com.example.mnrader.ui.theme.Green2
 import com.example.mnrader.ui.theme.Red
 import com.example.mnrader.ui.theme.SkyBlue
@@ -57,6 +59,7 @@ fun MyScrapSection(
     }
 }
 
+// todo onClick: AnimalPage 컴포저블 구현 이후 navigate
 @Composable
 fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
     val color = when (scrap.pet.status) {
@@ -117,7 +120,7 @@ private fun MyScrapSectionPreview() {
     val scrap = Scrap(
         id = "s1",
         pet = pet,
-        region = "서울 동작구",
+        region = "서울",
         date = "2025.04.01"
     )
 

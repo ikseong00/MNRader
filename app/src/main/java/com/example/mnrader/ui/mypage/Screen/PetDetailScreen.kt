@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage
+package com.example.mnrader.ui.mypage.Screen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -8,8 +8,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,16 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.mnrader.ui.mypage.component.CommonTopBar
+import com.example.mnrader.ui.mypage.component.DropdownSelector
+import com.example.mnrader.ui.mypage.dataclass.Pet
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 
 @Composable
 fun PetDetailScreen(
     pet: Pet,
-    viewModel: MyPageViewModel
+    viewModel: MyPageViewModel,
+    navController: NavHostController? = null
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var species by remember { mutableStateOf(pet.species) }
@@ -34,6 +40,8 @@ fun PetDetailScreen(
     var gender by remember { mutableStateOf(pet.gender) }
     var age by remember { mutableStateOf(pet.age) }
     var description by remember { mutableStateOf(pet.description) }
+
+    val scrollState = rememberScrollState()
 
     val breedExamples = mapOf(
         "강아지" to listOf("말티즈", "치와와", "푸들", "포메라니안", "요크셔 테리어"),
@@ -53,11 +61,16 @@ fun PetDetailScreen(
         selectedImageUri = uri
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(16.dp)
+    ) {
+        CommonTopBar(title = "동물 상세", onBack = { navController?.popBackStack() })
 
-        // 프로필 상단
+        Spacer(modifier = Modifier.height(16.dp))
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,7 +106,6 @@ fun PetDetailScreen(
         Text("동물 정보 바꾸기", fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 동물 종류
         DropdownSelector(
             label = "동물 종류",
             options = breedExamples.keys.toList(),
@@ -106,13 +118,13 @@ fun PetDetailScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 품종
         OutlinedTextField(
             value = breedQuery,
             onValueChange = { breedQuery = it },
             label = { Text("품종", color = Color.Gray) },
             modifier = Modifier.fillMaxWidth()
         )
+
         if (breedQuery.text.isNotBlank()) {
             filteredBreeds.forEach { breed ->
                 Text(
@@ -127,7 +139,6 @@ fun PetDetailScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 성별
         DropdownSelector(
             label = "성별",
             options = listOf("수컷", "암컷"),
@@ -137,7 +148,6 @@ fun PetDetailScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 나이
         OutlinedTextField(
             value = age,
             onValueChange = { age = it },
@@ -148,7 +158,6 @@ fun PetDetailScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 특징
         OutlinedTextField(
             value = description,
             onValueChange = { description = it },
@@ -176,6 +185,7 @@ fun PetDetailScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+
         Button(
             onClick = {
                 viewModel.updatePet(
@@ -194,21 +204,7 @@ fun PetDetailScreen(
         ) {
             Text("저장")
         }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-private fun PetDetailScreenPreview() {
-    val previewPet = Pet(
-        id = "preview1",
-        name = "흰둥이",
-        imageUrl = "https://example.com/dog1.png",
-        species = "강아지",
-        breed = "말티즈",
-        gender = "수컷",
-        age = "8개월",
-        description = "사람을 좋아함"
-    )
-    // PetDetailScreen(pet = previewPet, viewModel = MyPageViewModel())
+        Spacer(modifier = Modifier.height(24.dp)) // 하단 여백
+    }
 }

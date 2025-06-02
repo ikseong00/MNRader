@@ -1,11 +1,11 @@
 package com.example.mnrader.ui.mypage.viewmodel
 
-import com.example.mnrader.ui.mypage.Pet
-import com.example.mnrader.ui.mypage.Scrap
-import com.example.mnrader.ui.mypage.User
+import com.example.mnrader.ui.mypage.dataclass.Pet
+import com.example.mnrader.ui.mypage.dataclass.Scrap
+import com.example.mnrader.ui.mypage.dataclass.User
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mnrader.ui.mypage.Post
+import com.example.mnrader.ui.mypage.dataclass.Post
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,12 +34,12 @@ class MyPageViewModel : ViewModel() {
                 val pet3 = Pet("3", "고양이", "https://example.com/cat.png", "고양이", "코숏", "암컷", "1살", "얌전함", null, "목격중")
 
                 _pets.value = listOf(pet1, pet2, pet3)
-                _posts.value = listOf(Post("p1", pet1, "서울 광진구", "2025-03-24"))
+                _posts.value = listOf(Post("p1", pet1, "서울", "2025-03-24"))
                 _scraps.value = listOf(
-                    Scrap("s1", pet2, "서울 광진구", "2024.06.07"),
-                    Scrap("s2", pet3, "서울 동작구", "2025.04.01")
+                    Scrap("s1", pet2, "서울", "2024.06.07"),
+                    Scrap("s2", pet3, "서울", "2025.04.01")
                 )
-                _user.value = User(email, "서울 광진구")
+                _user.value = User(email, "서울")
             }
         }
     }

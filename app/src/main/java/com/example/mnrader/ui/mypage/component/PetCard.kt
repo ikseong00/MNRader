@@ -1,6 +1,5 @@
-package com.example.mnrader.ui.mypage
+package com.example.mnrader.ui.mypage.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,10 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.mnrader.ui.mypage.dataclass.Pet
 
 @Composable
 fun PetCard(pet: Pet, modifier: Modifier = Modifier, onClick: () -> Unit) {

@@ -13,11 +13,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mnrader.ui.mypage.MyPageScreen
-import com.example.mnrader.ui.mypage.Pet
-import com.example.mnrader.ui.mypage.PetDetailScreen
-import com.example.mnrader.ui.mypage.PostListScreen
-import com.example.mnrader.ui.mypage.ScrapListScreen
+import com.example.mnrader.ui.mypage.Screen.MyPageScreen
+import com.example.mnrader.ui.mypage.Screen.PetDetailScreen
+import com.example.mnrader.ui.mypage.Screen.PostListScreen
+import com.example.mnrader.ui.mypage.Screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
@@ -30,7 +29,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MYPAGE, // ONBOARDING변경
+        startDestination = Routes.ONBOARDING,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -77,7 +76,7 @@ fun MainNavHost(
             val pet = viewModel.pets.value.find { it.id == petId }
 
             if (pet != null) {
-                PetDetailScreen(pet = pet, viewModel = viewModel)
+                PetDetailScreen(pet = pet, viewModel = viewModel, navController = navController)
             } else {
                 Text("해당 동물을 찾을 수 없습니다.")
             }
@@ -105,6 +104,16 @@ fun MainNavHost(
             val viewModel: MyPageViewModel = viewModel(parentEntry)
             ScrapListScreen(navController = navController, viewModel = viewModel)
         }
+
+        // todo 동물 상세 페이지 (figma: AnimalPage) 컴포저블 구현 이후 처리 예정
+        composable(
+            route = Routes.ANIMAL_POST_DETAIL,
+            arguments = listOf(navArgument("postId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            Text("AnimalPostDetailScreen for Post ID: $postId") // 화면 미구현 대체
+        }
+
 
         // 알림
         composable(
@@ -137,7 +146,9 @@ object Routes {
     const val REGISTER = "register"
     const val LOGIN = "login"
     const val MAIN = "main"
+    const val ANIMAL_DETAIL = "animal_detail/{AnimalId}"
     const val ANIMAL_DETAIL_WITH_ARG = "animal_detail/{petId}"
+    const val ANIMAL_POST_DETAIL = "animal_post_detail/{postId}"
     const val POST_LIST = "post_list"
     const val SCRAP_LIST = "scrap_list"
     const val NOTIFICATION = "notification"
