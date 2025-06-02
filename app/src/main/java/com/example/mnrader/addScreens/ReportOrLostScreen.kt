@@ -1,7 +1,6 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
 import android.app.DatePickerDialog
-import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

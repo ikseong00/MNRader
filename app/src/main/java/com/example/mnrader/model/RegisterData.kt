@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import java.time.LocalDateTime
-
+//동물 등록하기 data
 data class RegisterData(
     var type: String = "",  // "report" or "lost"
     var name: String = "",

@@ -1,24 +1,28 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,17 +33,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
-import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.model.RegisterScreens
+import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
 
 @Composable
-fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewModel) {
+fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel) {
+    var selected by remember { mutableStateOf("") }
     val customButtonColor = Color(0xFF89C5A9)
+    val animalList = listOf(
+        Pair("강아지", R.drawable.dog),
+        Pair("고양이", R.drawable.cat),
+        Pair("기타동물", R.drawable.rabbit)
+    )
     Scaffold(
         topBar = {
             RegisterTopBar(
-                currentStep = 2
+                currentStep = 3
             )
         },
         bottomBar = {
@@ -52,7 +62,9 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                 Column {
                     Button(
                         onClick = {
-                            navController.navigate(RegisterScreens.AnimalType.route)
+                            viewModel.registerData =
+                                viewModel.registerData.copy(animalType = selected)
+                            navController.navigate(RegisterScreens.ReportOrLost.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
                         modifier = Modifier.fillMaxWidth()
@@ -79,61 +91,54 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 10.dp),
-            contentAlignment = Alignment.TopCenter
+            contentAlignment = Alignment.Center
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+               modifier =  Modifier.fillMaxSize()
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.outline_person_24),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(bottom = 16.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-                Text("이름",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
-                Spacer(Modifier.height(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = viewModel.registerData.name,
-                        onValueChange = {
-                            viewModel.registerData = viewModel.registerData.copy(name = it)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("이름") }
-                    )
-                }
-                Spacer(Modifier.height(10.dp))
+                animalList.forEach { (label, imageRes) ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .background(color = Color.LightGray)
+                            .clickable {
+                                selected = label
+                            }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
+                        ) {
+                            RadioButton(
+                                selected = selected == label,
+                                onClick = { selected = label }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(text = label)
+                            Spacer(modifier = Modifier.weight(0.5f))
+                            androidx.compose.foundation.Image(
+                                painter = painterResource(id = imageRes),
+                                contentDescription = label,
+                                modifier = Modifier.size(80.dp)
+                            )
 
-                Text("연락처",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
-                Spacer(Modifier.height(4.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = viewModel.registerData.contact,
-                        onValueChange = {
-                            viewModel.registerData = viewModel.registerData.copy(contact = it)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("전화번호") }
-                    )
+                        }
+                    }
                 }
             }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
-fun PreviewRegisterInfoScreen() {
+fun AnimalTypePreview() {
     val navController = rememberNavController()
     val viewModel = remember { RegisterViewModel() }
 
-    RegisterInfoScreen(navController = navController, viewModel = viewModel)
+    AnimalTypeScreen(navController = navController, viewModel = viewModel)
 }

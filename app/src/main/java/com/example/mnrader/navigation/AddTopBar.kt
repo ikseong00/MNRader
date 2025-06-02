@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RegisterTopBar(
             onBackClick:(() -> Unit)? = null,
-            currentStep: Int, // 현재 몇 번째 단계인지 1~5
+            currentStep: Int, // 현재 단계 1~5
             totalSteps: Int = 5) {
     Column {
         // TopAppBar

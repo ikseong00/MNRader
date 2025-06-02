@@ -1,4 +1,4 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

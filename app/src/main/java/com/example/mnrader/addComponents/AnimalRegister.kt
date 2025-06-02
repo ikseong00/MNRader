@@ -1,4 +1,4 @@
-package com.example.mnrader.uicomponents
+package com.example.mnrader.addComponents
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -6,11 +6,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.RegisterScreens.AnimalTypeScreen
-import com.example.mnrader.RegisterScreens.RegisterInfoScreen
-import com.example.mnrader.RegisterScreens.ReportOrLostScreen
-import com.example.mnrader.RegisterScreens.SelectTypeScreen
-import com.example.mnrader.RegisterScreens.SubmitSuccessScreen
+import com.example.mnrader.addScreens.AnimalTypeScreen
+import com.example.mnrader.addScreens.RegisterInfoScreen
+import com.example.mnrader.addScreens.ReportOrLostScreen
+import com.example.mnrader.addScreens.SelectTypeScreen
+import com.example.mnrader.addScreens.SubmitSuccessScreen
 import com.example.mnrader.model.RegisterScreens
 import com.example.mnrader.model.RegisterViewModel
 
