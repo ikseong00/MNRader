@@ -34,7 +34,11 @@ fun SelectTypeScreen(navController: NavController, viewModel: RegisterViewModel)
     Column(
         modifier = Modifier.fillMaxSize()) {
         RegisterTopBar(
-            onBackClick = { navController.popBackStack() },
+            onBackClick = {//Home화면으로 이동
+//                navController.popBackStack()
+                navController.navigate("HomeScreen") {
+                    popUpTo("RegisterStartScreen") { inclusive = true }
+                } },
             currentStep = 1 // 여기서 단계 조정: 1~5
         )
         Box(modifier = Modifier.fillMaxSize()

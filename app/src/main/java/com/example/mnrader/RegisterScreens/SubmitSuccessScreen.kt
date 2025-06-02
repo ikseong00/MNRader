@@ -34,7 +34,6 @@ fun SubmitSuccessScreen(navController: NavController, viewModel: RegisterViewMod
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = { navController.popBackStack() },
                 currentStep = 5
             )
         },

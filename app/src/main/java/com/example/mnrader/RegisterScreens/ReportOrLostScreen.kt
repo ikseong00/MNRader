@@ -93,7 +93,6 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = { navController.popBackStack() },
                 currentStep = 4
             )
         },

@@ -49,10 +49,6 @@ fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel)
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = {
-                    navController.popBackStack()
-                },
-
                 currentStep = 3
             )
         },

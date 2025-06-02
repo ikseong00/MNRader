@@ -44,10 +44,6 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = {
-                    navController.popBackStack()
-                },
-
                 currentStep = 2
             )
         },
@@ -100,7 +96,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                         .size(100.dp)
                         .padding(bottom = 16.dp)
                 )
-                Text("이름")
+                Text("이름",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = viewModel.registerData.name,
@@ -112,7 +108,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
 
                 Spacer(Modifier.height(10.dp))
 
-                Text("연락처")
+                Text("연락처",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 Spacer(Modifier.height(4.dp))
                 OutlinedTextField(
                     value = viewModel.registerData.contact,
