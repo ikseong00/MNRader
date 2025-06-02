@@ -60,7 +60,6 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
     var location by remember { mutableStateOf("") }
     var dateTime by remember { mutableStateOf(LocalDateTime.now()) }
     var description by remember { mutableStateOf("") }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val customButtonColor = Color(0xFF89C5A9)
 
     // 동물 타입에 따라 품종 리스트 설정

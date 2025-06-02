@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
@@ -17,10 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -81,39 +79,51 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 10.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
-            Column(modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.outline_person_24),
                     contentDescription = "",
                     modifier = Modifier
                         .size(100.dp)
                         .padding(bottom = 16.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
                 Text("이름",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 Spacer(Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = viewModel.registerData.name,
-                    onValueChange = {
-                        viewModel.registerData = viewModel.registerData.copy(name = it)
-                    },
-                    label = { Text("이름") }
-                )
-
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.registerData.name,
+                        onValueChange = {
+                            viewModel.registerData = viewModel.registerData.copy(name = it)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("이름") }
+                    )
+                }
                 Spacer(Modifier.height(10.dp))
 
                 Text("연락처",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 Spacer(Modifier.height(4.dp))
-                OutlinedTextField(
-                    value = viewModel.registerData.contact,
-                    onValueChange = {
-                        viewModel.registerData = viewModel.registerData.copy(contact = it)
-                    },
-                    label = { Text("전화번호") }
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.registerData.contact,
+                        onValueChange = {
+                            viewModel.registerData = viewModel.registerData.copy(contact = it)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("전화번호") }
+                    )
+                }
             }
         }
     }
