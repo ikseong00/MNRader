@@ -93,7 +93,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                 modifier = Modifier.fillMaxSize().padding(16.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.outline_person_24),
+                    painter = painterResource(id = R.drawable.ic_add_person),
                     contentDescription = "",
                     modifier = Modifier
                         .size(100.dp)

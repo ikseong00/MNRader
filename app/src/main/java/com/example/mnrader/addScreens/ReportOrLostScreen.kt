@@ -1,6 +1,7 @@
 package com.example.mnrader.addScreens
 
 import android.app.DatePickerDialog
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -69,33 +70,8 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
         "기타동물" -> listOf("햄스터", "토끼", "기타")
         else -> listOf("품종 없음")
     }
-    var tempDateTime by remember { mutableStateOf(dateTime) }
-    // DatePickerDialog
+    //날짜/시간 context
     val context = LocalContext.current
-    val datePickerDialog = remember {
-        DatePickerDialog(
-            context,
-            { _, year, month, day ->
-                dateTime = dateTime.withYear(year).withMonth(month + 1).withDayOfMonth(day)
-            },
-            dateTime.year,
-            dateTime.monthValue - 1,
-            dateTime.dayOfMonth
-        ).apply {
-            setOnShowListener {
-                // OK 버튼 누르면 dateTime 업데이트
-                getButton(DatePickerDialog.BUTTON_POSITIVE).setOnClickListener {
-                    dateTime = tempDateTime
-                    dismiss()
-                }
-                // Cancel 버튼 누르면 원래 날짜로 복귀
-                getButton(DatePickerDialog.BUTTON_NEGATIVE).setOnClickListener {
-                    tempDateTime = dateTime // 기존 날짜 유지
-                    dismiss()
-                }
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -254,11 +230,12 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = {
-                                tempDateTime = dateTime
-                                datePickerDialog.show()
+                                showDatePickerDialog(context, dateTime) { selectedDate ->
+                                    dateTime = selectedDate
+                                }
                             }) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.baseline_calendar),
+                                    painter = painterResource(id = R.drawable.ic_add_calendar),
                                     contentDescription = "날짜 선택"
                                 )
                             }
@@ -299,7 +276,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         })
                         {
                             Icon(
-                                painter = painterResource(id = R.drawable.outline_add_photo_alternate_24),
+                                painter = painterResource(id = R.drawable.ic_add_photo),
                                 contentDescription = "사진 추가",
                                 modifier = Modifier.size(48.dp),
                                 tint = Color.Gray
@@ -315,6 +292,21 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
             }
         }
     }
+}
+// datePickerDialog 생성 함수
+fun showDatePickerDialog(context: Context, currentDateTime: LocalDateTime, onDateSelected: (LocalDateTime) -> Unit) {
+    DatePickerDialog(
+        context,
+        { _, year, month, day ->
+            val selectedDate = LocalDateTime.of(year, month + 1, day, currentDateTime.hour, currentDateTime.minute)
+            onDateSelected(selectedDate)
+        },
+        currentDateTime.year,
+        currentDateTime.monthValue - 1,
+        currentDateTime.dayOfMonth
+    ).apply {
+        datePicker.maxDate = System.currentTimeMillis()
+    }.show()
 }
 
 @Preview(showBackground = true)
