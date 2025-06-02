@@ -1,4 +1,4 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,10 +49,6 @@ fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel)
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = {
-                    navController.popBackStack()
-                },
-
                 currentStep = 3
             )
         },

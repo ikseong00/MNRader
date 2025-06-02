@@ -1,6 +1,5 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,22 +9,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,16 +36,16 @@ import com.example.mnrader.navigation.RegisterTopBar
 
 @Composable
 fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewModel) {
-    var name by remember { mutableStateOf("") }
-    var contact by remember { mutableStateOf("") }
+
+    val name = viewModel.registerData.name
+    val contact = viewModel.registerData.contact
+
+    val isFormValid = name.isNotBlank() && contact.isNotBlank()
+
     val customButtonColor = Color(0xFF89C5A9)
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = {
-                    navController.popBackStack()
-                },
-
                 currentStep = 2
             )
         },
@@ -64,7 +62,8 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                             navController.navigate(RegisterScreens.AnimalType.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = isFormValid
                     ) {
                         Text("다음")
                     }
@@ -88,39 +87,54 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 10.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
-            Column(modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp)
+            ) {
                 Image(
-                    painter = painterResource(id = R.drawable.outline_person_24),
+                    painter = painterResource(id = R.drawable.ic_add_person),
                     contentDescription = "",
                     modifier = Modifier
                         .size(100.dp)
                         .padding(bottom = 16.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
-                Text("이름")
+                Text("이름",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 Spacer(Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = viewModel.registerData.name,
-                    onValueChange = {
-                        viewModel.registerData = viewModel.registerData.copy(name = it)
-                    },
-                    label = { Text("이름") }
-                )
-
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = {
+                            viewModel.registerData = viewModel.registerData.copy(name = it)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("이름") }
+                    )
+                }
                 Spacer(Modifier.height(10.dp))
 
-                Text("연락처")
+                Text("연락처",modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 Spacer(Modifier.height(4.dp))
-                OutlinedTextField(
-                    value = viewModel.registerData.contact,
-                    onValueChange = {
-                        viewModel.registerData = viewModel.registerData.copy(contact = it)
-                    },
-                    label = { Text("전화번호") }
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = contact,
+                        onValueChange = {
+                            // 숫자만 남기도록 필터링
+                            val filtered = it.filter { char -> char.isDigit() }
+                            viewModel.registerData = viewModel.registerData.copy(contact = it)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("전화번호") },
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    )
+                }
             }
         }
     }
