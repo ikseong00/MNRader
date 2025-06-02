@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,13 +45,17 @@ fun RegisterTopBar(
                         backClick ->
                     IconButton(onClick = { backClick() })  {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowLeft,
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                             contentDescription = null
                         )
                     }
                 }
             },
-            actions = { Spacer(modifier = Modifier.width(48.dp)) }
+            actions = {
+                if (onBackClick != null) {
+                    Spacer(modifier = Modifier.width(48.dp))
+                }
+            }
         )
 
         // 진도 라인

@@ -309,7 +309,7 @@ fun showDatePickerDialog(context: Context, currentDateTime: LocalDateTime, onDat
     }.show()
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun ReportPreview() {
     val navController = rememberNavController()
