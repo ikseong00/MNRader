@@ -43,7 +43,7 @@ fun MyPageScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        UserInfoSection(email = user.email, location = user.region)
+        UserInfoSection(email = user.email, location = user.region, navController = navController)
 
         OwningPetSection(
             pets = pets,

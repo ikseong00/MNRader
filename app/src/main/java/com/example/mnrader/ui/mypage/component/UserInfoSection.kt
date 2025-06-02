@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,11 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.mnrader.navigation.Routes
 
 @Composable
 fun UserInfoSection(
     email: String,
     location: String,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val city = location.split(" ").firstOrNull() ?: location
@@ -50,7 +54,9 @@ fun UserInfoSection(
 
         Spacer(modifier.weight(1f))
 
-        Icon(imageVector = Icons.Default.Settings, contentDescription = "설정")
+        IconButton(onClick = { navController.navigate(Routes.SETTING) }) {
+            Icon(Icons.Default.Settings, contentDescription = "설정")
+        }
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.settings
+package com.example.mnrader.ui.settings.screen
 
 import androidx.compose.foundation.clickable
 
@@ -18,10 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
-import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.mypage.component.CommonTopBar
-import com.example.mnrader.ui.mypage.dataclass.Pet
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 
 @Composable

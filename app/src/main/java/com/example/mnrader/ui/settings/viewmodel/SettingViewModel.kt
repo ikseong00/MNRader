@@ -3,26 +3,22 @@ package com.example.mnrader.ui.setting.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mnrader.ui.mypage.dataclass.Pet
+import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import com.example.mnrader.ui.settings.dataclass.SettingUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-
-data class SettingUiState(
-    val email: String = "",
-    val selectedCity: String = "",
-    val selectedDistrict: String = "",
-    val pets: List<Pet> = emptyList(),
-    val isNotificationEnabled: Boolean = false,
-    val isPetSectionExpanded: Boolean = false,
-    val isEmailSectionExpanded: Boolean = false,
-    val isRegionSectionExpanded: Boolean = false,
-    val showSuccessPopup: Boolean = false
-)
 
 class SettingViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingUiState())
     val uiState: StateFlow<SettingUiState> = _uiState.asStateFlow()
+
+    private var externalMyPageViewModel: MyPageViewModel? = null
+
+    fun setMyPageViewModel(viewModel: MyPageViewModel) {
+        externalMyPageViewModel = viewModel
+    }
 
     fun toggleSection(section: String) {
         _uiState.update {
@@ -49,6 +45,7 @@ class SettingViewModel : ViewModel() {
 
     fun addPet(pet: Pet) {
         _uiState.update { it.copy(pets = it.pets + pet) }
+        externalMyPageViewModel?.addPetFromSetting(pet)
     }
 
     fun removePet(petId: String) {
@@ -65,10 +62,7 @@ class SettingViewModel : ViewModel() {
 
     fun initDummyData(email: String) {
         _uiState.update {
-            it.copy(
-                email = email,
-                selectedCity = "서울시"
-            )
+            it.copy(email = email, selectedCity = "서울시")
         }
     }
 }

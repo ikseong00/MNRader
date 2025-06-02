@@ -20,6 +20,9 @@ import com.example.mnrader.ui.mypage.Screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
+import com.example.mnrader.ui.settings.screen.AddMyPetScreen
+import com.example.mnrader.ui.settings.screen.SettingScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -148,11 +151,23 @@ fun MainNavHost(
             MyPageScreen(navController = navController)
         }
 
-
         // 설정
         composable(
             route = Routes.SETTING
-        ) { }
+        ) {
+            SettingScreen(navController = navController)
+        }
+
+        composable(
+            route = Routes.ADD_MY_PET
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(Routes.SETTING)
+            }
+            val viewModel: SettingViewModel = viewModel(parentEntry)
+            AddMyPetScreen(navController = navController, viewModel = viewModel)
+        }
+
 
     }
 }
@@ -171,4 +186,5 @@ object Routes {
     const val ADD = "add"
     const val MYPAGE = "mypage"
     const val SETTING = "setting"
+    const val ADD_MY_PET = "add_my_pet"
 }

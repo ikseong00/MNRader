@@ -50,6 +50,11 @@ class MyPageViewModel : ViewModel() {
         _pets.value = updatedList
     }
 
+    // 3. 설정 화면에서 추가된 Pet을 마이페이지에 반영
+    fun addPetFromSetting(pet: Pet) {
+        _pets.value = _pets.value + pet
+    }
+
 
     /*
     실제 서비스 구조 함수
