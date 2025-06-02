@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -49,6 +49,7 @@ import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
 import java.time.LocalDateTime
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewModel) {
@@ -68,6 +69,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
         "기타동물" -> listOf("햄스터", "토끼", "기타")
         else -> listOf("품종 없음")
     }
+    var tempDateTime by remember { mutableStateOf(dateTime) }
     // DatePickerDialog
     val context = LocalContext.current
     val datePickerDialog = remember {
@@ -79,7 +81,20 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
             dateTime.year,
             dateTime.monthValue - 1,
             dateTime.dayOfMonth
-        )
+        ).apply {
+            setOnShowListener {
+                // OK 버튼 누르면 dateTime 업데이트
+                getButton(DatePickerDialog.BUTTON_POSITIVE).setOnClickListener {
+                    dateTime = tempDateTime
+                    dismiss()
+                }
+                // Cancel 버튼 누르면 원래 날짜로 복귀
+                getButton(DatePickerDialog.BUTTON_NEGATIVE).setOnClickListener {
+                    tempDateTime = dateTime // 기존 날짜 유지
+                    dismiss()
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -133,47 +148,57 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                 .padding(innerPadding),
             contentAlignment = Alignment.TopCenter
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(16.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.pets),
-                    contentDescription = null,
-                    modifier = Modifier.size(100.dp).align(Alignment.CenterHorizontally)
-                )
-                // 품종 (드롭다운)
-                Text("품종", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
-                var expanded by remember { mutableStateOf(false) }
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
-                ) {
-                    OutlinedTextField(
-                        value = breed,
-                        onValueChange = { breed = it },
-                        label = { Text("품종 선택") },
-                        readOnly = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    ExposedDropdownMenu(
+                item {
+                    Column (
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Image(
+                        painter = painterResource(id = R.drawable.pets),
+                        contentDescription = null,
+                        modifier = Modifier.size(100.dp)
+                        )
+                    }
+                }
+                item {
+                    // 품종 (드롭다운)
+                    Text("품종", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
+                    var expanded by remember { mutableStateOf(false) }
+                    ExposedDropdownMenuBox(
                         expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                        onExpandedChange = { expanded = !expanded }
                     ) {
-                        breedOptions.forEach { option ->
-                            DropdownMenuItem(
-                                text = { Text(option) },
-                                onClick = {
-                                    breed = option
-                                    expanded = false
-                                }
-                            )
+                        OutlinedTextField(
+                            value = breed,
+                            onValueChange = { breed = it },
+                            label = { Text("품종 선택") },
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            breedOptions.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(option) },
+                                    onClick = {
+                                        breed = option
+                                        expanded = false
+                                    }
+                                )
+                            }
                         }
                     }
                 }
-
+                item {
                 // 성별
                 Text("성별", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
                 OutlinedCard(
@@ -199,85 +224,93 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         }
                     }
                 }
+                }
                 // 장소
-                Text(
-                    if (isReport) "목격 장소" else "잃어버린 장소",
-                    modifier = Modifier.padding(top = 16.dp, start = 4.dp)
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = location,
-                        onValueChange = { location = it },
-                        placeholder = { Text("장소를 검색하세요") },
-                        modifier = Modifier.fillMaxWidth()
+                item {
+                    Text(
+                        if (isReport) "목격 장소" else "잃어버린 장소",
+                        modifier = Modifier.padding(top = 16.dp, start = 4.dp)
                     )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        OutlinedTextField(
+                            value = location,
+                            onValueChange = { location = it },
+                            placeholder = { Text("장소를 검색하세요") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
 
                 // 날짜/시간
-                Text("날짜/시간", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
+                item {
+                    Text("날짜/시간", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
 
-                OutlinedTextField(
-                    value = dateTime.toLocalDate().toString(),
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            datePickerDialog.show()
-                        }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_calendar),
-                                contentDescription = "날짜 선택"
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                // 상세내용
-                Text("상세내용", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
                     OutlinedTextField(
-                        value = description,
-                        onValueChange = { description = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
+                        value = dateTime.toLocalDate().toString(),
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(onClick = {
+                                tempDateTime = dateTime
+                                datePickerDialog.show()
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.baseline_calendar),
+                                    contentDescription = "날짜 선택"
+                                )
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     )
+
                 }
 
-                // 사진 추가 아이콘
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                ) {
-                    IconButton(onClick = {
-                        // TODO: 사진 추가 기능 구현
-                    })
-                    {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_add_photo_alternate_24),
-                            contentDescription = "사진 추가",
-                            modifier = Modifier.size(48.dp),
-                            tint = Color.Gray
+
+                // 상세내용
+                item {
+                    Text("상세내용", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        OutlinedTextField(
+                            value = description,
+                            onValueChange = { description = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
                         )
                     }
-                    Text(
-                        text = "사진 추가",
-                        modifier = Modifier.padding(start = 8.dp),
-                        fontSize = 16.sp
-                    )
+                }
+                // 사진 추가 아이콘
+                item {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        IconButton(onClick = {
+                            // TODO: 사진 추가 기능 구현
+                        })
+                        {
+                            Icon(
+                                painter = painterResource(id = R.drawable.outline_add_photo_alternate_24),
+                                contentDescription = "사진 추가",
+                                modifier = Modifier.size(48.dp),
+                                tint = Color.Gray
+                            )
+                        }
+                        Text(
+                            text = "사진 추가",
+                            modifier = Modifier.padding(start = 8.dp),
+                            fontSize = 16.sp
+                        )
+                    }
                 }
             }
         }
