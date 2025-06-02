@@ -21,13 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.model.MapAnimalData
 import com.example.mnrader.ui.theme.MNRaderTheme
 
 @Composable
 fun MapAnimalInfo(
     modifier: Modifier = Modifier,
-    animalData: HomeAnimalData,
-    onItemClick: (HomeAnimalData) -> Unit = {},
+    animalData: MapAnimalData,
+    onItemClick: (MapAnimalData) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -97,7 +98,17 @@ fun MapAnimalInfo(
 @Preview
 @Composable
 private fun MapAnimalInfoPreview() {
+    val homeAnimalData = HomeAnimalData.dummyHomeAnimalData.first()
     MapAnimalInfo(
-        animalData = HomeAnimalData.dummyHomeAnimalData.first()
+        animalData = MapAnimalData(
+            id = homeAnimalData.id,
+            imageUrl = homeAnimalData.imageUrl,
+            name = homeAnimalData.name,
+            location = homeAnimalData.location,
+            latLng = homeAnimalData.latLng,
+            type = homeAnimalData.type,
+            date = homeAnimalData.date,
+            gender = homeAnimalData.gender
+        )
     )
 }

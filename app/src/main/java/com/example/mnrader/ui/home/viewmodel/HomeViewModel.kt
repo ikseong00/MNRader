@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.mnrader.data.dto.AbandonedResponseDto
 import com.example.mnrader.data.repository.DataPortalRepository
 import com.example.mnrader.data.repository.NaverRepository
 import com.example.mnrader.mapper.toUiModel
 import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.model.MapAnimalData
 import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +34,7 @@ class HomeViewModel(
 //        }
     }
 
-    fun setSelectedAnimal(animalData: HomeAnimalData) {
+    fun setSelectedAnimal(animalData: MapAnimalData) {
         _uiState.update { currentState ->
             currentState.copy(selectedAnimal = animalData)
         }
@@ -44,7 +44,8 @@ class HomeViewModel(
         viewModelScope.launch {
             dataPortalRepository.fetchAbandonedAnimals().fold(
                 onSuccess = { animalDataList ->
-                    updateLatLngByLocation(animalDataList)
+                    val homeAnimalDataList = animalDataList.toUiModel()
+                    updateLatLngByLocation(homeAnimalDataList)
                 },
                 onFailure = { error ->
                     Log.d("HomeViewModel", "getDataPortalAnimalData: $error")
@@ -53,10 +54,28 @@ class HomeViewModel(
         }
     }
 
-    private fun updateLatLngByLocation(animalDataList: AbandonedResponseDto) {
-        val homeAnimalDataList = animalDataList.toUiModel()
+    private fun updateLatLngByLocation(homeAnimalDataList: List<HomeAnimalData>) {
+
+        val mapAnimalData: List<MapAnimalData> = homeAnimalDataList
+            .groupBy { it.location } // Map<String, List<HomeAnimalData>>
+            .map { (location, groupList) ->
+                val first = groupList.first()
+                MapAnimalData(
+                    id = first.id,
+                    imageUrl = first.imageUrl,
+                    name = first.name,
+                    location = location,
+                    latLng = first.latLng,
+                    type = first.type,
+                    date = first.date,
+                    gender = first.gender,
+                    count = groupList.size
+                )
+            }
+
+
         viewModelScope.launch {
-            homeAnimalDataList.forEachIndexed { index, animalData ->
+            mapAnimalData.forEach { animalData ->
                 naverRepository.getLatLngByLocation(animalData.location).fold(
                     onSuccess = { response ->
                         animalData.latLng = LatLng(
@@ -73,7 +92,8 @@ class HomeViewModel(
             _uiState.update { currentState ->
                 currentState.copy(
                     animalDataList = currentState.animalDataList + homeAnimalDataList,
-                    shownAnimalDataList = currentState.shownAnimalDataList + homeAnimalDataList
+                    shownAnimalDataList = currentState.shownAnimalDataList + homeAnimalDataList,
+                    mapAnimalDataList = currentState.mapAnimalDataList + mapAnimalData
                 )
             }
         }

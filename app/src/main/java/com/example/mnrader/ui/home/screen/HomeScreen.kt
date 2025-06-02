@@ -93,7 +93,7 @@ fun HomeScreen(
         MapComponent(
             isExpanded = uiState.isExpanded,
             cameraPositionState = cameraPositionState,
-            animalDataList = uiState.shownAnimalDataList,
+            animalDataList = uiState.mapAnimalDataList,
             onMarkerClick = { viewModel.setSelectedAnimal(it) },
         )
         if (!uiState.isExpanded) {
@@ -131,7 +131,9 @@ fun HomeScreen(
                         .padding(bottom = 100.dp)
                         .shadow(2.dp),
                     animalData = selectedAnimal,
-                    onItemClick = { /*TODO*/ }
+                    onItemClick = { animalData ->
+                        navigateToAnimalDetail(animalData.id.toInt())
+                    },
                 )
             }
             IconButton(

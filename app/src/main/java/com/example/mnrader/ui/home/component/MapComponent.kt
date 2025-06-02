@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.mnrader.R
-import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.model.MapAnimalData
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
@@ -35,9 +35,9 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 fun ColumnScope.MapComponent(
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
-    animalDataList: List<HomeAnimalData> = emptyList(),
+    animalDataList: List<MapAnimalData> = emptyList(),
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-    onMarkerClick: (HomeAnimalData) -> Unit = {}
+    onMarkerClick: (MapAnimalData) -> Unit = {}
 ) {
     // 건국대학교 위치 (위도: 37.5407, 경도: 127.0791)
     val konkukUniversity = remember { LatLng(37.5407, 127.0791) }
@@ -81,7 +81,7 @@ fun ColumnScope.MapComponent(
         }
         animalDataList.forEachIndexed { index, animal ->
             MarkerComposable(
-                captionText = animal.name,
+                captionText = "${animal.name} +${animal.count}",
                 state = MarkerState(position = animal.latLng),
                 onClick = {
                     onMarkerClick(animal)
