@@ -18,6 +18,7 @@ import com.example.mnrader.ui.mypage.Screen.PetDetailScreen
 import com.example.mnrader.ui.mypage.Screen.PostListScreen
 import com.example.mnrader.ui.mypage.Screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -29,7 +30,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ONBOARDING,
+        startDestination = Routes.MAIN,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -56,7 +57,24 @@ fun MainNavHost(
         // 메인화면
         composable(
             route = Routes.MAIN
-        ) { }
+        ) {
+            HomeScreen(
+                padding = padding,
+                navigateToAnimalDetail = { animalId ->
+                    navController.navigate("animal_detail/{animalId}")
+                }
+            )
+        }
+
+        // 애니멀페이지
+        composable(
+            route = Routes.ANIMAL_DETAIL
+        ) { navBackStackEntry ->
+
+            // 애니멀 ID를 가져오기
+            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toIntOrNull()
+            // AnimalDetailScreen(id = animalId)
+        }
 
         // 동물 상세보기 페이지
         composable(
@@ -80,7 +98,6 @@ fun MainNavHost(
             } else {
                 Text("해당 동물을 찾을 수 없습니다.")
             }
-
         }
 
         // 내가 올린 게시물
@@ -114,7 +131,6 @@ fun MainNavHost(
             Text("AnimalPostDetailScreen for Post ID: $postId") // 화면 미구현 대체
         }
 
-
         // 알림
         composable(
             route = Routes.NOTIFICATION
@@ -146,7 +162,7 @@ object Routes {
     const val REGISTER = "register"
     const val LOGIN = "login"
     const val MAIN = "main"
-    const val ANIMAL_DETAIL = "animal_detail/{AnimalId}"
+    const val ANIMAL_DETAIL = "animal_detail/{animalId}"
     const val ANIMAL_DETAIL_WITH_ARG = "animal_detail/{petId}"
     const val ANIMAL_POST_DETAIL = "animal_post_detail/{postId}"
     const val POST_LIST = "post_list"
