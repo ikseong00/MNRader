@@ -2,18 +2,25 @@ package com.example.mnrader.addScreens
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -23,6 +30,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -264,35 +272,47 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                             onValueChange = { description = it },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(100.dp)
+                                .height(100.dp),
+                            placeholder = { Text("상세 내용을 기술해 주세요") }
                         )
                     }
                 }
+                item {
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
                 // 사진 추가 아이콘
                 item {
+//                    val context = LocalContext.current
+                    val photoPickerLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.GetContent()
+                    ) { uri: Uri? ->
+                        uri?.let {
+                            Log.d("PhotoPicker", "사진 선택됨: $it")
+                            // 여기서 ViewModel이나 State에 저장해 UI에 표시
+                        }
+                    }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        IconButton(onClick = {
-                            // TODO: 사진 추가 기능 구현
-                        })
-                        {
+                        OutlinedButton(
+                            onClick = {
+                                photoPickerLauncher.launch("image/*")
+                            },
+                            shape = RoundedCornerShape(3.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "사진 추가",
+                                fontSize = 16.sp
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_add_photo),
                                 contentDescription = "사진 추가",
-                                modifier = Modifier.size(48.dp),
-                                tint = Color.Gray
+                                modifier = Modifier.size(24.dp)
                             )
                         }
-                        Text(
-                            text = "사진 추가",
-                            modifier = Modifier.padding(start = 8.dp),
-                            fontSize = 16.sp
-                        )
                     }
                 }
             }
