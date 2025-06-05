@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.home.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -13,12 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.example.mnrader.R
 import com.example.mnrader.ui.home.model.MapAnimalData
 import com.naver.maps.geometry.LatLng
@@ -89,23 +88,26 @@ fun ColumnScope.MapComponent(
                 }
             ) {
                 Box(
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(96.dp)
                 ) {
                     Icon(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .align(Alignment.Center),
                         painter = painterResource(R.drawable.ic_home_pin),
                         contentDescription = "Animal Marker",
                         tint = animal.type.color
                     )
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .align(Alignment.Center)
-                            .padding(top = 40.dp),
-                        model = animal.imageUrl,
-                        contentDescription = "Animal Image",
-                    )
+//
+//                    AsyncImage(
+//                        modifier = Modifier
+//                            .size(30.dp)
+//                            .clip(CircleShape)
+//                            .align(Alignment.Center)
+//                            .padding(top = 40.dp),
+//                        model = animal.imageUrl,
+//                        contentDescription = "Animal Image",
+//                    )
                 }
             }
         }

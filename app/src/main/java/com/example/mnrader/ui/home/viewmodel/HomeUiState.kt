@@ -2,6 +2,7 @@ package com.example.mnrader.ui.home.viewmodel
 
 import com.example.mnrader.ui.home.model.HomeAnimalData
 import com.example.mnrader.ui.home.model.MapAnimalData
+import com.naver.maps.geometry.LatLng
 
 data class HomeUiState(
     var mLocation: String = "",
@@ -17,4 +18,5 @@ data class HomeUiState(
     var currentPinAnimal: HomeAnimalData? = null,
     val shownAnimalDataList: List<HomeAnimalData> = emptyList(),
     val mapAnimalDataList: List<MapAnimalData> = emptyList(),
+    val cameraLatLng: LatLng = LatLng(37.5407, 127.0791)
 )

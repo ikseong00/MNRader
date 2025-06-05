@@ -36,7 +36,10 @@ class HomeViewModel(
 
     fun setSelectedAnimal(animalData: MapAnimalData) {
         _uiState.update { currentState ->
-            currentState.copy(selectedAnimal = animalData)
+            currentState.copy(
+                selectedAnimal = animalData,
+                cameraLatLng = animalData.latLng
+            )
         }
     }
 
@@ -93,7 +96,8 @@ class HomeViewModel(
                 currentState.copy(
                     animalDataList = currentState.animalDataList + homeAnimalDataList,
                     shownAnimalDataList = currentState.shownAnimalDataList + homeAnimalDataList,
-                    mapAnimalDataList = currentState.mapAnimalDataList + mapAnimalData
+                    mapAnimalDataList = currentState.mapAnimalDataList + mapAnimalData,
+                    cameraLatLng = mapAnimalData.first().latLng
                 )
             }
         }
@@ -101,7 +105,10 @@ class HomeViewModel(
 
 
     fun setExpanded(isExpanded: Boolean) {
-        _uiState.value = _uiState.value.copy(isExpanded = isExpanded)
+        _uiState.value = _uiState.value.copy(
+            isExpanded = isExpanded,
+            selectedAnimal = null,
+        )
     }
 
     fun setLostShown(isShown: Boolean) {

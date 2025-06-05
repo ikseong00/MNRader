@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,6 @@ import com.example.mnrader.ui.home.component.MapComponent
 import com.example.mnrader.ui.home.viewmodel.HomeVieWModelFactory
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.theme.Green2
-import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.rememberCameraPositionState
 
@@ -55,12 +55,14 @@ fun HomeScreen(
 
     val scrollState = rememberScrollState()
     val cameraPositionState = rememberCameraPositionState()
-    cameraPositionState.position = CameraPosition(
-        LatLng(37.5407, 127.0791),
-        15.0,
-        0.0,
-        0.0
-    )
+    LaunchedEffect(uiState.cameraLatLng) {
+        cameraPositionState.position = CameraPosition(
+            uiState.cameraLatLng,
+            15.0,
+            0.0,
+            0.0
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -128,8 +130,7 @@ fun HomeScreen(
                 MapAnimalInfo(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 100.dp)
-                        .shadow(2.dp),
+                        .padding(bottom = 100.dp),
                     animalData = selectedAnimal,
                     onItemClick = { animalData ->
                         navigateToAnimalDetail(animalData.id.toInt())
