@@ -214,6 +214,12 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         OutlinedTextField(
                             value = location,
                             onValueChange = { location = it },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_add_search),
+                                    contentDescription = "검색 아이콘"
+                                )
+                            },
                             placeholder = { Text("장소를 검색하세요") },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -228,7 +234,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         value = dateTime.toLocalDate().toString(),
                         onValueChange = {},
                         readOnly = true,
-                        trailingIcon = {
+                        leadingIcon = {
                             IconButton(onClick = {
                                 showDatePickerDialog(context, dateTime) { selectedDate ->
                                     dateTime = selectedDate
