@@ -55,7 +55,20 @@ class HomeViewModel(
                 }
             )
         }
+
+        viewModelScope.launch {
+            dataPortalRepository.fetchLostAnimals().fold(
+                onSuccess = { animalDataList ->
+                    val homeAnimalDataList = animalDataList.map { it.toUiModel() }
+                    updateLatLngByLocation(homeAnimalDataList)
+                },
+                onFailure = { error ->
+                    Log.d("HomeViewModel", "getLostAnimalData: $error")
+                }
+            )
+        }
     }
+
 
     private fun updateLatLngByLocation(homeAnimalDataList: List<HomeAnimalData>) {
 
@@ -97,7 +110,7 @@ class HomeViewModel(
                     animalDataList = currentState.animalDataList + homeAnimalDataList,
                     shownAnimalDataList = currentState.shownAnimalDataList + homeAnimalDataList,
                     mapAnimalDataList = currentState.mapAnimalDataList + mapAnimalData,
-                    cameraLatLng = mapAnimalData.first().latLng
+                    cameraLatLng = mapAnimalData[2].latLng
                 )
             }
         }
