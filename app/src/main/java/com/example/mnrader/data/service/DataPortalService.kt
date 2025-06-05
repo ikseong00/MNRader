@@ -2,6 +2,7 @@ package com.example.mnrader.data.service
 
 import com.example.mnrader.BuildConfig
 import com.example.mnrader.data.dto.AbandonedResponseDto
+import com.example.mnrader.data.dto.LostPortalResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.time.LocalDate
@@ -12,7 +13,15 @@ interface DataPortalService {
     suspend fun getAbandonedAnimals(
         @Query("serviceKey") serviceKey: String = BuildConfig.DATA_PORTAL_SERVICE_KEY,
         @Query("_type") type: String = "json",
-        @Query("bgnde") startDate: String = LocalDate.now().minusMonths(7).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-        @Query("endde") endDate: String = LocalDate.now().minusMonths(6).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        @Query("bgnde") startDate: String = LocalDate.now().minusMonths(3).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        @Query("endde") endDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
     ): AbandonedResponseDto
+
+    @GET("lossInfoService/lossInfo")
+    suspend fun getLostAnimals(
+        @Query("serviceKey") serviceKey: String = BuildConfig.DATA_PORTAL_SERVICE_KEY,
+        @Query("_type") type: String = "json",
+        @Query("bgnde") startDate: String = LocalDate.now().minusMonths(3).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        @Query("endde") endDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+    ): LostPortalResponseDto
 }
