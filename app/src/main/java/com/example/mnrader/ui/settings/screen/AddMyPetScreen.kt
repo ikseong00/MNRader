@@ -22,12 +22,14 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 import com.example.mnrader.ui.mypage.dataclass.Pet
+import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import java.util.*
 
 @Composable
 fun AddMyPetScreen(
     navController: NavHostController,
-    viewModel: SettingViewModel
+    viewModel: SettingViewModel,
+    myPageViewModel: MyPageViewModel
 ) {
     var species by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
@@ -92,6 +94,7 @@ fun AddMyPetScreen(
                         imageUri = imageUri?.toString()
                     )
                     viewModel.addPet(newPet)
+                    myPageViewModel.addPetFromSetting(newPet)
                     navController.popBackStack()
                 }
             },

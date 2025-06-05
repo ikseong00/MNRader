@@ -14,12 +14,6 @@ class SettingViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingUiState())
     val uiState: StateFlow<SettingUiState> = _uiState.asStateFlow()
 
-    private var externalMyPageViewModel: MyPageViewModel? = null
-
-    fun setMyPageViewModel(viewModel: MyPageViewModel) {
-        externalMyPageViewModel = viewModel
-    }
-
     fun toggleSection(section: String) {
         _uiState.update {
             when (section) {
@@ -45,11 +39,6 @@ class SettingViewModel : ViewModel() {
 
     fun addPet(pet: Pet) {
         _uiState.update { it.copy(pets = it.pets + pet) }
-        externalMyPageViewModel?.addPetFromSetting(pet)
-    }
-
-    fun removePet(petId: String) {
-        _uiState.update { it.copy(pets = it.pets.filterNot { it.id == petId }) }
     }
 
     fun saveSettings() {
@@ -60,9 +49,18 @@ class SettingViewModel : ViewModel() {
         }
     }
 
-    fun initDummyData(email: String) {
+    fun initWithMyPagePets(email: String, pets: List<Pet>) {
         _uiState.update {
-            it.copy(email = email, selectedCity = "서울시")
+            it.copy(
+                email = email,
+                pets = pets,
+                selectedCity = "서울시"
+            )
         }
     }
+
+
+
+
+
 }

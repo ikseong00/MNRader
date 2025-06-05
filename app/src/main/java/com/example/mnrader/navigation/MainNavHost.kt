@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,7 +34,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN,
+        startDestination = Routes.MYPAGE,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -145,28 +146,51 @@ fun MainNavHost(
         ) { }
 
         // 마이페이지
-        composable(
-            route = Routes.MYPAGE
-        ) {
+        composable(route = Routes.MYPAGE) {
+            val viewModel: MyPageViewModel = viewModel()
+            LaunchedEffect(Unit) {
+                viewModel.loadDummyUserData("123@konkuk.ac.kr")
+            }
             MyPageScreen(navController = navController)
         }
 
+
         // 설정
-        composable(
-            route = Routes.SETTING
-        ) {
-            SettingScreen(navController = navController)
+        composable(route = Routes.SETTING) {
+            val parentEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
+            val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
+            val settingViewModel: SettingViewModel = viewModel()
+
+            LaunchedEffect(true) {
+                settingViewModel.initWithMyPagePets(
+                    email = myPageViewModel.user.value.email,
+                    pets = myPageViewModel.pets.value
+                )
+            }
+
+            SettingScreen(
+                navController = navController,
+                viewModel = settingViewModel,
+                myPageViewModel = myPageViewModel
+            )
         }
 
-        composable(
-            route = Routes.ADD_MY_PET
-        ) {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(Routes.SETTING)
-            }
-            val viewModel: SettingViewModel = viewModel(parentEntry)
-            AddMyPetScreen(navController = navController, viewModel = viewModel)
+
+
+        composable(route = Routes.ADD_MY_PET) {
+            val settingEntry = remember(it) { navController.getBackStackEntry(Routes.SETTING) }
+            val myPageEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
+
+            val settingViewModel: SettingViewModel = viewModel(settingEntry)
+            val myPageViewModel: MyPageViewModel = viewModel(myPageEntry)
+
+            AddMyPetScreen(
+                navController = navController,
+                viewModel = settingViewModel,
+                myPageViewModel = myPageViewModel
+            )
         }
+
 
 
     }
