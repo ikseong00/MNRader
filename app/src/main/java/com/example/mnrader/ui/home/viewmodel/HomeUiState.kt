@@ -18,5 +18,6 @@ data class HomeUiState(
     var currentPinAnimal: HomeAnimalData? = null,
     val shownAnimalDataList: List<HomeAnimalData> = emptyList(),
     val mapAnimalDataList: List<MapAnimalData> = emptyList(),
+    val shownMapAnimalDataList: List<MapAnimalData> = emptyList(),
     val cameraLatLng: LatLng = LatLng(37.5407, 127.0791)
 )

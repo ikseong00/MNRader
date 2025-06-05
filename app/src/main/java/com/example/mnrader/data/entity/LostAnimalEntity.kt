@@ -14,5 +14,6 @@ data class LostAnimalEntity(
     val sexCd: Gender,
     val specialMark: String,
     val location: String,
+    val happenAddr: String,
     val happenDate: String,
 )

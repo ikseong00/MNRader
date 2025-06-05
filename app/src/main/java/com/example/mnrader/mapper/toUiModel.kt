@@ -17,7 +17,7 @@ fun AbandonedResponseDto.toUiModel(): List<HomeAnimalData> =
                 "F" -> Gender.FEMALE
                 else -> Gender.MALE
             },
-            location = it.orgNm,
+            location = it.careAddr,
             date = it.updTm.split(" ").first(),
             type = AnimalDataType.PROTECT,
             latLng = LatLng(0.0, 0.0), // TODO: 위치 정보를 업데이트해야함.
@@ -31,7 +31,7 @@ fun LostAnimalEntity.toUiModel(): HomeAnimalData =
         imageUrl = this.popfile,
         name = this.kindCd,
         gender = this.sexCd,
-        location = this.orgNm,
+        location = this.happenAddr,
         date = this.happenDate.split(" ").first(),
         type = AnimalDataType.LOST,
         latLng = LatLng(0.0, 0.0), // TODO: 위치 정보를 업데이트해야함.

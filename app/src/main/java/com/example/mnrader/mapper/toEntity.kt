@@ -17,6 +17,7 @@ fun LostPortalResponseDto.toEntityList(): List<LostAnimalEntity> =
             },
             location = item.happenAddr,
             happenDate = item.happenDt,
+            happenAddr = item.happenAddr
         )
     }
 

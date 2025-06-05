@@ -71,26 +71,26 @@ class HomeViewModel(
 
 
     private fun updateLatLngByLocation(homeAnimalDataList: List<HomeAnimalData>) {
-
-        val mapAnimalData: List<MapAnimalData> = homeAnimalDataList
-            .groupBy { it.location } // Map<String, List<HomeAnimalData>>
-            .map { (location, groupList) ->
-                val first = groupList.first()
-                MapAnimalData(
-                    id = first.id,
-                    imageUrl = first.imageUrl,
-                    name = first.name,
-                    location = location,
-                    latLng = first.latLng,
-                    type = first.type,
-                    date = first.date,
-                    gender = first.gender,
-                    count = groupList.size
-                )
-            }
-
-
         viewModelScope.launch {
+
+            val mapAnimalData: List<MapAnimalData> = homeAnimalDataList
+                .groupBy { it.location } // Map<String, List<HomeAnimalData>>
+                .map { (location, groupList) ->
+                    val first = groupList.first()
+                    MapAnimalData(
+                        id = first.id,
+                        imageUrl = first.imageUrl,
+                        name = first.name,
+                        location = location,
+                        latLng = first.latLng,
+                        type = first.type,
+                        date = first.date,
+                        gender = first.gender,
+                        count = groupList.size
+                    )
+                }
+
+
             mapAnimalData.forEach { animalData ->
                 naverRepository.getLatLngByLocation(animalData.location).fold(
                     onSuccess = { response ->
@@ -104,12 +104,16 @@ class HomeViewModel(
                     }
                 )
             }
+            mapAnimalData.forEach {
+                Log.d("HomeViewModel", "MapAnimalData: ${it.name}, LatLng: ${it.latLng}")
+            }
 
             _uiState.update { currentState ->
                 currentState.copy(
                     animalDataList = currentState.animalDataList + homeAnimalDataList,
                     shownAnimalDataList = currentState.shownAnimalDataList + homeAnimalDataList,
                     mapAnimalDataList = currentState.mapAnimalDataList + mapAnimalData,
+                    shownMapAnimalDataList = currentState.mapAnimalDataList + mapAnimalData,
                     cameraLatLng = mapAnimalData[2].latLng
                 )
             }
@@ -152,8 +156,21 @@ class HomeViewModel(
                         (currentState.isProtectShown && animalData.type == AnimalDataType.PROTECT) ||
                         (currentState.isWitnessShown && animalData.type == AnimalDataType.WITNESS)
             }
-            currentState.copy(shownAnimalDataList = shownList)
+            val mapAnimalDataList =
+                uiState.value.mapAnimalDataList.filter { animalData ->
+                    (currentState.isLostShown && animalData.type == AnimalDataType.LOST) ||
+                            (currentState.isProtectShown && animalData.type == AnimalDataType.PROTECT) ||
+                            (currentState.isWitnessShown && animalData.type == AnimalDataType.WITNESS)
+                }
+            mapAnimalDataList.forEach {
+                Log.d("HomeViewModel", ": ${it.name}, LatLng: ${it.latLng}")
+            }
+            currentState.copy(
+                shownAnimalDataList = shownList,
+                shownMapAnimalDataList = mapAnimalDataList,
+            )
         }
+
     }
 
     fun setBookmark(animalData: HomeAnimalData) {

@@ -95,7 +95,7 @@ fun HomeScreen(
         MapComponent(
             isExpanded = uiState.isExpanded,
             cameraPositionState = cameraPositionState,
-            animalDataList = uiState.mapAnimalDataList,
+            animalDataList = uiState.shownMapAnimalDataList,
             onMarkerClick = { viewModel.setSelectedAnimal(it) },
         )
         if (!uiState.isExpanded) {

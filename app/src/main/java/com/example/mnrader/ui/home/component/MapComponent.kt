@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.home.component
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -78,6 +79,7 @@ fun ColumnScope.MapComponent(
             }
         }
         animalDataList.forEachIndexed { index, animal ->
+            Log.d("MapComponent", "Animal $index: ${animal.name}, LatLng: ${animal.latLng}")
             MarkerComposable(
                 captionText = "${animal.name} +${animal.count}",
                 captionTextSize = 14.sp,
