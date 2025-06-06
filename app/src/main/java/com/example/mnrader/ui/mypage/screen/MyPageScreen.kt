@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.mypage.component.MyPostSection
 import com.example.mnrader.ui.mypage.component.MyScrapSection
 import com.example.mnrader.ui.mypage.component.OwningPetSection
@@ -23,9 +20,9 @@ import com.example.mnrader.ui.mypage.component.UserInfoSection
 @Composable
 fun MyPageScreen(
     viewModel: MyPageViewModel = viewModel(),
-    onNavigateToPetDetail: (String) -> Unit,
-    onNavigateToPostDetail: (String) -> Unit,
-    onNavigateToScrapDetail: (String) -> Unit,
+    onNavigateToPetDetail: (Int) -> Unit,
+    onNavigateToPostDetail: (Int) -> Unit,
+    onNavigateToScrapDetail: (Int) -> Unit,
     onNavigateToAllPosts: () -> Unit,
     onNavigateToAllScraps: () -> Unit
 ) {

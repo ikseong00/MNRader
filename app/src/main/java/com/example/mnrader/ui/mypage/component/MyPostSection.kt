@@ -24,7 +24,7 @@ import com.example.mnrader.ui.theme.SkyBlue
 @Composable
 fun MyPostSection(
     posts: List<Post>,
-    postClick: (postId: String) -> Unit,
+    postClick: (postId: Int) -> Unit,
     allPostsClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -91,7 +91,7 @@ fun PostItem(post: Post, onClick: () -> Unit) {
 @Composable
 private fun MyPostSectionPreview() {
     val pet = Pet(
-        id = "p1",
+        id = 1,
         name = "인절미",
         imageUrl = "https://example.com/dog.png",
         species = "개",
@@ -103,7 +103,7 @@ private fun MyPostSectionPreview() {
     )
 
     val post = Post(
-        id = "1",
+        id = 1,
         pet = pet,
         region = "서울",
         date = "2025-03-24"

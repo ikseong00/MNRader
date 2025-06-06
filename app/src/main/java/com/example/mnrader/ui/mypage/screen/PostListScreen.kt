@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
@@ -28,7 +27,7 @@ import com.example.mnrader.ui.theme.SkyBlue
 fun PostListScreen(
     viewModel: MyPageViewModel,
     onBackClick: () -> Unit,
-    onPostClick: (postId: String) -> Unit
+    onPostClick: (postId: Int) -> Unit
 ) {
     val posts by viewModel.posts.collectAsState()
 
@@ -73,7 +72,7 @@ fun PostListScreen(
                                     color = when (post.pet.status) {
                                         "실종" -> Red
                                         "보호중" -> SkyBlue
-                                        "목격중" -> Green2
+                                        "목격" -> Green2
                                         else -> Color.LightGray
                                     },
                                     shape = CircleShape

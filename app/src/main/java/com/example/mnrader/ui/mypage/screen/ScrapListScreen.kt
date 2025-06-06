@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.component.ScrapItem
@@ -32,7 +31,7 @@ import com.example.mnrader.ui.theme.SkyBlue
 fun ScrapListScreen(
     viewModel: MyPageViewModel,
     onBackClick: () -> Unit,
-    onScrapClick: (postId: String) -> Unit
+    onScrapClick: (postId: Int) -> Unit
 ) {
     val scraps by viewModel.scraps.collectAsState()
 
@@ -93,7 +92,7 @@ fun ScrapListScreen(
 @Composable
 fun ScrapListScreenPreview() {
     val pet1 = Pet(
-        id = "p1",
+        id = 1,
         name = "푸들",
         imageUrl = "https://example.com/poodle.png",
         species = "개",
@@ -105,7 +104,7 @@ fun ScrapListScreenPreview() {
     )
 
     val pet2 = Pet(
-        id = "p2",
+        id = 2,
         name = "페르시안",
         imageUrl = "https://example.com/persian.png",
         species = "고양이",
@@ -117,8 +116,8 @@ fun ScrapListScreenPreview() {
     )
 
     val dummyScraps = listOf(
-        Scrap(id = "1", pet = pet1, region = "서울", date = "2025.06.01"),
-        Scrap(id = "2", pet = pet2, region = "서울", date = "2025.05.30")
+        Scrap(id = 1, pet = pet1, region = "서울", date = "2025.06.01"),
+        Scrap(id = 2, pet = pet2, region = "서울", date = "2025.05.30")
     )
 
     Column(modifier = Modifier.fillMaxSize()) {

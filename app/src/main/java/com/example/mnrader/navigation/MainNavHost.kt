@@ -13,13 +13,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mnrader.ui.mypage.Screen.MyPageScreen
-import com.example.mnrader.ui.mypage.Screen.PetDetailScreen
-import com.example.mnrader.ui.mypage.Screen.PostListScreen
-import com.example.mnrader.ui.mypage.Screen.ScrapListScreen
+import com.example.mnrader.ui.mypage.screen.MyPageScreen
+import com.example.mnrader.ui.mypage.screen.PetDetailScreen
+import com.example.mnrader.ui.mypage.screen.PostListScreen
+import com.example.mnrader.ui.mypage.screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -81,28 +82,27 @@ fun MainNavHost(
             route = Routes.ANIMAL_DETAIL_WITH_ARG,
             arguments = listOf(navArgument("petId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val petId = backStackEntry.arguments?.getString("petId")
+            val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull()
 
             val parentEntry = remember(backStackEntry) {
-                // MyPageScreen이 사용한 ViewModel의 NavBackStackEntry
                 navController.getBackStackEntry(Routes.MYPAGE)
             }
-            // MyPageScreen의 viewmodel 인스턴스 재사용
-            // MyPageScreen에서 생성된 pets데이터 사용하기 위해
-            val viewModel: MyPageViewModel = viewModel(parentEntry)
+            val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
+            val uploadViewModel: PetUploadViewModel = viewModel() // 새로 생성
 
-            val pet = viewModel.pets.value.find { it.id == petId }
+            val pet = myPageViewModel.pets.value.find { it.id == petId }
 
             if (pet != null) {
                 PetDetailScreen(
                     pet = pet,
-                    viewModel = viewModel,
+                    viewModel = uploadViewModel,
                     onBackClick = { navController.popBackStack() }
                 )
             } else {
                 Text("해당 동물을 찾을 수 없습니다.")
             }
         }
+
 
         // 내가 올린 게시물
         composable(

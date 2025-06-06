@@ -24,11 +24,9 @@ import com.example.mnrader.ui.theme.SkyBlue
 @Composable
 fun MyScrapSection(
     scraps: List<Scrap>,
-    scrapClick: (String) -> Unit,
+    scrapClick: (Int) -> Unit,
     allScrapClick: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     Column(modifier = Modifier.padding(top = 12.dp)) {
         Row(
             modifier = Modifier
@@ -98,7 +96,7 @@ fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
 @Composable
 private fun MyScrapSectionPreview() {
     val pet = Pet(
-        id = "p2",
+        id = 1,
         name = "나비",
         imageUrl = "https://example.com/cat.png",
         species = "고양이",
@@ -110,7 +108,7 @@ private fun MyScrapSectionPreview() {
     )
 
     val scrap = Scrap(
-        id = "s1",
+        id = 1,
         pet = pet,
         region = "서울",
         date = "2025.04.01"

@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,17 +21,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.component.DropdownSelector
 import com.example.mnrader.ui.mypage.dataclass.Pet
-import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun PetDetailScreen(
     pet: Pet,
-    viewModel: MyPageViewModel,
+    viewModel: PetUploadViewModel,
     onBackClick: () -> Unit
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -157,18 +157,16 @@ fun PetDetailScreen(
             value = age,
             onValueChange = { age = it },
             label = { Text("나이", color = Color.Gray) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(unfocusedTextColor = Color.Gray)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = description,
+            value = description ?:"",
             onValueChange = { description = it },
             label = { Text("특징", color = Color.Gray) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(unfocusedTextColor = Color.Gray)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -191,30 +189,33 @@ fun PetDetailScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 품종 선택 안되면 disable
         Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isBreedValid) Green1 else Color.LightGray
+            ),
             onClick = {
                 viewModel.updatePet(
-                    pet.copy(
-                        species = species,
-                        breed = breedQuery.text,
-                        gender = gender,
-                        age = age,
-                        description = description,
-                        imageUri = selectedImageUri?.toString()
-                    )
-                )
+                    animalId = pet.id,
+                    name = pet.name,
+                    species = species,
+                    breed = breedQuery.text,
+                    gender = gender,
+                    age = age,
+                    description = description,
+                    imageUri = selectedImageUri
+                ) { success ->
+                    if (success) {
+                        onBackClick()
+                    }
+                }
             },
             enabled = isBreedValid,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isBreedValid) Color(0xFFA5D6A7) else Color.LightGray
-            )
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("저장")
         }
 
 
-        Spacer(modifier = Modifier.height(24.dp)) // 하단 여백
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
