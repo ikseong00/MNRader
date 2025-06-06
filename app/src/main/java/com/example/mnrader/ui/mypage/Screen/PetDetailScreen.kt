@@ -40,7 +40,6 @@ fun PetDetailScreen(
     var gender by remember { mutableStateOf(pet.gender) }
     var age by remember { mutableStateOf(pet.age) }
     var description by remember { mutableStateOf(pet.description) }
-
     val scrollState = rememberScrollState()
 
     val breedExamples = mapOf(
@@ -54,6 +53,12 @@ fun PetDetailScreen(
     val filteredBreeds = breedExamples[species]?.filter {
         it.contains(breedQuery.text, ignoreCase = true)
     } ?: emptyList()
+
+    val isBreedValid by remember(breedQuery.text, species) {
+        mutableStateOf(
+            breedExamples[species]?.contains(breedQuery.text) == true
+        )
+    }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -186,6 +191,7 @@ fun PetDetailScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // 품종 선택 안되면 disable
         Button(
             onClick = {
                 viewModel.updatePet(
@@ -199,11 +205,15 @@ fun PetDetailScreen(
                     )
                 )
             },
+            enabled = isBreedValid,
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA5D6A7))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isBreedValid) Color(0xFFA5D6A7) else Color.LightGray
+            )
         ) {
             Text("저장")
         }
+
 
         Spacer(modifier = Modifier.height(24.dp)) // 하단 여백
     }
