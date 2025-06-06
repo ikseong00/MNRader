@@ -14,7 +14,6 @@ class PetRepository {
     fun updatePetData(
         animalId: Int,
         imageUri: Uri?,
-        name: String,
         animal: Int,
         breed: String,
         gender: Int,
@@ -30,7 +29,6 @@ class PetRepository {
             }
         }
 
-        val namePart = name.toRequestBody("text/plain".toMediaTypeOrNull())
         val animalPart = animal.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val breedPart = breed.toRequestBody("text/plain".toMediaTypeOrNull())
         val genderPart = gender.toString().toRequestBody("text/plain".toMediaTypeOrNull())
@@ -40,7 +38,6 @@ class PetRepository {
         val call = RetrofitClient.petService.updatePet(
             animalId = animalId,
             img = imgPart,
-            name = namePart,
             animal = animalPart,
             breed = breedPart,
             gender = genderPart,

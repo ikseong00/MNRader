@@ -199,7 +199,6 @@ fun PetDetailScreen(
             onClick = {
                 viewModel.updatePet(
                     animalId = pet.id,
-                    name = pet.name,
                     species = species,
                     breed = breedQuery.text,
                     gender = gender,

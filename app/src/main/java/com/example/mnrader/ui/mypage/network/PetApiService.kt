@@ -19,7 +19,6 @@ interface PetApiService {
         @Part("animal") animal: RequestBody,
         @Part("breed") breed: RequestBody,
         @Part("gender") gender: RequestBody,
-        @Part("name") name: RequestBody,
         @Part("age") age: RequestBody,
         @Part("detail") detail: RequestBody
     ): Call<Void>

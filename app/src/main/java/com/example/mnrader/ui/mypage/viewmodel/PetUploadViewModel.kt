@@ -13,7 +13,6 @@ class PetUploadViewModel(application: Application) : AndroidViewModel(applicatio
     fun updatePet(
         animalId: Int,
         imageUri: Uri?,
-        name: String,
         species: String,
         breed: String,
         gender: String,
@@ -38,7 +37,6 @@ class PetUploadViewModel(application: Application) : AndroidViewModel(applicatio
         repository.updatePetData(
             animalId = animalId,
             imageUri = imageUri,
-            name = name,
             animal = animalCode,
             breed = breed,
             gender = genderCode,

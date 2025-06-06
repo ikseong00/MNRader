@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.retrofit)
     //converter-gson
     implementation(libs.converter.gson)
+    // okhttp3 의존성 (멀티파트 로그 체크용(
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
