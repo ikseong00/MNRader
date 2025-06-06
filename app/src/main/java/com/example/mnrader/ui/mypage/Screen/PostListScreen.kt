@@ -26,8 +26,9 @@ import com.example.mnrader.ui.theme.SkyBlue
 
 @Composable
 fun PostListScreen(
-    navController: NavHostController,
-    viewModel: MyPageViewModel
+    viewModel: MyPageViewModel,
+    onBackClick: () -> Unit,
+    onPostClick: (postId: String) -> Unit
 ) {
     val posts by viewModel.posts.collectAsState()
 
@@ -36,7 +37,7 @@ fun PostListScreen(
 
         CommonTopBar(
             title = "내가 올린 게시물",
-            onBack = { navController.popBackStack() }
+            onBack = { onBackClick() }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -51,7 +52,7 @@ fun PostListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate("animal_post_detail/${post.id}")
+                            onPostClick(post.id)
                         }
                         .padding(vertical = 12.dp)
                 ) {

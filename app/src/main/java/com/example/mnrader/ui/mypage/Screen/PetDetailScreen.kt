@@ -32,7 +32,7 @@ import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 fun PetDetailScreen(
     pet: Pet,
     viewModel: MyPageViewModel,
-    navController: NavHostController? = null
+    onBackClick: () -> Unit
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var species by remember { mutableStateOf(pet.species) }
@@ -67,7 +67,7 @@ fun PetDetailScreen(
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-        CommonTopBar(title = "동물 상세", onBack = { navController?.popBackStack() })
+        CommonTopBar(title = "동물 상세", onBack = { onBackClick() })
 
         Spacer(modifier = Modifier.height(16.dp))
 

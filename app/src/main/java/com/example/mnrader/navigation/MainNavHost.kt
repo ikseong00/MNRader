@@ -30,7 +30,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN,
+        startDestination = Routes.MYPAGE, // todo ONBOARDING으로 바꾸기
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -94,7 +94,11 @@ fun MainNavHost(
             val pet = viewModel.pets.value.find { it.id == petId }
 
             if (pet != null) {
-                PetDetailScreen(pet = pet, viewModel = viewModel, navController = navController)
+                PetDetailScreen(
+                    pet = pet,
+                    viewModel = viewModel,
+                    onBackClick = { navController.popBackStack() }
+                )
             } else {
                 Text("해당 동물을 찾을 수 없습니다.")
             }
@@ -108,7 +112,11 @@ fun MainNavHost(
                 navController.getBackStackEntry(Routes.MYPAGE)
             }
             val viewModel: MyPageViewModel = viewModel(parentEntry)
-            PostListScreen(navController = navController, viewModel = viewModel)
+            PostListScreen(
+                viewModel = viewModel,
+                onBackClick = { navController.popBackStack() },
+                onPostClick = { postId -> navController.navigate("animal_post_detail/$postId") }
+            )
         }
 
         // 내가 스크랩 한 게시물
@@ -119,7 +127,11 @@ fun MainNavHost(
                 navController.getBackStackEntry(Routes.MYPAGE)
             }
             val viewModel: MyPageViewModel = viewModel(parentEntry)
-            ScrapListScreen(navController = navController, viewModel = viewModel)
+            ScrapListScreen(
+                viewModel = viewModel,
+                onBackClick = { navController.popBackStack() },
+                onScrapClick = { postId -> navController.navigate("animal_post_detail/$postId") }
+            )
         }
 
         // todo 동물 상세 페이지 (figma: AnimalPage) 컴포저블 구현 이후 처리 예정
@@ -143,11 +155,16 @@ fun MainNavHost(
 
         // 마이페이지
         composable(
-            route = Routes.MYPAGE
+            Routes.MYPAGE
         ) {
-            MyPageScreen(navController = navController)
+            MyPageScreen(
+                onNavigateToPetDetail = { petId -> navController.navigate("animal_detail/$petId") },
+                onNavigateToPostDetail = { postId -> navController.navigate("animal_post_detail/$postId") },
+                onNavigateToScrapDetail = { scrapId -> navController.navigate("animal_post_detail/$scrapId") },
+                onNavigateToAllPosts = { navController.navigate(Routes.POST_LIST) },
+                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) }
+            )
         }
-
 
         // 설정
         composable(

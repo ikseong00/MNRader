@@ -30,8 +30,9 @@ import com.example.mnrader.ui.theme.SkyBlue
 
 @Composable
 fun ScrapListScreen(
-    navController: NavHostController,
-    viewModel: MyPageViewModel
+    viewModel: MyPageViewModel,
+    onBackClick: () -> Unit,
+    onScrapClick: (postId: String) -> Unit
 ) {
     val scraps by viewModel.scraps.collectAsState()
 
@@ -40,7 +41,7 @@ fun ScrapListScreen(
 
         CommonTopBar(
             title = "스크랩",
-            onBack = { navController.popBackStack() }
+            onBack = { onBackClick() }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -56,7 +57,7 @@ fun ScrapListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate("animal_post_detail/${scrap.id}")
+                            onScrapClick(scrap.id)
                         }
                         .padding(vertical = 12.dp)
                 ) {

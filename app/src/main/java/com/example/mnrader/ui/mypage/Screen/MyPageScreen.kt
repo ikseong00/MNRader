@@ -22,8 +22,12 @@ import com.example.mnrader.ui.mypage.component.UserInfoSection
 
 @Composable
 fun MyPageScreen(
-    navController: NavHostController,
-    viewModel: MyPageViewModel = viewModel()
+    viewModel: MyPageViewModel = viewModel(),
+    onNavigateToPetDetail: (String) -> Unit,
+    onNavigateToPostDetail: (String) -> Unit,
+    onNavigateToScrapDetail: (String) -> Unit,
+    onNavigateToAllPosts: () -> Unit,
+    onNavigateToAllScraps: () -> Unit
 ) {
     // 예시: 로그인된 사용자 이메일
     val loggedInEmail = "123@konkuk.ac.kr"
@@ -47,25 +51,22 @@ fun MyPageScreen(
 
         OwningPetSection(
             pets = pets,
-            onPetClick = { pet ->
-                navController.navigate("animal_detail/${pet.id}")
-            }
+            onPetClick = { pet -> onNavigateToPetDetail(pet.id) }
+
         )
 
         MyPostSection(
             posts = posts,
-            postClick = { postId -> println("Clicked post: $postId") },
-            allPostsClick = {
-                navController.navigate(Routes.POST_LIST)
-            }
+            postClick = { postId -> onNavigateToPostDetail(postId) },
+            allPostsClick = onNavigateToAllPosts
+
         )
 
         MyScrapSection(
             scraps = scraps,
-            scrapClick = { scrapId -> println("Clicked scrap: $scrapId") },
-            allScrapClick = {
-                navController.navigate(Routes.SCRAP_LIST)
-            }
+            scrapClick = { scrapId -> onNavigateToScrapDetail(scrapId) },
+            allScrapClick = onNavigateToAllScraps
+
         )
     }
 }
@@ -73,7 +74,12 @@ fun MyPageScreen(
 @Preview(showBackground = true)
 @Composable
 private fun MyPageScreenPreview() {
-    // 임시 NavController (Preview용)
-    val fakeNavController = rememberNavController()
-    MyPageScreen(navController = fakeNavController)
+    MyPageScreen(
+        onNavigateToPetDetail = {},
+        onNavigateToPostDetail = {},
+        onNavigateToScrapDetail = {},
+        onNavigateToAllPosts = {},
+        onNavigateToAllScraps = {}
+    )
 }
+

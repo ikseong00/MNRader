@@ -45,8 +45,7 @@ fun UserInfoSection(
 
         Column {
             Text(email, style = MaterialTheme.typography.bodyLarge)
-            Text(city, style = MaterialTheme.typography.bodySmall, color = Color(0xFF8E8E93))
-        }
+            Text(city, style = MaterialTheme.typography.bodySmall, color = Color(0xFF8E8E93))}
 
         Spacer(modifier.weight(1f))
 
