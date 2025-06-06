@@ -45,10 +45,13 @@ fun PetDetailScreen(
     val breedExamples = mapOf(
         "강아지" to listOf("말티즈", "치와와", "푸들", "포메라니안", "요크셔 테리어"),
         "고양이" to listOf("코리안 숏헤어", "러시안 블루", "먼치킨", "스코티시 폴드"),
-        "햄스터" to listOf("골든 햄스터", "드워프 햄스터"),
-        "거북이" to listOf("러시안 육지거북", "헤르만 육지거북"),
-        "토끼" to listOf("미니 렉스", "라이언헤드")
+        "기타" to listOf(
+            "골든 햄스터", "드워프 햄스터",
+            "러시안 육지거북", "헤르만 육지거북",
+            "미니 렉스", "라이언헤드"
+        )
     )
+
 
     val filteredBreeds = breedExamples[species]?.filter {
         it.contains(breedQuery.text, ignoreCase = true)
