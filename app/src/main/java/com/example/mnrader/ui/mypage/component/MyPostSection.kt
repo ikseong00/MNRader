@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +27,8 @@ fun MyPostSection(
     postClick: (postId: String) -> Unit,
     allPostsClick: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.padding(top = 12.dp)) {
         Row(
             modifier = Modifier
@@ -36,22 +38,20 @@ fun MyPostSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("내가 올린 게시물", style = MaterialTheme.typography.titleMedium)
-            Row(
-                modifier = Modifier.clickable(onClick = allPostsClick),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            TextButton(onClick = allPostsClick) {
                 Text("전체보기", color = Color(0xFF8E8E93))
-                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color(0xFF8E8E93))
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = Color(0xFF8E8E93)
+                )
             }
+
         }
 
-        posts.forEach {
-            PostItem(it, onClick = { postClick(it.id) })
-        }
     }
 }
 
-// todo onClick: AnimalPage 컴포저블 구현 이후 navigate
 @Composable
 fun PostItem(post: Post, onClick: () -> Unit) {
     val color = when (post.pet.status) {

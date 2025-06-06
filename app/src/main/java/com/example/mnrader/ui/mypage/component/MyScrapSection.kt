@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +27,9 @@ fun MyScrapSection(
     scrapClick: (String) -> Unit,
     allScrapClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(top = 12.dp)
-    ) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.padding(top = 12.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -38,24 +38,16 @@ fun MyScrapSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("스크랩", style = MaterialTheme.typography.titleMedium)
-            Row(
-                modifier = Modifier
-                    .clickable(onClick = allScrapClick)
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            TextButton(onClick = allScrapClick) {
                 Text("전체보기", color = Color(0xFF8E8E93))
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "전체보기",
+                    contentDescription = null,
                     tint = Color(0xFF8E8E93)
                 )
             }
         }
 
-        scraps.forEach {
-            ScrapItem(it, onClick = { scrapClick(it.id) })
-        }
     }
 }
 
