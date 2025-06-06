@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.mnrader.ui.mypage.network.RetrofitClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -22,6 +23,7 @@ class PetRepository {
         getFileFromUri: (Uri) -> File?,
         onResult: (Boolean) -> Unit
     ) {
+        // image part
         val imgPart = imageUri?.let { uri ->
             getFileFromUri(uri)?.let { file ->
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
@@ -29,20 +31,21 @@ class PetRepository {
             }
         }
 
-        val animalPart = animal.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val breedPart = breed.toRequestBody("text/plain".toMediaTypeOrNull())
-        val genderPart = gender.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val agePart = age.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val detailPart = (detail ?: "").toRequestBody("text/plain".toMediaTypeOrNull())
+        // request body parts
+        val animalBody = animal.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val breedBody = breed.toRequestBody("text/plain".toMediaTypeOrNull())
+        val genderBody = gender.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val ageBody = age.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val detailBody = (detail ?: "").toRequestBody("text/plain".toMediaTypeOrNull())
 
         val call = RetrofitClient.petService.updatePet(
             animalId = animalId,
-            img = imgPart,
-            animal = animalPart,
-            breed = breedPart,
-            gender = genderPart,
-            age = agePart,
-            detail = detailPart
+            animal = animalBody,
+            breed = breedBody,
+            gender = genderBody,
+            age = ageBody,
+            detail = detailBody,
+            img = imgPart
         )
 
         call.enqueue(object : retrofit2.Callback<Void> {
