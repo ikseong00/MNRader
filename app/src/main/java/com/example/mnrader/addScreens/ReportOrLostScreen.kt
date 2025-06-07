@@ -236,7 +236,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
 
                 // 날짜/시간
                 item {
-                    Text("날짜/시간", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
+                    Text("날짜", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
 
                     OutlinedTextField(
                         value = dateTime.toLocalDate().toString(),
