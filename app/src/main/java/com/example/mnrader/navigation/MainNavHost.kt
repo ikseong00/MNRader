@@ -134,7 +134,7 @@ fun AnimalRegister(
             ReportOrLostScreen(navController, viewModel)
         }
         composable(RegisterScreens.SubmitSuccess.route) {
-            SubmitSuccessScreen(navController, rootNavController,viewModel)
+            SubmitSuccessScreen(rootNavController,viewModel)
         }
     }
 }
