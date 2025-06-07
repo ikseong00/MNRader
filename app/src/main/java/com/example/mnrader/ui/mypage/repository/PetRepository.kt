@@ -8,6 +8,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
 import java.io.File
 
 class PetRepository {
@@ -65,4 +66,52 @@ class PetRepository {
             }
         })
     }
+
+    // 설정화면에서 동물 추가 작업
+    fun addPetData(
+        imageUri: Uri?,
+        animal: Int,
+        breed: String,
+        gender: Int,
+        name: String,
+        age: Int,
+        detail: String,
+        getFileFromUri: (Uri) -> File?,
+        onResult: (Boolean) -> Unit
+    ) {
+        val imgPart = imageUri?.let { uri ->
+            getFileFromUri(uri)?.let { file ->
+                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                MultipartBody.Part.createFormData("img", file.name, requestFile)
+            }
+        }
+
+        val animalBody = animal.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val breedBody = breed.toRequestBody("text/plain".toMediaTypeOrNull())
+        val genderBody = gender.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val nameBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
+        val ageBody = age.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val detailBody = detail.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val call = RetrofitClient.petService.addPet(
+            animal = animalBody,
+            breed = breedBody,
+            gender = genderBody,
+            name = nameBody,
+            age = ageBody,
+            detail = detailBody,
+            img = imgPart
+        )
+
+        call.enqueue(object : retrofit2.Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: retrofit2.Response<Void>) {
+                onResult(response.isSuccessful)
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                onResult(false)
+            }
+        })
+    }
+
 }

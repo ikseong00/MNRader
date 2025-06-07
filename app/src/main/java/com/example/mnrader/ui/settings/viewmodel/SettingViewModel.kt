@@ -1,15 +1,18 @@
 package com.example.mnrader.ui.setting.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mnrader.ui.mypage.dataclass.Pet
-import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import com.example.mnrader.ui.mypage.repository.PetRepository
 import com.example.mnrader.ui.settings.dataclass.SettingUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.File
 
-class SettingViewModel : ViewModel() {
+class SettingViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(SettingUiState())
     val uiState: StateFlow<SettingUiState> = _uiState.asStateFlow()
@@ -58,5 +61,50 @@ class SettingViewModel : ViewModel() {
             )
         }
     }
+
+    fun addPet(
+        pet: Pet,
+        imageUri: Uri?,
+        onResult: (Boolean) -> Unit
+    ) {
+        val animalCode = when (pet.species) {
+            "강아지" -> 1
+            "고양이" -> 2
+            else -> 3
+        }
+
+        val genderCode = when (pet.gender) {
+            "수컷" -> 1
+            "암컷" -> 2
+            else -> 3
+        }
+
+        val parsedAge = pet.age.filter { it.isDigit() }.toIntOrNull() ?: 0
+
+        val repository = PetRepository()
+
+        repository.addPetData(
+            imageUri = imageUri,
+            animal = animalCode,
+            breed = pet.breed,
+            gender = genderCode,
+            name = pet.name.ifBlank { pet.breed },
+            age = parsedAge,
+            detail = pet.description ?: "",
+            getFileFromUri = { uri -> uriToFile(uri) },
+            onResult = onResult
+        )
+    }
+
+    private fun uriToFile(uri: Uri): File? {
+        val context = getApplication<Application>().applicationContext
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        val file = File(context.cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+        file.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        return file
+    }
+
 
 }
