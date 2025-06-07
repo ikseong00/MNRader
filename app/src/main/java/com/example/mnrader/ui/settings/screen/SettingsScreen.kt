@@ -13,13 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
@@ -120,7 +115,7 @@ fun SettingScreen(
         )
 
         if (state.isRegionSectionExpanded) {
-            val cityList = listOf("서울시", "경기도", "부산시", "인천시")
+            val cityList = listOf("서울시", "경기도", "부산광역시", "인천광역시")
             Column(modifier = Modifier.padding(vertical = 4.dp)) {
                 cityList.forEach { city ->
                     Text(

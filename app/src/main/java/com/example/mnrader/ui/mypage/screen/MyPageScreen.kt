@@ -31,9 +31,10 @@ fun MyPageScreen(
     val loggedInEmail = "123@konkuk.ac.kr"
 
     // 화면 진입 시 이메일 기반 데이터 로딩
-    LaunchedEffect(loggedInEmail) {
-        viewModel.loadDummyUserData(loggedInEmail)
-    }
+    // 더미데이터 로직, 임시 주석
+//    LaunchedEffect(loggedInEmail) {
+//        viewModel.loadDummyUserData(loggedInEmail)
+//    }
 
     val user by viewModel.user.collectAsState()
     val pets by viewModel.pets.collectAsState()

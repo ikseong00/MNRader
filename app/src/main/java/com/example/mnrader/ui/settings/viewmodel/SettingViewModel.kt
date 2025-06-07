@@ -59,8 +59,4 @@ class SettingViewModel : ViewModel() {
         }
     }
 
-
-
-
-
 }

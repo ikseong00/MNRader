@@ -20,10 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 import com.example.mnrader.ui.mypage.dataclass.Pet
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import com.example.mnrader.ui.settings.component.DropdownSelector
 import java.util.*
+
 
 @Composable
 fun AddMyPetScreen(
@@ -31,17 +34,26 @@ fun AddMyPetScreen(
     myPageViewModel: MyPageViewModel,
     onBackClick: () -> Unit,
     onSaveComplete: () -> Unit
-
 ) {
     var species by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        imageUri = uri
+    val breedExamples = mapOf(
+        "강아지" to listOf("말티즈", "푸들", "치와와", "포메라니안"),
+        "고양이" to listOf("코숏", "러시안블루", "먼치킨", "스코티시 폴드"),
+        "기타" to listOf("골든 햄스터", "드워프 햄스터",
+            "러시안 육지거북", "헤르만 육지거북",
+            "미니 렉스", "라이언헤드")
+    )
+    val breedOptions = breedExamples[species] ?: emptyList()
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        imageUri = it
     }
 
     Column(
@@ -50,12 +62,70 @@ fun AddMyPetScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text("동물 추가", style = MaterialTheme.typography.headlineSmall)
+        CommonTopBar(title = "설정", onBack = onBackClick)
+
+        Text("보유중인 동물 추가", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(12.dp))
+
+        DropdownSelector(
+            label = "동물 종류",
+            options = breedExamples.keys.toList(),
+            selected = species,
+            onSelected = {
+                species = it
+                breed = "" // 종이 바뀌면 품종 초기화
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DropdownSelector(
+            label = "품종",
+            options = breedOptions,
+            selected = breed,
+            onSelected = { breed = it }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DropdownSelector(
+            label = "성별",
+            options = listOf("수컷", "암컷"),
+            selected = gender,
+            onSelected = { gender = it }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("이름") },
+            placeholder = { Text("이름을 입력하세요") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = age,
+            onValueChange = { age = it },
+            label = { Text("나이") },
+            placeholder = { Text("나이를 입력하세요") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text("특징") },
+            placeholder = { Text("특징을 입력하세요") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
+        Text("사진 첨부")
 
         Box(
             modifier = Modifier
-                .size(150.dp)
+                .height(150.dp)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(Color.LightGray)
                 .clickable { launcher.launch("image/*") },
@@ -64,7 +134,7 @@ fun AddMyPetScreen(
             if (imageUri != null) {
                 Image(
                     painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = "Selected Image",
+                    contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
@@ -73,19 +143,13 @@ fun AddMyPetScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = species, onValueChange = { species = it }, label = { Text("종") })
-        OutlinedTextField(value = breed, onValueChange = { breed = it }, label = { Text("품종") })
-        OutlinedTextField(value = gender, onValueChange = { gender = it }, label = { Text("성별") })
-        OutlinedTextField(value = age, onValueChange = { age = it }, label = { Text("나이") })
-        OutlinedTextField(value = description, onValueChange = { description = it }, label = { Text("설명") })
 
-        Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = {
                 if (species.isNotBlank() && breed.isNotBlank()) {
                     val newPet = Pet(
-                        id = 0, // 서버에서 실제 ID 부여
-                        name = breed,
+                        id = 0,
+                        name = name.ifBlank { breed },
                         imageUrl = null,
                         species = species,
                         breed = breed,
@@ -96,21 +160,20 @@ fun AddMyPetScreen(
                     )
                     viewModel.addPet(newPet)
                     myPageViewModel.addPetFromSetting(newPet)
-                    onSaveComplete() // navigation 처리 위임
+                    onSaveComplete()
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA5D6A7))
         ) {
-            Text("저장하기", fontSize = 16.sp)
+            Text("저장하기")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        OutlinedButton(
-            onClick = onBackClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("취소")
-        }
+        SectionHeader("이메일", false) {}
+        SectionHeader("지역", false) {}
+        SectionHeader("알림 설정", false) {}
     }
 }
+

@@ -54,7 +54,6 @@ fun PetDetailScreen(
         )
     )
 
-
     val filteredBreeds = breedExamples[species]?.filter {
         it.contains(breedQuery.text, ignoreCase = true)
     } ?: emptyList()
