@@ -1,4 +1,4 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,7 +38,10 @@ import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
 
 @Composable
-fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel) {
+fun AnimalTypeScreen(
+    navController: NavController,
+    viewModel: RegisterViewModel
+) {
     var selected by remember { mutableStateOf("") }
     val customButtonColor = Color(0xFF89C5A9)
     val animalList = listOf(
@@ -49,10 +52,6 @@ fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel)
     Scaffold(
         topBar = {
             RegisterTopBar(
-                onBackClick = {
-                    navController.popBackStack()
-                },
-
                 currentStep = 3
             )
         },
