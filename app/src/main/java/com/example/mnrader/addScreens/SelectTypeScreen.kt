@@ -24,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.model.RegisterScreens
 import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
-import com.example.mnrader.navigation.Routes
 
 @Composable
 fun SelectTypeScreen(
