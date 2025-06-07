@@ -27,9 +27,11 @@ import java.util.*
 
 @Composable
 fun AddMyPetScreen(
-    navController: NavHostController,
     viewModel: SettingViewModel,
-    myPageViewModel: MyPageViewModel
+    myPageViewModel: MyPageViewModel,
+    onBackClick: () -> Unit,
+    onSaveComplete: () -> Unit
+
 ) {
     var species by remember { mutableStateOf("") }
     var breed by remember { mutableStateOf("") }
@@ -78,14 +80,13 @@ fun AddMyPetScreen(
         OutlinedTextField(value = description, onValueChange = { description = it }, label = { Text("설명") })
 
         Spacer(modifier = Modifier.height(24.dp))
-
         Button(
             onClick = {
                 if (species.isNotBlank() && breed.isNotBlank()) {
                     val newPet = Pet(
-                        id = UUID.randomUUID().toString(),
+                        id = 0, // 서버에서 실제 ID 부여
                         name = breed,
-                        imageUrl = "",
+                        imageUrl = null,
                         species = species,
                         breed = breed,
                         gender = gender,
@@ -95,12 +96,21 @@ fun AddMyPetScreen(
                     )
                     viewModel.addPet(newPet)
                     myPageViewModel.addPetFromSetting(newPet)
-                    navController.popBackStack()
+                    onSaveComplete() // navigation 처리 위임
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("저장하기", fontSize = 16.sp)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = onBackClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("취소")
         }
     }
 }

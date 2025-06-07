@@ -43,7 +43,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN,
+        startDestination = Routes.MYPAGE, // todo Main으로 바꿀 것
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -177,11 +177,13 @@ fun MainNavHost(
                 onNavigateToPostDetail = { postId -> navController.navigate("animal_post_detail/$postId") },
                 onNavigateToScrapDetail = { scrapId -> navController.navigate("animal_post_detail/$scrapId") },
                 onNavigateToAllPosts = { navController.navigate(Routes.POST_LIST) },
-                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) }
+                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) },
+                onNavigateToSetting = { navController.navigate(Routes.SETTING) }
             )
         }
 
         // 설정
+        // MainNavHost.kt
         composable(route = Routes.SETTING) {
             val parentEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
             val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
@@ -195,13 +197,12 @@ fun MainNavHost(
             }
 
             SettingScreen(
-                navController = navController,
                 viewModel = settingViewModel,
-                myPageViewModel = myPageViewModel
+                myPageViewModel = myPageViewModel,
+                onNavigateToAddPet = { navController.navigate(Routes.ADD_MY_PET) },
+                onBackClick = { navController.popBackStack() }
             )
         }
-
-
 
         composable(route = Routes.ADD_MY_PET) {
             val settingEntry = remember(it) { navController.getBackStackEntry(Routes.SETTING) }
@@ -211,9 +212,10 @@ fun MainNavHost(
             val myPageViewModel: MyPageViewModel = viewModel(myPageEntry)
 
             AddMyPetScreen(
-                navController = navController,
                 viewModel = settingViewModel,
-                myPageViewModel = myPageViewModel
+                myPageViewModel = myPageViewModel,
+                onBackClick = { navController.popBackStack() },
+                onSaveComplete = { navController.popBackStack() }
             )
         }
 

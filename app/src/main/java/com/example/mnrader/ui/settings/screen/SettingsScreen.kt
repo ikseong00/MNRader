@@ -26,9 +26,10 @@ import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 
 @Composable
 fun SettingScreen(
-    navController: NavHostController,
-    viewModel: SettingViewModel = viewModel(),
-    myPageViewModel: MyPageViewModel = viewModel(navController.getBackStackEntry(Routes.MYPAGE))
+    viewModel: SettingViewModel,
+    myPageViewModel: MyPageViewModel,
+    onNavigateToAddPet: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     val petsFromMyPage by myPageViewModel.pets.collectAsState()
@@ -44,7 +45,7 @@ fun SettingScreen(
             .padding(horizontal = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(12.dp))
-        CommonTopBar(title = "설정", onBack = { navController.popBackStack() })
+        CommonTopBar(title = "설정", onBack = { onBackClick() })
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(state.email, fontSize = 16.sp, modifier = Modifier.padding(bottom = 8.dp))
@@ -86,8 +87,8 @@ fun SettingScreen(
                             .height(100.dp)
                             .background(Color.LightGray, shape = MaterialTheme.shapes.medium)
                             .clickable {
-                                navController.navigate(Routes.ADD_MY_PET)
-                            },
+                                onNavigateToAddPet()
+                                       },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "추가")

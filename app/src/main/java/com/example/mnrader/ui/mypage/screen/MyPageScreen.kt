@@ -24,7 +24,8 @@ fun MyPageScreen(
     onNavigateToPostDetail: (Int) -> Unit,
     onNavigateToScrapDetail: (Int) -> Unit,
     onNavigateToAllPosts: () -> Unit,
-    onNavigateToAllScraps: () -> Unit
+    onNavigateToAllScraps: () -> Unit,
+    onNavigateToSetting: () -> Unit
 ) {
     // 예시: 로그인된 사용자 이메일
     val loggedInEmail = "123@konkuk.ac.kr"
@@ -44,7 +45,10 @@ fun MyPageScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        UserInfoSection(email = user.email, location = user.region, navController = navController)
+        UserInfoSection(email = user.email,
+            location = user.region,
+            onSettingsClick = { onNavigateToSetting() }
+        )
 
         OwningPetSection(
             pets = pets,
@@ -67,16 +71,3 @@ fun MyPageScreen(
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun MyPageScreenPreview() {
-    MyPageScreen(
-        onNavigateToPetDetail = {},
-        onNavigateToPostDetail = {},
-        onNavigateToScrapDetail = {},
-        onNavigateToAllPosts = {},
-        onNavigateToAllScraps = {}
-    )
-}
-
