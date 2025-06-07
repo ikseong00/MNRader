@@ -1,15 +1,28 @@
 package com.example.mnrader.ui.home.component
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,8 +33,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil3.compose.rememberAsyncImagePainter
+import com.example.mnrader.R
 import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.home.model.HomeAnimalData
 
@@ -38,30 +65,78 @@ fun AnimalDetailScreen(
     }
 
     if (animal == null) {
-        Text("동물 정보를 찾을 수 없습니다.")
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text("상세페이지")},
+                    navigationIcon = {
+                        IconButton(onClick = { onBack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                contentDescription = "back"
+                            )
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("동물 정보를 찾을 수 없습니다.")
+            }
+        }
         return
     }
 
+    var isBookmarked by remember { mutableStateOf(animal.isBookmarked) }
+
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("상세페이지") },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text("상세페이지")},
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "back"
+                        )
                     }
                 }
             )
         },
         bottomBar = {
-            BottomBar(
-                isBookmarked = animal.isBookmarked,
-                onBookmarkClick = { /* 북마크 로직 추가 */ },
-                onReportClick = {
-                    navController.navigate(Routes.ADD)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                IconButton(onClick = { isBookmarked = !isBookmarked }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_animal_stars),
+                        contentDescription = "Bookmark",
+//                        tint = if (isBookmarked) Color. else Color.Gray,
+                        modifier = Modifier.size(32.dp)
+                    )
                 }
-            )
+
+                Button(
+                    onClick = {
+                        navController.navigate("add")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF90c5aa))
+                ) {
+                    Text("신고하러 가기")
+                }
+            }
         }
     ) { innerPadding ->
         Column(
@@ -70,41 +145,76 @@ fun AnimalDetailScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text(text = "Animal ID: $animalId", style = MaterialTheme.typography.headlineMedium)
-            // 여기에 동물 정보 표시 로직 추가
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+            // 동물 이미지
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // 실제는 Coil 추천!
+                    contentDescription = "Animal Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(CircleShape)
+                        .border( width = 10.dp,
+                            shape = CircleShape,
+                            color = animal.type.color)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 동물 정보
+            AnimalInfoSection(animal)
         }
     }
 }
 
 
 @Composable
-fun BottomBar(
-    isBookmarked: Boolean,
-    onBookmarkClick: () -> Unit,
-    onReportClick: () -> Unit
-) {
+fun AnimalInfoSection(animal: HomeAnimalData) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        InfoRow(label = "성별", value = animal.gender.value)
+        InfoRow(label = "품종", value = "Breed")
+        InfoRow(label = "장소", value = animal.location)
+        InfoRow(label = "등록 날짜", value = animal.date)
+        InfoRow(label = "연락처", value = "")//contact
+        InfoRow(label = "상세 내용", value = "")//description
+    }
+}
+
+@Composable
+fun InfoRow(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(vertical = 4.dp)
     ) {
-        Button(
-            onClick = onBookmarkClick,
-            colors = if (isBookmarked) {
-                ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-            } else {
-                ButtonDefaults.buttonColors()
-            }
-        ) {
-            Text(if (isBookmarked) "스크랩됨" else "스크랩")
-        }
-
-        Button(
-            onClick = onReportClick,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-        ) {
-            Text("동물 신고하기")
-        }
+        Text(
+            text = "$label:",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(2f)
+        )
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun AnimalDetailScreenPreview() {
+    val dummyAnimal = HomeAnimalData.dummyHomeAnimalData[0]  // id = 1L
+
+    AnimalDetailScreen(
+        animalId = dummyAnimal.id,
+        navController = rememberNavController(),
+        onBack = {}
+    )
 }

@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.add.model.RegisterViewModel
-import com.example.mnrader.navigation.RegisterTopBar
 import com.example.mnrader.navigation.Routes
 
 @Composable

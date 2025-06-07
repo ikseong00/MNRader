@@ -32,7 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
 import com.example.mnrader.add.model.RegisterViewModel
 import com.example.mnrader.add.model.RegisterScreens
-import com.example.mnrader.navigation.RegisterTopBar
 
 @Composable
 fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewModel) {
