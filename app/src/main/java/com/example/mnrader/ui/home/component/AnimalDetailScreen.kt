@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.rememberAsyncImagePainter
@@ -140,7 +141,7 @@ fun AnimalDetailScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(360.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
             // 동물 이미지
@@ -149,7 +150,7 @@ fun AnimalDetailScreen(
                     contentDescription = "Animal Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(200.dp)
+                        .size(360.dp)
                         .clip(CircleShape)
                         .border( width = 10.dp,
                             shape = CircleShape,
@@ -171,8 +172,15 @@ fun AnimalInfoSection(animal: HomeAnimalData) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        InfoRow(label = "성별", value = animal.gender.value)
-        InfoRow(label = "품종", value = "Breed")
+        Text(animal.name,
+            fontSize = 24.sp,
+            color = Color.Black)
+        Text("성별:"+animal.gender.value,
+            fontSize = 16.sp,
+            color = Color.Gray)
+        Text("품종: breed",
+            fontSize = 16.sp,
+            color = Color.Gray)
         InfoRow(label = "장소", value = animal.location)
         InfoRow(label = "등록 날짜", value = animal.date)
         InfoRow(label = "연락처", value = "")//contact
@@ -189,7 +197,7 @@ fun InfoRow(label: String, value: String) {
     ) {
         Text(
             text = "$label:",
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.weight(1f)
         )
         Text(
