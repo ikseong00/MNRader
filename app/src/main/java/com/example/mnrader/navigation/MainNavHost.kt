@@ -13,14 +13,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.addScreens.AnimalTypeScreen
+import com.example.mnrader.addScreens.RegisterInfoScreen
+import com.example.mnrader.addScreens.ReportOrLostScreen
+import com.example.mnrader.addScreens.SelectTypeScreen
+import com.example.mnrader.addScreens.SubmitSuccessScreen
+import com.example.mnrader.model.RegisterScreens
+import com.example.mnrader.model.RegisterViewModel
 import androidx.navigation.navArgument
-import com.example.mnrader.ui.mypage.Screen.MyPageScreen
-import com.example.mnrader.ui.mypage.Screen.PetDetailScreen
-import com.example.mnrader.ui.mypage.Screen.PostListScreen
-import com.example.mnrader.ui.mypage.Screen.ScrapListScreen
+import com.example.mnrader.ui.mypage.screen.MyPageScreen
+import com.example.mnrader.ui.mypage.screen.PetDetailScreen
+import com.example.mnrader.ui.mypage.screen.PostListScreen
+import com.example.mnrader.ui.mypage.screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 import com.example.mnrader.ui.settings.screen.AddMyPetScreen
 import com.example.mnrader.ui.settings.screen.SettingScreen
@@ -34,7 +43,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MYPAGE,
+        startDestination = Routes.MAIN,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -85,24 +94,28 @@ fun MainNavHost(
             route = Routes.ANIMAL_DETAIL_WITH_ARG,
             arguments = listOf(navArgument("petId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val petId = backStackEntry.arguments?.getString("petId")
+            val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull()
 
             val parentEntry = remember(backStackEntry) {
-                // MyPageScreen이 사용한 ViewModel의 NavBackStackEntry
                 navController.getBackStackEntry(Routes.MYPAGE)
             }
-            // MyPageScreen의 viewmodel 인스턴스 재사용
-            // MyPageScreen에서 생성된 pets데이터 사용하기 위해
-            val viewModel: MyPageViewModel = viewModel(parentEntry)
+            val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
+            val uploadViewModel: PetUploadViewModel = viewModel() // 새로 생성
 
-            val pet = viewModel.pets.value.find { it.id == petId }
+            val pet = myPageViewModel.pets.value.find { it.id == petId }
 
             if (pet != null) {
-                PetDetailScreen(pet = pet, viewModel = viewModel, navController = navController)
+                PetDetailScreen(
+                    pet = pet,
+                    viewModel = uploadViewModel,
+                    myPageViewModel = myPageViewModel,
+                    onBackClick = { navController.popBackStack() }
+                )
             } else {
                 Text("해당 동물을 찾을 수 없습니다.")
             }
         }
+
 
         // 내가 올린 게시물
         composable(
@@ -112,7 +125,11 @@ fun MainNavHost(
                 navController.getBackStackEntry(Routes.MYPAGE)
             }
             val viewModel: MyPageViewModel = viewModel(parentEntry)
-            PostListScreen(navController = navController, viewModel = viewModel)
+            PostListScreen(
+                viewModel = viewModel,
+                onBackClick = { navController.popBackStack() },
+                onPostClick = { postId -> navController.navigate("animal_post_detail/$postId") }
+            )
         }
 
         // 내가 스크랩 한 게시물
@@ -123,7 +140,11 @@ fun MainNavHost(
                 navController.getBackStackEntry(Routes.MYPAGE)
             }
             val viewModel: MyPageViewModel = viewModel(parentEntry)
-            ScrapListScreen(navController = navController, viewModel = viewModel)
+            ScrapListScreen(
+                viewModel = viewModel,
+                onBackClick = { navController.popBackStack() },
+                onScrapClick = { postId -> navController.navigate("animal_post_detail/$postId") }
+            )
         }
 
         // todo 동물 상세 페이지 (figma: AnimalPage) 컴포저블 구현 이후 처리 예정
@@ -143,17 +164,22 @@ fun MainNavHost(
         // 등록하기
         composable(
             route = Routes.ADD
-        ) { }
-
-        // 마이페이지
-        composable(route = Routes.MYPAGE) {
-            val viewModel: MyPageViewModel = viewModel()
-            LaunchedEffect(Unit) {
-                viewModel.loadDummyUserData("123@konkuk.ac.kr")
-            }
-            MyPageScreen(navController = navController)
+        ) {
+            AnimalRegister(navController)
         }
 
+        // 마이페이지
+        composable(
+            Routes.MYPAGE
+        ) {
+            MyPageScreen(
+                onNavigateToPetDetail = { petId -> navController.navigate("animal_detail/$petId") },
+                onNavigateToPostDetail = { postId -> navController.navigate("animal_post_detail/$postId") },
+                onNavigateToScrapDetail = { scrapId -> navController.navigate("animal_post_detail/$scrapId") },
+                onNavigateToAllPosts = { navController.navigate(Routes.POST_LIST) },
+                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) }
+            )
+        }
 
         // 설정
         composable(route = Routes.SETTING) {
@@ -211,4 +237,34 @@ object Routes {
     const val MYPAGE = "mypage"
     const val SETTING = "setting"
     const val ADD_MY_PET = "add_my_pet"
+}
+
+
+@Composable
+fun AnimalRegister(
+    rootNavController: NavHostController,
+    viewModel: RegisterViewModel = RegisterViewModel()
+) {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = RegisterScreens.SelectType.route
+    ) {
+        composable(RegisterScreens.SelectType.route) {
+            SelectTypeScreen(navController,rootNavController, viewModel)
+        }
+        composable(RegisterScreens.RegisterInfo.route) {
+            RegisterInfoScreen(navController, viewModel)
+        }
+        composable(RegisterScreens.AnimalType.route) {
+            AnimalTypeScreen(navController, viewModel)
+        }
+        composable(RegisterScreens.ReportOrLost.route) {
+            ReportOrLostScreen(navController, viewModel)
+        }
+        composable(RegisterScreens.SubmitSuccess.route) {
+            SubmitSuccessScreen(rootNavController,viewModel)
+        }
+    }
 }

@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,9 +24,10 @@ import com.example.mnrader.ui.theme.SkyBlue
 @Composable
 fun MyPostSection(
     posts: List<Post>,
-    postClick: (postId: String) -> Unit,
+    postClick: (postId: Int) -> Unit,
     allPostsClick: () -> Unit
 ) {
+
     Column(modifier = Modifier.padding(top = 12.dp)) {
         Row(
             modifier = Modifier
@@ -36,22 +37,20 @@ fun MyPostSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("내가 올린 게시물", style = MaterialTheme.typography.titleMedium)
-            Row(
-                modifier = Modifier.clickable(onClick = allPostsClick),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            TextButton(onClick = allPostsClick) {
                 Text("전체보기", color = Color(0xFF8E8E93))
-                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color(0xFF8E8E93))
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = Color(0xFF8E8E93)
+                )
             }
+
         }
 
-        posts.forEach {
-            PostItem(it, onClick = { postClick(it.id) })
-        }
     }
 }
 
-// todo onClick: AnimalPage 컴포저블 구현 이후 navigate
 @Composable
 fun PostItem(post: Post, onClick: () -> Unit) {
     val color = when (post.pet.status) {
@@ -68,15 +67,18 @@ fun PostItem(post: Post, onClick: () -> Unit) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = post.pet.imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .border(3.dp, color, CircleShape)
-        )
-        Spacer(Modifier.width(16.dp))
+        if (post.pet.imageUrl != null) {
+            AsyncImage(
+                model = post.pet.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .border(3.dp, color, CircleShape)
+            )
+            Spacer(Modifier.width(16.dp))
+        }
+
         Column(Modifier.weight(1f)) {
             Text(post.pet.name, style = MaterialTheme.typography.bodyLarge)
             Text("성별 ${post.pet.gender}", color = Color.Gray)
@@ -91,7 +93,7 @@ fun PostItem(post: Post, onClick: () -> Unit) {
 @Composable
 private fun MyPostSectionPreview() {
     val pet = Pet(
-        id = "p1",
+        id = 1,
         name = "인절미",
         imageUrl = "https://example.com/dog.png",
         species = "개",
@@ -103,7 +105,7 @@ private fun MyPostSectionPreview() {
     )
 
     val post = Post(
-        id = "1",
+        id = 1,
         pet = pet,
         region = "서울",
         date = "2025-03-24"

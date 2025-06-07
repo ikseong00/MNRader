@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.component.ScrapItem
@@ -30,8 +29,9 @@ import com.example.mnrader.ui.theme.SkyBlue
 
 @Composable
 fun ScrapListScreen(
-    navController: NavHostController,
-    viewModel: MyPageViewModel
+    viewModel: MyPageViewModel,
+    onBackClick: () -> Unit,
+    onScrapClick: (postId: Int) -> Unit
 ) {
     val scraps by viewModel.scraps.collectAsState()
 
@@ -40,7 +40,7 @@ fun ScrapListScreen(
 
         CommonTopBar(
             title = "스크랩",
-            onBack = { navController.popBackStack() }
+            onBack = { onBackClick() }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -56,28 +56,30 @@ fun ScrapListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate("animal_post_detail/${scrap.id}")
+                            onScrapClick(scrap.id)
                         }
                         .padding(vertical = 12.dp)
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(scrap.pet.imageUrl),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .border(
-                                width = 3.dp,
-                                color = when (scrap.pet.status) {
-                                    "실종" -> Red
-                                    "보호중" -> SkyBlue
-                                    "목격중" -> Green2
-                                    else -> Color.LightGray
-                                },
-                                shape = CircleShape
-                            )
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
+                    if (scrap.pet.imageUrl != null) {
+                        Image(
+                            painter = rememberAsyncImagePainter(scrap.pet.imageUrl),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    width = 3.dp,
+                                    color = when (scrap.pet.status) {
+                                        "실종" -> Red
+                                        "보호중" -> SkyBlue
+                                        "목격중" -> Green2
+                                        else -> Color.LightGray
+                                    },
+                                    shape = CircleShape
+                                )
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                    }
                     Column {
                         Text("${scrap.pet.name} / ${scrap.region}", fontSize = 16.sp)
                         Text(scrap.date, fontSize = 14.sp, color = Color.Gray)
@@ -92,7 +94,7 @@ fun ScrapListScreen(
 @Composable
 fun ScrapListScreenPreview() {
     val pet1 = Pet(
-        id = "p1",
+        id = 1,
         name = "푸들",
         imageUrl = "https://example.com/poodle.png",
         species = "개",
@@ -104,7 +106,7 @@ fun ScrapListScreenPreview() {
     )
 
     val pet2 = Pet(
-        id = "p2",
+        id = 2,
         name = "페르시안",
         imageUrl = "https://example.com/persian.png",
         species = "고양이",
@@ -116,8 +118,8 @@ fun ScrapListScreenPreview() {
     )
 
     val dummyScraps = listOf(
-        Scrap(id = "1", pet = pet1, region = "서울", date = "2025.06.01"),
-        Scrap(id = "2", pet = pet2, region = "서울", date = "2025.05.30")
+        Scrap(id = 1, pet = pet1, region = "서울", date = "2025.06.01"),
+        Scrap(id = 2, pet = pet2, region = "서울", date = "2025.05.30")
     )
 
     Column(modifier = Modifier.fillMaxSize()) {

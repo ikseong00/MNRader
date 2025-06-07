@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Scrap(
-    val id: String,
+    val id: Int,
     val pet: Pet,
     val region: String,
     val date: String

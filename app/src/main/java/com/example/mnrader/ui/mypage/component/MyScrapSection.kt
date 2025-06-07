@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,12 +24,10 @@ import com.example.mnrader.ui.theme.SkyBlue
 @Composable
 fun MyScrapSection(
     scraps: List<Scrap>,
-    scrapClick: (String) -> Unit,
+    scrapClick: (Int) -> Unit,
     allScrapClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(top = 12.dp)
-    ) {
+    Column(modifier = Modifier.padding(top = 12.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -38,24 +36,16 @@ fun MyScrapSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("스크랩", style = MaterialTheme.typography.titleMedium)
-            Row(
-                modifier = Modifier
-                    .clickable(onClick = allScrapClick)
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            TextButton(onClick = allScrapClick) {
                 Text("전체보기", color = Color(0xFF8E8E93))
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "전체보기",
+                    contentDescription = null,
                     tint = Color(0xFF8E8E93)
                 )
             }
         }
 
-        scraps.forEach {
-            ScrapItem(it, onClick = { scrapClick(it.id) })
-        }
     }
 }
 
@@ -76,14 +66,17 @@ fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = scrap.pet.imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .border(2.dp, color, CircleShape)
-        )
+        if (scrap.pet.imageUrl != null) {
+            AsyncImage(
+                model = scrap.pet.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, color, CircleShape)
+            )
+        }
+
 
         Spacer(modifier = Modifier.width(12.dp))
 
@@ -106,7 +99,7 @@ fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
 @Composable
 private fun MyScrapSectionPreview() {
     val pet = Pet(
-        id = "p2",
+        id = 1,
         name = "나비",
         imageUrl = "https://example.com/cat.png",
         species = "고양이",
@@ -118,7 +111,7 @@ private fun MyScrapSectionPreview() {
     )
 
     val scrap = Scrap(
-        id = "s1",
+        id = 1,
         pet = pet,
         region = "서울",
         date = "2025.04.01"

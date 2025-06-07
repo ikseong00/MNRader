@@ -29,15 +29,15 @@ class MyPageViewModel : ViewModel() {
     fun loadDummyUserData(email: String) {
         viewModelScope.launch {
             if (email == "123@konkuk.ac.kr") {
-                val pet1 = Pet("1", "인절미", "https://example.com/dog.png", "강아지", "말티즈", "암컷", "2개월", "사람을 좋아함", null, "실종")
-                val pet2 = Pet("2", "치와와", "https://example.com/dog2.png", "강아지", "치와와", "수컷", "3개월", "짖음", null, "보호중")
-                val pet3 = Pet("3", "고양이", "https://example.com/cat.png", "고양이", "코숏", "암컷", "1살", "얌전함", null, "목격중")
+                val pet1 = Pet(1, "인절미", "https://example.com/dog.png", "강아지", "말티즈", "암컷", "2개월", "사람을 좋아함", null, "실종")
+                val pet2 = Pet(2, "치와와", "https://example.com/dog2.png", "강아지", "치와와", "수컷", "3개월", "짖음", null, "보호중")
+                val pet3 = Pet(3, "고양이", "https://example.com/cat.png", "고양이", "코숏", "암컷", "1살", "얌전함", null, "목격중")
 
                 _pets.value = listOf(pet1, pet2, pet3)
-                _posts.value = listOf(Post("p1", pet1, "서울", "2025-03-24"))
+                _posts.value = listOf(Post(1, pet1, "서울", "2025-03-24"))
                 _scraps.value = listOf(
-                    Scrap("s1", pet2, "서울", "2024.06.07"),
-                    Scrap("s2", pet3, "서울", "2025.04.01")
+                    Scrap(1, pet2, "서울", "2024.06.07"),
+                    Scrap(2, pet3, "서울", "2025.04.01")
                 )
                 _user.value = User(email, "서울")
             }

@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.mypage.component.MyPostSection
 import com.example.mnrader.ui.mypage.component.MyScrapSection
 import com.example.mnrader.ui.mypage.component.OwningPetSection
@@ -22,8 +19,12 @@ import com.example.mnrader.ui.mypage.component.UserInfoSection
 
 @Composable
 fun MyPageScreen(
-    navController: NavHostController,
-    viewModel: MyPageViewModel = viewModel()
+    viewModel: MyPageViewModel = viewModel(),
+    onNavigateToPetDetail: (Int) -> Unit,
+    onNavigateToPostDetail: (Int) -> Unit,
+    onNavigateToScrapDetail: (Int) -> Unit,
+    onNavigateToAllPosts: () -> Unit,
+    onNavigateToAllScraps: () -> Unit
 ) {
     // 예시: 로그인된 사용자 이메일
     val loggedInEmail = "123@konkuk.ac.kr"
@@ -47,25 +48,22 @@ fun MyPageScreen(
 
         OwningPetSection(
             pets = pets,
-            onPetClick = { pet ->
-                navController.navigate("animal_detail/${pet.id}")
-            }
+            onPetClick = { pet -> onNavigateToPetDetail(pet.id) }
+
         )
 
         MyPostSection(
             posts = posts,
-            postClick = { postId -> println("Clicked post: $postId") },
-            allPostsClick = {
-                navController.navigate(Routes.POST_LIST)
-            }
+            postClick = { postId -> onNavigateToPostDetail(postId) },
+            allPostsClick = onNavigateToAllPosts
+
         )
 
         MyScrapSection(
             scraps = scraps,
-            scrapClick = { scrapId -> println("Clicked scrap: $scrapId") },
-            allScrapClick = {
-                navController.navigate(Routes.SCRAP_LIST)
-            }
+            scrapClick = { scrapId -> onNavigateToScrapDetail(scrapId) },
+            allScrapClick = onNavigateToAllScraps
+
         )
     }
 }
@@ -73,7 +71,12 @@ fun MyPageScreen(
 @Preview(showBackground = true)
 @Composable
 private fun MyPageScreenPreview() {
-    // 임시 NavController (Preview용)
-    val fakeNavController = rememberNavController()
-    MyPageScreen(navController = fakeNavController)
+    MyPageScreen(
+        onNavigateToPetDetail = {},
+        onNavigateToPostDetail = {},
+        onNavigateToScrapDetail = {},
+        onNavigateToAllPosts = {},
+        onNavigateToAllScraps = {}
+    )
 }
+

@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,18 +21,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.component.DropdownSelector
 import com.example.mnrader.ui.mypage.dataclass.Pet
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
+import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun PetDetailScreen(
     pet: Pet,
-    viewModel: MyPageViewModel,
-    navController: NavHostController? = null
+    viewModel: PetUploadViewModel,
+    myPageViewModel: MyPageViewModel,
+    onBackClick: () -> Unit
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var species by remember { mutableStateOf(pet.species) }
@@ -40,20 +42,28 @@ fun PetDetailScreen(
     var gender by remember { mutableStateOf(pet.gender) }
     var age by remember { mutableStateOf(pet.age) }
     var description by remember { mutableStateOf(pet.description) }
-
     val scrollState = rememberScrollState()
 
     val breedExamples = mapOf(
         "강아지" to listOf("말티즈", "치와와", "푸들", "포메라니안", "요크셔 테리어"),
         "고양이" to listOf("코리안 숏헤어", "러시안 블루", "먼치킨", "스코티시 폴드"),
-        "햄스터" to listOf("골든 햄스터", "드워프 햄스터"),
-        "거북이" to listOf("러시안 육지거북", "헤르만 육지거북"),
-        "토끼" to listOf("미니 렉스", "라이언헤드")
+        "기타" to listOf(
+            "골든 햄스터", "드워프 햄스터",
+            "러시안 육지거북", "헤르만 육지거북",
+            "미니 렉스", "라이언헤드"
+        )
     )
+
 
     val filteredBreeds = breedExamples[species]?.filter {
         it.contains(breedQuery.text, ignoreCase = true)
     } ?: emptyList()
+
+    val isBreedValid by remember(breedQuery.text, species) {
+        mutableStateOf(
+            breedExamples[species]?.contains(breedQuery.text) == true
+        )
+    }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -67,7 +77,7 @@ fun PetDetailScreen(
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-        CommonTopBar(title = "동물 상세", onBack = { navController?.popBackStack() })
+        CommonTopBar(title = "동물 상세", onBack = { onBackClick() })
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -152,18 +162,16 @@ fun PetDetailScreen(
             value = age,
             onValueChange = { age = it },
             label = { Text("나이", color = Color.Gray) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(unfocusedTextColor = Color.Gray)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = description,
+            value = description ?:"",
             onValueChange = { description = it },
             label = { Text("특징", color = Color.Gray) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = OutlinedTextFieldDefaults.colors(unfocusedTextColor = Color.Gray)
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -187,24 +195,33 @@ fun PetDetailScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isBreedValid) Green1 else Color.LightGray
+            ),
             onClick = {
                 viewModel.updatePet(
-                    pet.copy(
-                        species = species,
-                        breed = breedQuery.text,
-                        gender = gender,
-                        age = age,
-                        description = description,
-                        imageUri = selectedImageUri?.toString()
-                    )
-                )
+                    animalId = pet.id,
+                    species = species,
+                    breed = breedQuery.text,
+                    gender = gender,
+                    age = age,
+                    description = description,
+                    imageUri = selectedImageUri
+                ) { success ->
+                    if (success) {
+                        // 예: 동물 목록 다시 불러오고
+                        myPageViewModel.loadDummyUserData(myPageViewModel.user.value.email)
+                        onBackClick()
+                    }
+                }
             },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA5D6A7))
+            enabled = isBreedValid,
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("저장")
         }
 
-        Spacer(modifier = Modifier.height(24.dp)) // 하단 여백
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }

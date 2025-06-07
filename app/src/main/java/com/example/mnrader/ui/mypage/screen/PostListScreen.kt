@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.mypage.Screen
+package com.example.mnrader.ui.mypage.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
@@ -26,8 +25,9 @@ import com.example.mnrader.ui.theme.SkyBlue
 
 @Composable
 fun PostListScreen(
-    navController: NavHostController,
-    viewModel: MyPageViewModel
+    viewModel: MyPageViewModel,
+    onBackClick: () -> Unit,
+    onPostClick: (postId: Int) -> Unit
 ) {
     val posts by viewModel.posts.collectAsState()
 
@@ -36,7 +36,7 @@ fun PostListScreen(
 
         CommonTopBar(
             title = "내가 올린 게시물",
-            onBack = { navController.popBackStack() }
+            onBack = { onBackClick() }
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -51,7 +51,7 @@ fun PostListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate("animal_post_detail/${post.id}")
+                            onPostClick(post.id)
                         }
                         .padding(vertical = 12.dp)
                 ) {
@@ -72,7 +72,7 @@ fun PostListScreen(
                                     color = when (post.pet.status) {
                                         "실종" -> Red
                                         "보호중" -> SkyBlue
-                                        "목격중" -> Green2
+                                        "목격" -> Green2
                                         else -> Color.LightGray
                                     },
                                     shape = CircleShape
