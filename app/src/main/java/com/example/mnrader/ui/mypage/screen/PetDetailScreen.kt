@@ -25,6 +25,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.component.DropdownSelector
 import com.example.mnrader.ui.mypage.dataclass.Pet
+import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
 import com.example.mnrader.ui.theme.Green1
 
@@ -32,6 +33,7 @@ import com.example.mnrader.ui.theme.Green1
 fun PetDetailScreen(
     pet: Pet,
     viewModel: PetUploadViewModel,
+    myPageViewModel: MyPageViewModel,
     onBackClick: () -> Unit
 ) {
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -207,6 +209,8 @@ fun PetDetailScreen(
                     imageUri = selectedImageUri
                 ) { success ->
                     if (success) {
+                        // 예: 동물 목록 다시 불러오고
+                        myPageViewModel.loadDummyUserData(myPageViewModel.user.value.email)
                         onBackClick()
                     }
                 }

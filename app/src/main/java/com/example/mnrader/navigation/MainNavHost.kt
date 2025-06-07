@@ -96,6 +96,7 @@ fun MainNavHost(
                 PetDetailScreen(
                     pet = pet,
                     viewModel = uploadViewModel,
+                    myPageViewModel = myPageViewModel,
                     onBackClick = { navController.popBackStack() }
                 )
             } else {

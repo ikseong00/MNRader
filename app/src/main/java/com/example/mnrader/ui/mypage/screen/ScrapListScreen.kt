@@ -60,24 +60,26 @@ fun ScrapListScreen(
                         }
                         .padding(vertical = 12.dp)
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(scrap.pet.imageUrl),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .border(
-                                width = 3.dp,
-                                color = when (scrap.pet.status) {
-                                    "실종" -> Red
-                                    "보호중" -> SkyBlue
-                                    "목격중" -> Green2
-                                    else -> Color.LightGray
-                                },
-                                shape = CircleShape
-                            )
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
+                    if (scrap.pet.imageUrl != null) {
+                        Image(
+                            painter = rememberAsyncImagePainter(scrap.pet.imageUrl),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    width = 3.dp,
+                                    color = when (scrap.pet.status) {
+                                        "실종" -> Red
+                                        "보호중" -> SkyBlue
+                                        "목격중" -> Green2
+                                        else -> Color.LightGray
+                                    },
+                                    shape = CircleShape
+                                )
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                    }
                     Column {
                         Text("${scrap.pet.name} / ${scrap.region}", fontSize = 16.sp)
                         Text(scrap.date, fontSize = 14.sp, color = Color.Gray)

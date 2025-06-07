@@ -27,7 +27,6 @@ fun MyPostSection(
     postClick: (postId: Int) -> Unit,
     allPostsClick: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.padding(top = 12.dp)) {
         Row(
@@ -68,15 +67,18 @@ fun PostItem(post: Post, onClick: () -> Unit) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = post.pet.imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .border(3.dp, color, CircleShape)
-        )
-        Spacer(Modifier.width(16.dp))
+        if (post.pet.imageUrl != null) {
+            AsyncImage(
+                model = post.pet.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .border(3.dp, color, CircleShape)
+            )
+            Spacer(Modifier.width(16.dp))
+        }
+
         Column(Modifier.weight(1f)) {
             Text(post.pet.name, style = MaterialTheme.typography.bodyLarge)
             Text("성별 ${post.pet.gender}", color = Color.Gray)

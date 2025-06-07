@@ -66,14 +66,17 @@ fun ScrapItem(scrap: Scrap, onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = scrap.pet.imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .border(2.dp, color, CircleShape)
-        )
+        if (scrap.pet.imageUrl != null) {
+            AsyncImage(
+                model = scrap.pet.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, color, CircleShape)
+            )
+        }
+
 
         Spacer(modifier = Modifier.width(12.dp))
 

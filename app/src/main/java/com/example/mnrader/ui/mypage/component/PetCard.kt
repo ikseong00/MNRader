@@ -39,12 +39,16 @@ fun PetCard(pet: Pet, modifier: Modifier = Modifier, onClick: () -> Unit) {
                 .background(Color.White),
             contentAlignment = Alignment.Center
         ) {
-            AsyncImage(
-                model = pet.imageUrl,
-                contentDescription = null,
-                modifier = Modifier.size(36.dp)
-            )
+            // imageUrl이 null이 아닐때만 사진 보여주기
+            pet.imageUrl?.let { imageUrl ->
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
         }
+
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = pet.name, fontSize = 13.sp)
     }

@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 data class Pet (
     val id: Int,
     val name: String,
-    val imageUrl: String,
+    val imageUrl: String ? = null,
     val species: String,
     val breed: String,
     val gender: String,
