@@ -23,13 +23,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.model.RegisterScreens
 import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
+import com.example.mnrader.navigation.Routes
 
 @Composable
-fun SubmitSuccessScreen(navController: NavController, viewModel: RegisterViewModel) {
+fun SubmitSuccessScreen(
+    navController: NavController,
+    rootNavController: NavHostController,
+    viewModel: RegisterViewModel) {
     val customButtonColor = Color(0xFF89C5A9)
     Scaffold(
         topBar = {
@@ -47,7 +52,9 @@ fun SubmitSuccessScreen(navController: NavController, viewModel: RegisterViewMod
                 Button(
                     onClick = {
                         viewModel.reset()
-                        navController.popBackStack(RegisterScreens.SelectType.route, inclusive = false)
+                        rootNavController.navigate(Routes.MAIN) {
+                            popUpTo(Routes.MAIN) { inclusive = true }
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
                     modifier = Modifier.fillMaxWidth()
@@ -88,5 +95,5 @@ fun SubmitPreview() {
     val navController = rememberNavController()
     val viewModel = remember { RegisterViewModel() }
 
-    SubmitSuccessScreen(navController = navController, viewModel = viewModel)
+    SubmitSuccessScreen(navController = navController,rootNavController = navController, viewModel = viewModel)
 }

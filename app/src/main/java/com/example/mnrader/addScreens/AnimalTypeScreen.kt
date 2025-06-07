@@ -38,7 +38,10 @@ import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
 
 @Composable
-fun AnimalTypeScreen(navController: NavController, viewModel: RegisterViewModel) {
+fun AnimalTypeScreen(
+    navController: NavController,
+    viewModel: RegisterViewModel
+) {
     var selected by remember { mutableStateOf("") }
     val customButtonColor = Color(0xFF89C5A9)
     val animalList = listOf(

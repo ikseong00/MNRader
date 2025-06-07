@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     derivedStateOf {
                         MainTab.entries.any { tab ->
                             tab.route == currentDestination
-                        }
+                        }&& currentDestination != "add"
                     }
                 }
 
