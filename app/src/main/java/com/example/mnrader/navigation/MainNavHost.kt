@@ -8,13 +8,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.addScreens.AnimalTypeScreen
-import com.example.mnrader.addScreens.RegisterInfoScreen
-import com.example.mnrader.addScreens.ReportOrLostScreen
-import com.example.mnrader.addScreens.SelectTypeScreen
-import com.example.mnrader.addScreens.SubmitSuccessScreen
-import com.example.mnrader.model.RegisterScreens
-import com.example.mnrader.model.RegisterViewModel
+import com.example.mnrader.add.addScreens.AnimalTypeScreen
+import com.example.mnrader.add.addScreens.RegisterInfoScreen
+import com.example.mnrader.add.addScreens.ReportOrLostScreen
+import com.example.mnrader.add.addScreens.SelectTypeScreen
+import com.example.mnrader.add.addScreens.SubmitSuccessScreen
+import com.example.mnrader.add.model.RegisterScreens
+import com.example.mnrader.add.model.RegisterViewModel
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
