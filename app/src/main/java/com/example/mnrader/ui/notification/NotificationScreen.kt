@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -78,11 +77,9 @@ fun NotificationScreen(
             state = lazyState,
             contentPadding = PaddingValues(horizontal = 20.dp)
         ) {
-            itemsIndexed(
-                uiState.notificationList
-            ) { index, item ->
+            items(uiState.notificationList.size) { index ->
                 NotificationAnimalCard(
-                    notificationModel = item,
+                    notificationModel = uiState.notificationList[index],
                     onClick = { id -> onItemClick(id) }
                 )
             }

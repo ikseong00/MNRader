@@ -28,6 +28,7 @@ import com.example.mnrader.ui.mypage.screen.PostListScreen
 import com.example.mnrader.ui.mypage.screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
+import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -156,7 +157,11 @@ fun MainNavHost(
         composable(
             route = Routes.NOTIFICATION
         ) {
-//            NotificationScreen()
+            NotificationScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+                onItemClick = { /* TODO : 상세 페이지로 이동 */},
+            )
         }
 
         // 등록하기
