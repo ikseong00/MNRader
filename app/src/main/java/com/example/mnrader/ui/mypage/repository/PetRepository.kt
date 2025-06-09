@@ -76,6 +76,7 @@ class PetRepository {
         name: String,
         age: Int,
         detail: String,
+        status: Int, // 추가
         getFileFromUri: (Uri) -> File?,
         onResult: (Boolean) -> Unit
     ) {
@@ -91,7 +92,11 @@ class PetRepository {
         val genderBody = gender.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val nameBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
         val ageBody = age.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val detailBody = detail.toRequestBody("text/plain".toMediaTypeOrNull())
+        // detail에 아무 입력 안했을때 에러 방지
+        val detailBody = (detail.ifEmpty { " " }).toRequestBody("text/plain".toMediaTypeOrNull())
+        // status 안보내서 에러 발생
+        val statusBody = status.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
 
         val call = RetrofitClient.petService.addPet(
             animal = animalBody,
@@ -100,18 +105,28 @@ class PetRepository {
             name = nameBody,
             age = ageBody,
             detail = detailBody,
+            status = statusBody, // 추가
             img = imgPart
         )
 
         call.enqueue(object : retrofit2.Callback<Void> {
             override fun onResponse(call: Call<Void>, response: retrofit2.Response<Void>) {
-                onResult(response.isSuccessful)
+                if (response.isSuccessful) {
+                    Log.d("addPet", "동물 추가 성공")
+                    onResult(true)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("addPet", "동물 추가 실패: code=${response.code()} body=$errorBody")
+                    onResult(false)
+                }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("addPet", "네트워크 실패: ${t.message}")
                 onResult(false)
             }
         })
+
     }
 
 }

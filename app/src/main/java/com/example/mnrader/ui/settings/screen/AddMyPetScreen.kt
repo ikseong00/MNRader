@@ -158,9 +158,20 @@ fun AddMyPetScreen(
                         description = description,
                         imageUri = imageUri?.toString()
                     )
-                    viewModel.addPet(newPet)
-                    myPageViewModel.addPetFromSetting(newPet)
-                    onSaveComplete()
+
+                    viewModel.addPet(
+                        pet = newPet,
+                        imageUri = imageUri,
+                        onResult = { success ->
+                            if (success) {
+                                myPageViewModel.addPetFromSetting(newPet)
+                                onSaveComplete()
+                            } else {
+                                // 실패 시 처리 (optional)
+                                println("동물 추가 실패")
+                            }
+                        }
+                    )
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -168,6 +179,7 @@ fun AddMyPetScreen(
         ) {
             Text("저장하기")
         }
+
 
         Spacer(modifier = Modifier.height(12.dp))
 

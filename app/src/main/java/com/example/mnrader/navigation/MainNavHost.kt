@@ -43,7 +43,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MYPAGE, // todo Main으로 바꿀 것
+        startDestination = Routes.MAIN,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩

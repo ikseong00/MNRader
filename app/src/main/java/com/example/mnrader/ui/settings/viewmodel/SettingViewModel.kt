@@ -79,6 +79,14 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
             else -> 3
         }
 
+        val statusCode = when (pet.status) {
+            "실종" -> 1
+            "보호중" -> 2
+            "목격중" -> 3
+            else -> 4 // None이 디폴트
+        }
+
+
         val parsedAge = pet.age.filter { it.isDigit() }.toIntOrNull() ?: 0
 
         val repository = PetRepository()
@@ -91,6 +99,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
             name = pet.name.ifBlank { pet.breed },
             age = parsedAge,
             detail = pet.description ?: "",
+            status = statusCode,
             getFileFromUri = { uri -> uriToFile(uri) },
             onResult = onResult
         )

@@ -9,7 +9,7 @@ interface PetApiService {
 
     // 마이페이지에서 동물 정보 수정
     @Multipart
-    @PATCH("user-animals/{animalId}")
+    @PATCH("/user-animals/{animalId}")
     fun updatePet(
         @Path("animalId") animalId: Int,
         @Part("animal") animal: RequestBody,
@@ -22,7 +22,7 @@ interface PetApiService {
 
     // 설정 화면에서 동물 추가
     @Multipart
-    @POST("user-animals")
+    @POST("/user-animals")
     fun addPet(
         @Part("animal") animal: RequestBody,
         @Part("breed") breed: RequestBody,
@@ -30,6 +30,7 @@ interface PetApiService {
         @Part("name") name: RequestBody,
         @Part("age") age: RequestBody,
         @Part("detail") detail: RequestBody,
+        @Part("status") status: RequestBody,
         @Part img: MultipartBody.Part? = null
     ): Call<Void>
 
