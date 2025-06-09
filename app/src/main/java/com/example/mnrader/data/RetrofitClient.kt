@@ -1,6 +1,7 @@
 package com.example.mnrader.data
 
 import com.example.mnrader.BuildConfig
+import com.example.mnrader.data.service.AuthService
 import com.example.mnrader.data.service.DataPortalService
 import com.example.mnrader.data.service.NaverService
 import okhttp3.OkHttpClient
@@ -36,6 +37,14 @@ object RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(NaverService::class.java)
+    }
+    val authService: AuthService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(AuthService::class.java)
     }
 
 }
