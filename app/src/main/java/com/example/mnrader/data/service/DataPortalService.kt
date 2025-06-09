@@ -15,6 +15,7 @@ interface DataPortalService {
         @Query("_type") type: String = "json",
         @Query("bgnde") startDate: String = LocalDate.now().minusMonths(3).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
         @Query("endde") endDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+        @Query("numOfRows") numOfRows: Int = 25,
     ): AbandonedResponseDto
 
     @GET("lossInfoService/lossInfo")
