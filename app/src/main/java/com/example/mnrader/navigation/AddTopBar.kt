@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,24 +28,34 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterTopBar( onBackClick: () -> Unit,
-            currentStep: Int, // 현재 몇 번째 단계인지 1~5
+fun RegisterTopBar(
+            onBackClick:(() -> Unit)? = null,
+            currentStep: Int, // 현재 단계 1~5
             totalSteps: Int = 5) {
     Column {
         // TopAppBar
         TopAppBar(
             title = {
-                Text("등록하기", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                Text("등록하기",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center)
             },
             navigationIcon = {
-                IconButton(onClick = { onBackClick() }) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = null
-                    )
+                onBackClick?.let{
+                        backClick ->
+                    IconButton(onClick = { backClick() })  {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = null
+                        )
+                    }
                 }
             },
-            actions = { Spacer(modifier = Modifier.width(48.dp)) } // 가운데 정렬 유지용
+            actions = {
+                if (onBackClick != null) {
+                    Spacer(modifier = Modifier.width(48.dp))
+                }
+            }
         )
 
         // 진도 라인
@@ -69,7 +79,7 @@ fun StepProgressIndicator(currentStep: Int, totalSteps: Int) {
                     .height(8.dp)
                     .weight(1f)
                     .clip(CircleShape)
-                    .background(if (isActive) Color(0xFF04A69F) else Color.LightGray)
+                    .background(if (isActive) Color(0xFF89C5A9) else Color.LightGray)
             )
             if (index != totalSteps - 1) {
                 Spacer(modifier = Modifier.width(8.dp))

@@ -1,6 +1,5 @@
-package com.example.mnrader.RegisterScreens
+package com.example.mnrader.addScreens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,26 +14,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.model.RegisterScreens
 import com.example.mnrader.model.RegisterViewModel
 import com.example.mnrader.navigation.RegisterTopBar
 
 @Composable
-fun SelectTypeScreen(navController: NavController, viewModel: RegisterViewModel) {
+fun SelectTypeScreen(
+    navController: NavController,
+    rootNavController: NavHostController,
+    viewModel: RegisterViewModel
+) {
 
     val customButtonColor = Color(0xFF89C5A9)
 
     Column(
         modifier = Modifier.fillMaxSize()) {
         RegisterTopBar(
-            onBackClick = { navController.popBackStack() },
+            onBackClick = {//Home화면으로 이동
+                rootNavController.popBackStack()  // 또는 rootNavController.navigate(Routes.MAIN)
+                },
             currentStep = 1 // 여기서 단계 조정: 1~5
         )
         Box(modifier = Modifier.fillMaxSize()
@@ -77,5 +82,5 @@ fun SelectTypeScreenPreview() {
     val navController = rememberNavController()
     val viewModel = remember { RegisterViewModel() }
 
-    SelectTypeScreen(navController = navController, viewModel = viewModel)
+    SelectTypeScreen(navController = navController, rootNavController = navController,viewModel = viewModel)
 }
