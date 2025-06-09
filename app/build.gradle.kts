@@ -1,10 +1,10 @@
 import java.util.Properties
-import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
     kotlin("plugin.parcelize")
 }
 
@@ -26,6 +26,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Naver Map API 키 설정
         manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"].toString()
+        buildConfigField("String", "DATA_PORTAL_BASE_URL", properties["DATA_PORTAL_BASE_URL"].toString())
+        buildConfigField("String", "DATA_PORTAL_SERVICE_KEY", properties["DATA_PORTAL_SERVICE_KEY"].toString())
+        buildConfigField("String", "NAVER_BASE_URL", properties["NAVER_BASE_URL"].toString())
+        buildConfigField("String", "NAVER_CLIENT_ID", properties["NAVER_CLIENT_ID"].toString())
+        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", properties["NAVER_MAP_CLIENT_SECRET"].toString())
+
     }
 
     buildTypes {
@@ -94,5 +100,16 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // Network
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 
 }
