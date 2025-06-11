@@ -4,15 +4,16 @@ import com.naver.maps.geometry.LatLng
 
 data class HomeAnimalData(
     val id: Long = 0L,
-    val imageUrl: String,
+    val imageUrl: String?,
     val name: String,
-    val gender: Gender,
     val location: String,
+    val gender: Gender,
     val date: String,
+    var latLng: LatLng = LatLng(37.5407, 127.0791),
     val type: AnimalDataType,
-    val latLng: LatLng = LatLng(37.5407, 127.0791),
     var isBookmarked: Boolean = false
 ) {
+
     companion object {
         val dummyHomeAnimalData = listOf(
             HomeAnimalData(
@@ -62,3 +63,5 @@ data class HomeAnimalData(
         )
     }
 }
+
+data class ItemData(val name: String, val category: String)
