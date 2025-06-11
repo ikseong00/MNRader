@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -116,7 +118,7 @@ fun AnimalDetailScreen(
                     Icon(
                         painterResource(id = R.drawable.ic_animal_stars),
                         contentDescription = "Bookmark",
-//                        tint = if (isBookmarked) Color. else Color.Gray,
+                        tint = if (isBookmarked) Color(0xFF90c5aa) else Color.Gray,
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -133,35 +135,39 @@ fun AnimalDetailScreen(
             }
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(360.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-            // 동물 이미지
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // 실제는 Coil 추천!
-                    contentDescription = "Animal Image",
-                    contentScale = ContentScale.Crop,
+            item {
+                Box(
                     modifier = Modifier
                         .size(360.dp)
-                        .clip(CircleShape)
-                        .border( width = 10.dp,
-                            shape = CircleShape,
-                            color = animal.type.color)
-                )
+                ) {
+                    // 동물 이미지
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 실제는 Coil 추천!
+                        contentDescription = "Animal Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(360.dp)
+                            .clip(CircleShape)
+                            .border(
+                                width = 10.dp,
+                                shape = CircleShape,
+                                color = animal.type.color
+                            )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 동물 정보
-            AnimalInfoSection(animal)
+            item {
+                // 동물 정보
+                AnimalInfoSection(animal)
+            }
         }
     }
 }
@@ -175,10 +181,10 @@ fun AnimalInfoSection(animal: HomeAnimalData) {
         Text(animal.name,
             fontSize = 24.sp,
             color = Color.Black)
-        Text("성별:"+animal.gender.value,
+        Text("성별 "+animal.gender.value,
             fontSize = 16.sp,
             color = Color.Gray)
-        Text("품종: breed",
+        Text("품종 breed",
             fontSize = 16.sp,
             color = Color.Gray)
         InfoRow(label = "장소", value = animal.location)
@@ -190,20 +196,21 @@ fun AnimalInfoSection(animal: HomeAnimalData) {
 
 @Composable
 fun InfoRow(label: String, value: String) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
     ) {
         Text(
-            text = "$label:",
+            text = "$label",
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.padding(bottom = 4.dp)
         )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
+        OutlinedTextField(
+            value = value,
+            onValueChange ={},
+            readOnly = true,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
