@@ -201,7 +201,7 @@ fun InfoRow(label: String, value: String) {
             .padding(vertical = 4.dp)
     ) {
         Text(
-            text = "$label",
+            text = label,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(bottom = 4.dp)
         )
