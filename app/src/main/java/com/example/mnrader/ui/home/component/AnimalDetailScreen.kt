@@ -1,7 +1,6 @@
 package com.example.mnrader.ui.home.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -43,9 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.rememberAsyncImagePainter
 import com.example.mnrader.R
-import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.home.model.HomeAnimalData
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -128,7 +126,8 @@ fun AnimalDetailScreen(
                         navController.navigate("add")
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF90c5aa))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF90c5aa)),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("신고하러 가기")
                 }
@@ -148,7 +147,7 @@ fun AnimalDetailScreen(
                 ) {
                     // 동물 이미지
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 실제는 Coil 추천!
+                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 실제 동물 이미지를 볼러오기
                         contentDescription = "Animal Image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
