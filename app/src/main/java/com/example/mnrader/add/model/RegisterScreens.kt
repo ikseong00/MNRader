@@ -1,4 +1,4 @@
-package com.example.mnrader.model
+package com.example.mnrader.add.model
 
 sealed class RegisterScreens(val route: String) {
     object SelectType : RegisterScreens("select_type")

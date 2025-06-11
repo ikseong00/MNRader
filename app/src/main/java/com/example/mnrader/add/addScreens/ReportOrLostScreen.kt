@@ -1,4 +1,4 @@
-package com.example.mnrader.addScreens
+package com.example.mnrader.add.addScreens
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -53,9 +53,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
-import com.example.mnrader.model.RegisterScreens
-import com.example.mnrader.model.RegisterViewModel
-import com.example.mnrader.navigation.RegisterTopBar
+import com.example.mnrader.add.model.RegisterScreens
+import com.example.mnrader.add.model.RegisterViewModel
 import java.time.LocalDateTime
 
 
