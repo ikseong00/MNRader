@@ -1,4 +1,4 @@
-package com.example.mnrader.addScreens
+package com.example.mnrader.add.addScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,14 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.model.RegisterViewModel
-import com.example.mnrader.navigation.RegisterTopBar
+import com.example.mnrader.add.model.RegisterViewModel
 import com.example.mnrader.navigation.Routes
 
 @Composable
 fun SubmitSuccessScreen(
     rootNavController: NavHostController,
-    viewModel: RegisterViewModel) {
+    viewModel: RegisterViewModel
+) {
     val customButtonColor = Color(0xFF89C5A9)
     Scaffold(
         topBar = {

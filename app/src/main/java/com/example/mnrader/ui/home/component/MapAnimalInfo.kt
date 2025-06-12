@@ -15,19 +15,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.model.MapAnimalData
 import com.example.mnrader.ui.theme.MNRaderTheme
 
 @Composable
 fun MapAnimalInfo(
     modifier: Modifier = Modifier,
-    animalData: HomeAnimalData,
-    onItemClick: (HomeAnimalData) -> Unit = {},
+    animalData: MapAnimalData,
+    onItemClick: (MapAnimalData) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -38,6 +40,7 @@ fun MapAnimalInfo(
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable { onItemClick(animalData) }
+            .shadow(2.dp)
             .padding(horizontal = 20.dp, vertical = 15.dp),
         horizontalArrangement = Arrangement.spacedBy(19.dp),
     ) {
@@ -50,7 +53,7 @@ fun MapAnimalInfo(
                     shape = CircleShape,
                     color = animalData.type.color
                 ),
-            model = "https://picsum.photos/200/300",
+            model = animalData.imageUrl,
             contentDescription = null,
         )
 
@@ -97,7 +100,17 @@ fun MapAnimalInfo(
 @Preview
 @Composable
 private fun MapAnimalInfoPreview() {
+    val homeAnimalData = HomeAnimalData.dummyHomeAnimalData.first()
     MapAnimalInfo(
-        animalData = HomeAnimalData.dummyHomeAnimalData.first()
+        animalData = MapAnimalData(
+            id = homeAnimalData.id,
+            imageUrl = homeAnimalData.imageUrl,
+            name = homeAnimalData.name,
+            location = homeAnimalData.location,
+            latLng = homeAnimalData.latLng,
+            type = homeAnimalData.type,
+            date = homeAnimalData.date,
+            gender = homeAnimalData.gender
+        )
     )
 }

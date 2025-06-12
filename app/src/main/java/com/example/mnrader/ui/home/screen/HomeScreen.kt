@@ -17,25 +17,27 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.repository.DataPortalRepository
+import com.example.mnrader.data.repository.NaverRepository
 import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.home.component.HomeAnimalList
 import com.example.mnrader.ui.home.component.HomeFilter
 import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
-import com.example.mnrader.ui.home.model.HomeAnimalData
+import com.example.mnrader.ui.home.viewmodel.HomeVieWModelFactory
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.theme.Green2
-import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.rememberCameraPositionState
 
@@ -43,24 +45,37 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 fun HomeScreen(
     padding: PaddingValues,
     navigateToAnimalDetail: (Int) -> Unit = {},
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = viewModel(
+        factory = HomeVieWModelFactory(
+            DataPortalRepository(LocalContext.current), NaverRepository()
+        )
+    ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
     val cameraPositionState = rememberCameraPositionState()
-    cameraPositionState.position = CameraPosition(
-        LatLng(37.5407, 127.0791),
-        15.0,
-        0.0,
-        0.0
-    )
+    LaunchedEffect(uiState.cameraLatLng) {
+        cameraPositionState.position = CameraPosition(
+            uiState.cameraLatLng,
+            15.0,
+            0.0,
+            0.0
+        )
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .verticalScroll(state = scrollState)
+            .then(
+                if (uiState.isExpanded) {
+                    Modifier
+                } else {
+                    Modifier
+                        .verticalScroll(state = scrollState)
+                }
+            )
     ) {
         HomeTopBar(
             onNotificationClick = { /*TODO*/ },
@@ -80,7 +95,8 @@ fun HomeScreen(
         MapComponent(
             isExpanded = uiState.isExpanded,
             cameraPositionState = cameraPositionState,
-            animalDataList = uiState.shownAnimalDataList,
+            animalDataList = uiState.shownMapAnimalDataList,
+            onMarkerClick = { viewModel.setSelectedAnimal(it) },
         )
         if (!uiState.isExpanded) {
             MNRaderButton(
@@ -109,18 +125,22 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            MapAnimalInfo(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 100.dp)
-                    .shadow(2.dp),
-                animalData = HomeAnimalData.dummyHomeAnimalData.first(),
-                onItemClick = { /*TODO*/ }
-            )
+            val selectedAnimal = uiState.selectedAnimal
+            if (selectedAnimal != null) {
+                MapAnimalInfo(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 100.dp),
+                    animalData = selectedAnimal,
+                    onItemClick = { animalData ->
+                        navigateToAnimalDetail(animalData.id.toInt())
+                    },
+                )
+            }
             IconButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 60.dp)
+                    .padding(bottom = 40.dp)
                     .background(
                         color = Green2,
                         shape = CircleShape

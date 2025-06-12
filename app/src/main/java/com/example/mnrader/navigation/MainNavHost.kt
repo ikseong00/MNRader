@@ -14,25 +14,26 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.addScreens.AnimalTypeScreen
-import com.example.mnrader.addScreens.RegisterInfoScreen
-import com.example.mnrader.addScreens.ReportOrLostScreen
-import com.example.mnrader.addScreens.SelectTypeScreen
-import com.example.mnrader.addScreens.SubmitSuccessScreen
-import com.example.mnrader.model.RegisterScreens
-import com.example.mnrader.model.RegisterViewModel
+import com.example.mnrader.add.addScreens.AnimalTypeScreen
+import com.example.mnrader.add.addScreens.RegisterInfoScreen
+import com.example.mnrader.add.addScreens.ReportOrLostScreen
+import com.example.mnrader.add.addScreens.SelectTypeScreen
+import com.example.mnrader.add.addScreens.SubmitSuccessScreen
+import com.example.mnrader.add.model.RegisterScreens
+import com.example.mnrader.add.model.RegisterViewModel
 import androidx.navigation.navArgument
+import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.mypage.screen.PetDetailScreen
 import com.example.mnrader.ui.mypage.screen.PostListScreen
 import com.example.mnrader.ui.mypage.screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
-import com.example.mnrader.ui.home.screen.HomeScreen
-import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 import com.example.mnrader.ui.settings.screen.AddMyPetScreen
 import com.example.mnrader.ui.settings.screen.SettingScreen
+import com.example.mnrader.ui.notification.NotificationScreen
+import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -159,7 +160,13 @@ fun MainNavHost(
         // 알림
         composable(
             route = Routes.NOTIFICATION
-        ) { }
+        ) {
+            NotificationScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+                onItemClick = { /* TODO : 상세 페이지로 이동 */},
+            )
+        }
 
         // 등록하기
         composable(

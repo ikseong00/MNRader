@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,18 +48,22 @@ fun HomeAnimalItem(
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(19.dp),
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(90.dp)
-                .clip(CircleShape)
-                .border(
-                    width = 6.dp,
-                    shape = CircleShape,
-                    color = animalData.type.color
-                ),
-            model = "https://picsum.photos/200/300",
-            contentDescription = null,
-        )
+        animalData.imageUrl?.let {
+            AsyncImage(
+                modifier = Modifier
+                    .size(90.dp)
+                    .clip(CircleShape)
+                    .border(
+                        width = 6.dp,
+                        shape = CircleShape,
+                        color = animalData.type.color
+                    ),
+                model = it,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
+        }
+
 
         Column {
             Row(
