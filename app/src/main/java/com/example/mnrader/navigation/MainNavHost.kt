@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +29,9 @@ import com.example.mnrader.ui.mypage.screen.PostListScreen
 import com.example.mnrader.ui.mypage.screen.ScrapListScreen
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
+import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
+import com.example.mnrader.ui.settings.screen.AddMyPetScreen
+import com.example.mnrader.ui.settings.screen.SettingScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 
@@ -180,14 +184,49 @@ fun MainNavHost(
                 onNavigateToPostDetail = { postId -> navController.navigate("animal_post_detail/$postId") },
                 onNavigateToScrapDetail = { scrapId -> navController.navigate("animal_post_detail/$scrapId") },
                 onNavigateToAllPosts = { navController.navigate(Routes.POST_LIST) },
-                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) }
+                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) },
+                onNavigateToSetting = { navController.navigate(Routes.SETTING) }
             )
         }
 
         // 설정
-        composable(
-            route = Routes.SETTING
-        ) { }
+        // MainNavHost.kt
+        composable(route = Routes.SETTING) {
+            val parentEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
+            val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
+            val settingViewModel: SettingViewModel = viewModel()
+
+            LaunchedEffect(true) {
+                settingViewModel.initWithMyPagePets(
+                    email = myPageViewModel.user.value.email,
+                    pets = myPageViewModel.pets.value
+                )
+            }
+
+            SettingScreen(
+                viewModel = settingViewModel,
+                myPageViewModel = myPageViewModel,
+                onNavigateToAddPet = { navController.navigate(Routes.ADD_MY_PET) },
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(route = Routes.ADD_MY_PET) {
+            val settingEntry = remember(it) { navController.getBackStackEntry(Routes.SETTING) }
+            val myPageEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
+
+            val settingViewModel: SettingViewModel = viewModel(settingEntry)
+            val myPageViewModel: MyPageViewModel = viewModel(myPageEntry)
+
+            AddMyPetScreen(
+                viewModel = settingViewModel,
+                myPageViewModel = myPageViewModel,
+                onBackClick = { navController.popBackStack() },
+                onSaveComplete = { navController.popBackStack() }
+            )
+        }
+
+
 
     }
 }
@@ -206,6 +245,7 @@ object Routes {
     const val ADD = "add"
     const val MYPAGE = "mypage"
     const val SETTING = "setting"
+    const val ADD_MY_PET = "add_my_pet"
 }
 
 

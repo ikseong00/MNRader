@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +26,8 @@ import androidx.compose.ui.unit.dp
 fun UserInfoSection(
     email: String,
     location: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSettingsClick: () -> Unit
 ) {
     val city = location.split(" ").firstOrNull() ?: location
 
@@ -49,7 +51,8 @@ fun UserInfoSection(
 
         Spacer(modifier.weight(1f))
 
-        Icon(imageVector = Icons.Default.Settings, contentDescription = "설정")
-
+        IconButton(onClick = onSettingsClick) {
+            Icon(imageVector = Icons.Default.Settings, contentDescription = "설정")
+        }
     }
 }
