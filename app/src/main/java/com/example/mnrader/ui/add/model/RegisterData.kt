@@ -1,4 +1,4 @@
-package com.example.mnrader.add.model
+package com.example.mnrader.ui.add.model
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
