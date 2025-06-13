@@ -100,7 +100,6 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     // Network
-    implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)

@@ -22,6 +22,7 @@ import com.example.mnrader.add.addScreens.SubmitSuccessScreen
 import com.example.mnrader.add.model.RegisterScreens
 import com.example.mnrader.add.model.RegisterViewModel
 import androidx.navigation.navArgument
+import com.example.mnrader.ui.home.component.AnimalDetailScreen
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.mypage.screen.PetDetailScreen
@@ -75,19 +76,28 @@ fun MainNavHost(
             HomeScreen(
                 padding = padding,
                 navigateToAnimalDetail = { animalId ->
-                    navController.navigate("animal_detail/{animalId}")
+                    navController.navigate("animal_detail/$animalId")
                 }
             )
         }
 
         // 애니멀페이지
         composable(
-            route = Routes.ANIMAL_DETAIL
+            route = Routes.ANIMAL_DETAIL + "/{animalId}",
+            arguments = listOf(navArgument("animalId") { type = NavType.StringType })
         ) { navBackStackEntry ->
 
             // 애니멀 ID를 가져오기
-            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toIntOrNull()
-            // AnimalDetailScreen(id = animalId)
+            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toLongOrNull()
+            if (animalId != null) {
+                AnimalDetailScreen(
+                    animalId = animalId,
+                    navController = navController,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 동물 ID입니다.")
+            }
         }
 
         // 동물 상세보기 페이지
