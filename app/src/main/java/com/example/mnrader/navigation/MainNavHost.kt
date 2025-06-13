@@ -163,8 +163,18 @@ fun MainNavHost(
             route = Routes.ANIMAL_POST_DETAIL,
             arguments = listOf(navArgument("postId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val postId = backStackEntry.arguments?.getString("postId")
-            Text("AnimalPostDetailScreen for Post ID: $postId") // 화면 미구현 대체
+            val postIdStr = backStackEntry.arguments?.getString("postId")
+            val postId = postIdStr?.toLongOrNull()
+
+            if (postId != null) {
+                AnimalDetailScreen(
+                    animalId = postId,
+                    navController = navController,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 접근입니다. 게시물 ID가 유효하지 않습니다.")
+            }
         }
 
         // 알림
