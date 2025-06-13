@@ -26,12 +26,16 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Naver Map API 키 설정
         manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"].toString()
-        buildConfigField("String", "DATA_PORTAL_BASE_URL", properties["DATA_PORTAL_BASE_URL"].toString())
-        buildConfigField("String", "DATA_PORTAL_SERVICE_KEY", properties["DATA_PORTAL_SERVICE_KEY"].toString())
-        buildConfigField("String", "NAVER_BASE_URL", properties["NAVER_BASE_URL"].toString())
-        buildConfigField("String", "NAVER_CLIENT_ID", properties["NAVER_CLIENT_ID"].toString())
-        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", properties["NAVER_MAP_CLIENT_SECRET"].toString())
-
+//        buildConfigField("String", "DATA_PORTAL_BASE_URL", properties["DATA_PORTAL_BASE_URL"].toString())
+//        buildConfigField("String", "DATA_PORTAL_SERVICE_KEY", properties["DATA_PORTAL_SERVICE_KEY"].toString())
+//        buildConfigField("String", "NAVER_BASE_URL", properties["NAVER_BASE_URL"].toString())
+//        buildConfigField("String", "NAVER_CLIENT_ID", properties["NAVER_CLIENT_ID"].toString())
+//        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", properties["NAVER_MAP_CLIENT_SECRET"].toString())
+        buildConfigField("String", "DATA_PORTAL_BASE_URL", "\"${properties["DATA_PORTAL_BASE_URL"]}\"")
+        buildConfigField("String", "DATA_PORTAL_SERVICE_KEY", "\"${properties["DATA_PORTAL_SERVICE_KEY"]}\"")
+        buildConfigField("String", "NAVER_BASE_URL", "\"${properties["NAVER_BASE_URL"]}\"")
+        buildConfigField("String", "NAVER_CLIENT_ID", "\"${properties["NAVER_CLIENT_ID"]}\"")
+        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", "\"${properties["NAVER_MAP_CLIENT_SECRET"]}\"")
     }
 
     buildTypes {
@@ -100,7 +104,6 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     // Network
-    implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)

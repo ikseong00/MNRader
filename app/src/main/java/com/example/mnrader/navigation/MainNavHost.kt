@@ -14,14 +14,15 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.add.addScreens.AnimalTypeScreen
-import com.example.mnrader.add.addScreens.RegisterInfoScreen
-import com.example.mnrader.add.addScreens.ReportOrLostScreen
-import com.example.mnrader.add.addScreens.SelectTypeScreen
-import com.example.mnrader.add.addScreens.SubmitSuccessScreen
-import com.example.mnrader.add.model.RegisterScreens
-import com.example.mnrader.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.addScreens.AnimalTypeScreen
+import com.example.mnrader.ui.add.addScreens.RegisterInfoScreen
+import com.example.mnrader.ui.add.addScreens.ReportOrLostScreen
+import com.example.mnrader.ui.add.addScreens.SelectTypeScreen
+import com.example.mnrader.ui.add.addScreens.SubmitSuccessScreen
+import com.example.mnrader.ui.add.model.RegisterScreens
+import com.example.mnrader.ui.add.model.RegisterViewModel
 import androidx.navigation.navArgument
+import com.example.mnrader.ui.home.component.AnimalDetailScreen
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.mypage.screen.PetDetailScreen
@@ -75,19 +76,28 @@ fun MainNavHost(
             HomeScreen(
                 padding = padding,
                 navigateToAnimalDetail = { animalId ->
-                    navController.navigate("animal_detail/{animalId}")
+                    navController.navigate("animal_detail/$animalId")
                 }
             )
         }
 
         // 애니멀페이지
         composable(
-            route = Routes.ANIMAL_DETAIL
+            route = Routes.ANIMAL_DETAIL + "/{animalId}",
+            arguments = listOf(navArgument("animalId") { type = NavType.StringType })
         ) { navBackStackEntry ->
 
             // 애니멀 ID를 가져오기
-            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toIntOrNull()
-            // AnimalDetailScreen(id = animalId)
+            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toLongOrNull()
+            if (animalId != null) {
+                AnimalDetailScreen(
+                    animalId = animalId,
+                    navController = navController,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 동물 ID입니다.")
+            }
         }
 
         // 동물 상세보기 페이지
@@ -153,8 +163,18 @@ fun MainNavHost(
             route = Routes.ANIMAL_POST_DETAIL,
             arguments = listOf(navArgument("postId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val postId = backStackEntry.arguments?.getString("postId")
-            Text("AnimalPostDetailScreen for Post ID: $postId") // 화면 미구현 대체
+            val postIdStr = backStackEntry.arguments?.getString("postId")
+            val postId = postIdStr?.toLongOrNull()
+
+            if (postId != null) {
+                AnimalDetailScreen(
+                    animalId = postId,
+                    navController = navController,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 접근입니다. 게시물 ID가 유효하지 않습니다.")
+            }
         }
 
         // 알림

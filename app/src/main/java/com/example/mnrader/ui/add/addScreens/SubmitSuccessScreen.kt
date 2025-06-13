@@ -1,4 +1,4 @@
-package com.example.mnrader.add.addScreens
+package com.example.mnrader.ui.add.addScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.navigation.Routes
 
 @Composable

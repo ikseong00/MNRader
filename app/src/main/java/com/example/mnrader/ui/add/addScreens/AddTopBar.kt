@@ -1,4 +1,4 @@
-package com.example.mnrader.add.addScreens
+package com.example.mnrader.ui.add.addScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

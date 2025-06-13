@@ -1,4 +1,4 @@
-package com.example.mnrader.add.addScreens
+package com.example.mnrader.ui.add.addScreens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.add.model.RegisterScreens
-import com.example.mnrader.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.model.RegisterScreens
+import com.example.mnrader.ui.add.model.RegisterViewModel
 
 @Composable
 fun SelectTypeScreen(
