@@ -127,7 +127,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                         onValueChange = {
                             // 숫자만 남기도록 필터링
                             val filtered = it.filter { char -> char.isDigit() }
-                            viewModel.registerData = viewModel.registerData.copy(contact = it)
+                            viewModel.registerData = viewModel.registerData.copy(contact = filtered)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("전화번호") },
