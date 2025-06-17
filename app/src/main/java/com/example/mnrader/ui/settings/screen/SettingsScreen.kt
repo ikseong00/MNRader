@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.*
@@ -82,13 +84,18 @@ fun SettingScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .background(Color.LightGray, shape = MaterialTheme.shapes.medium)
+                            .background(Color.White, shape = MaterialTheme.shapes.medium)
                             .clickable {
                                 onNavigateToAddPet()
                                        },
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = "추가")
+                        Icon(
+                            imageVector = Icons.Default.AddCircleOutline,
+                            contentDescription = "추가",
+                            tint = Green1,
+                            modifier = Modifier.size(48.dp)
+                        )
                     }
                 }
             }
@@ -139,8 +146,9 @@ fun SettingScreen(
             onClick = { viewModel.saveSettings() },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Green1)
+                .height(40.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Green1),
+            shape = RoundedCornerShape(8.dp)
         ) {
             Text("저장하기")
         }
@@ -199,3 +207,4 @@ fun SectionHeader(title: String, expanded: Boolean, onToggle: () -> Unit) {
         )
     }
 }
+

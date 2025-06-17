@@ -3,21 +3,19 @@ package com.example.mnrader.ui.settings.screen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 import com.example.mnrader.ui.mypage.dataclass.Pet
@@ -117,28 +115,31 @@ fun AddMyPetScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("사진 첨부")
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Box(
+        OutlinedTextField(
+            value = imageUri?.toString() ?: "",
+            onValueChange = {},
+            readOnly = true,
+            enabled = false,
+            label = { Text("사진 첨부", color= Color.Black) },
+            placeholder = { Text("사진 선택") },
             modifier = Modifier
-                .height(150.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color.LightGray)
                 .clickable { launcher.launch("image/*") },
-            contentAlignment = Alignment.Center
-        ) {
-            if (imageUri != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.AddPhotoAlternate,
+                    contentDescription = "사진 선택"
                 )
-            } else {
-                Text("사진 선택", color = Color.DarkGray)
-            }
-        }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = Color.Unspecified,
+                disabledBorderColor = Color.Gray,
+                disabledLabelColor = Color.Black,
+                disabledTrailingIconColor = Color.Gray
+            )
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -173,7 +174,8 @@ fun AddMyPetScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Green1)
+            colors = ButtonDefaults.buttonColors(containerColor = Green1),
+            shape = RoundedCornerShape(8.dp)
         ) {
             Text("저장하기")
         }
