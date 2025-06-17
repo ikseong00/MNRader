@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:name=".MNRaderApp"
@@ -17,6 +20,10 @@
         android:theme="@style/Theme.MNRader"
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="${NAVER_CLIENT_ID}" />
 
         <activity
             android:name=".MainActivity"
