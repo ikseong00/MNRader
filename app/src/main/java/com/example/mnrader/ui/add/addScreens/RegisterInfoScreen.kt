@@ -32,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
 import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.ui.add.model.RegisterScreens
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewModel) {
@@ -41,7 +42,6 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
 
     val isFormValid = name.isNotBlank() && contact.isNotBlank()
 
-    val customButtonColor = Color(0xFF89C5A9)
     Scaffold(
         topBar = {
             RegisterTopBar(
@@ -60,7 +60,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                         onClick = {
                             navController.navigate(RegisterScreens.AnimalType.route)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                        colors = ButtonDefaults.buttonColors(containerColor = Green1),
                         modifier = Modifier.fillMaxWidth(),
                         enabled = isFormValid
                     ) {

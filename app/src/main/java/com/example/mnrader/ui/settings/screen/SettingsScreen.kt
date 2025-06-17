@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
+import com.example.mnrader.ui.theme.Gray
 import com.example.mnrader.ui.theme.Green1
 
 @Composable
@@ -126,7 +127,7 @@ fun SettingScreen(
                             .fillMaxWidth()
                             .clickable { viewModel.updateCity(city) }
                             .padding(vertical = 6.dp),
-                        color = if (state.selectedCity == city) Color.Blue else Color.Black
+                        color = if (state.selectedCity == city) Green1 else Color.Black
                     )
                 }
             }
@@ -166,7 +167,7 @@ fun SettingScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Surface(
-                    color = Color(0xFF81C784),
+                    color = Green1,
                     shape = MaterialTheme.shapes.medium,
                     shadowElevation = 8.dp
                 ) {
@@ -186,7 +187,7 @@ fun SectionHeader(title: String, expanded: Boolean, onToggle: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF5F5F5), shape = MaterialTheme.shapes.medium)
+            .background(Gray, shape = MaterialTheme.shapes.medium)
             .clickable { onToggle() }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically

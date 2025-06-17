@@ -55,6 +55,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.theme.Green1
 import java.time.LocalDateTime
 
 
@@ -68,7 +69,6 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
     var location by remember { mutableStateOf("") }
     var dateTime by remember { mutableStateOf(LocalDateTime.now()) }
     var description by remember { mutableStateOf("") }
-    val customButtonColor = Color(0xFF89C5A9)
 
     // 동물 타입에 따라 품종 리스트 설정
     val breedOptions = when (selectedAnimalType) {
@@ -105,7 +105,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                                 description = description)
                             navController.navigate(RegisterScreens.SubmitSuccess.route)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                        colors = ButtonDefaults.buttonColors(containerColor = Green1),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("다음")

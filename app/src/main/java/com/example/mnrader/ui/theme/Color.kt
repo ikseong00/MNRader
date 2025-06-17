@@ -16,3 +16,5 @@ val Green2 = Color(0xFF88C4A8)
 val SkyBlue = Color(0xFFA8B6FD)
 
 val Red = Color(0xFFFC8195)
+
+val Gray = Color(0xFFF5F5F5) //Background Color

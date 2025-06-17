@@ -2,10 +2,13 @@ package com.example.mnrader.ui.settings.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +57,28 @@ fun DropdownSelector(
                     }
                 )
             }
+        }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun DropdownSelectorPreview() {
+    var selectedOption by remember { mutableStateOf("강아지") }
+
+    val options = listOf("강아지", "고양이", "기타")
+
+    MaterialTheme {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            DropdownSelector(
+                label = "종류",
+                options = options,
+                selected = selectedOption,
+                onSelected = { selectedOption = it }
+            )
         }
     }
 }

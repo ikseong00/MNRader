@@ -23,6 +23,7 @@ import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
 import com.example.mnrader.ui.mypage.dataclass.Pet
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.settings.component.DropdownSelector
+import com.example.mnrader.ui.theme.Green1
 
 
 @Composable
@@ -172,11 +173,10 @@ fun AddMyPetScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA5D6A7))
+            colors = ButtonDefaults.buttonColors(containerColor = Green1)
         ) {
             Text("저장하기")
         }
-
 
         Spacer(modifier = Modifier.height(12.dp))
 
