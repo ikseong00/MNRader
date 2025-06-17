@@ -36,153 +36,157 @@ fun SettingScreen(
         viewModel.initWithMyPagePets("123@konkuk.ac.kr", petsFromMyPage)
     }
 
+    Scaffold(
+        topBar = {
+            CommonTopBar(title = "설정", onBack = { onBackClick() })
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        CommonTopBar(title = "설정", onBack = { onBackClick() })
-        Spacer(modifier = Modifier.height(12.dp))
+            Text(state.email, fontSize = 16.sp, modifier = Modifier.padding(bottom = 8.dp))
 
-        Text(state.email, fontSize = 16.sp, modifier = Modifier.padding(bottom = 8.dp))
+            SectionHeader(
+                title = "보유중인 동물",
+                expanded = state.isPetSectionExpanded,
+                onToggle = { viewModel.toggleSection("pet") }
+            )
 
-        SectionHeader(
-            title = "보유중인 동물",
-            expanded = state.isPetSectionExpanded,
-            onToggle = { viewModel.toggleSection("pet") }
-        )
+            if (state.isPetSectionExpanded) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 100.dp)
+                        .padding(vertical = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(state.pets) { pet ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
+                                .background(Color.LightGray, shape = MaterialTheme.shapes.medium)
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(pet.name)
+                        }
+                    }
 
-        if (state.isPetSectionExpanded) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 100.dp)
-                    .padding(vertical = 8.dp),
-                contentPadding = PaddingValues(horizontal = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(state.pets) { pet ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(Color.LightGray, shape = MaterialTheme.shapes.medium)
-                            .padding(8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(pet.name)
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
+                                .background(Color.White, shape = MaterialTheme.shapes.medium)
+                                .clickable {
+                                    onNavigateToAddPet()
+                                           },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AddCircleOutline,
+                                contentDescription = "추가",
+                                tint = Green1,
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }
                     }
                 }
+            }
 
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(Color.White, shape = MaterialTheme.shapes.medium)
-                            .clickable {
-                                onNavigateToAddPet()
-                                       },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.AddCircleOutline,
-                            contentDescription = "추가",
-                            tint = Green1,
-                            modifier = Modifier.size(48.dp)
+            SectionHeader(
+                title = "이메일",
+                expanded = state.isEmailSectionExpanded,
+                onToggle = { viewModel.toggleSection("email") }
+            )
+
+            if (state.isEmailSectionExpanded) {
+                OutlinedTextField(
+                    value = state.email,
+                    onValueChange = { viewModel.updateEmail(it) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            SectionHeader(
+                title = "지역",
+                expanded = state.isRegionSectionExpanded,
+                onToggle = { viewModel.toggleSection("region") }
+            )
+
+            if (state.isRegionSectionExpanded) {
+                val cityList = listOf("서울시", "경기도", "부산광역시", "인천광역시")
+                Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                    cityList.forEach { city ->
+                        Text(
+                            text = city,
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { viewModel.updateCity(city) }
+                                .padding(vertical = 6.dp),
+                            color = if (state.selectedCity == city) Green1 else Color.Black
                         )
                     }
                 }
             }
-        }
 
-        SectionHeader(
-            title = "이메일",
-            expanded = state.isEmailSectionExpanded,
-            onToggle = { viewModel.toggleSection("email") }
-        )
+            Spacer(modifier = Modifier.height(16.dp))
 
-        if (state.isEmailSectionExpanded) {
-            OutlinedTextField(
-                value = state.email,
-                onValueChange = { viewModel.updateEmail(it) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-
-        SectionHeader(
-            title = "지역",
-            expanded = state.isRegionSectionExpanded,
-            onToggle = { viewModel.toggleSection("region") }
-        )
-
-        if (state.isRegionSectionExpanded) {
-            val cityList = listOf("서울시", "경기도", "부산광역시", "인천광역시")
-            Column(modifier = Modifier.padding(vertical = 4.dp)) {
-                cityList.forEach { city ->
-                    Text(
-                        text = city,
-                        fontSize = 16.sp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { viewModel.updateCity(city) }
-                            .padding(vertical = 6.dp),
-                        color = if (state.selectedCity == city) Green1 else Color.Black
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { viewModel.saveSettings() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Green1),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text("저장하기")
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text("알림 설정", fontSize = 16.sp)
-            Switch(
-                checked = state.isNotificationEnabled,
-                onCheckedChange = { viewModel.toggleNotification(it) }
-            )
-        }
-
-        if (state.showSuccessPopup) {
-            Box(
+            Button(
+                onClick = { viewModel.saveSettings() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
-                contentAlignment = Alignment.Center
+                    .height(40.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Green1),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Surface(
-                    color = Green1,
-                    shape = MaterialTheme.shapes.medium,
-                    shadowElevation = 8.dp
+                Text("저장하기")
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("알림 설정", fontSize = 16.sp)
+                Switch(
+                    checked = state.isNotificationEnabled,
+                    onCheckedChange = { viewModel.toggleNotification(it) }
+                )
+            }
+
+            if (state.showSuccessPopup) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "저장 성공!",
-                        modifier = Modifier.padding(16.dp),
-                        color = Color.White
-                    )
+                    Surface(
+                        color = Green1,
+                        shape = MaterialTheme.shapes.medium,
+                        shadowElevation = 8.dp
+                    ) {
+                        Text(
+                            text = "저장 성공!",
+                            modifier = Modifier.padding(16.dp),
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
