@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
@@ -27,8 +26,8 @@ import com.example.mnrader.ui.add.model.RegisterViewModel
 @Composable
 fun SelectTypeScreen(
     navController: NavController,
-    rootNavController: NavHostController,
-    viewModel: RegisterViewModel
+    viewModel: RegisterViewModel,
+    onBackClick: () -> Unit
 ) {
 
     val customButtonColor = Color(0xFF89C5A9)
@@ -36,9 +35,7 @@ fun SelectTypeScreen(
     Column(
         modifier = Modifier.fillMaxSize()) {
         RegisterTopBar(
-            onBackClick = {//Home화면으로 이동
-                rootNavController.popBackStack()  // 또는 rootNavController.navigate(Routes.MAIN)
-                },
+            onBackClick = onBackClick,
             currentStep = 1 // 여기서 단계 조정: 1~5
         )
         Box(modifier = Modifier.fillMaxSize()
@@ -81,5 +78,5 @@ fun SelectTypeScreenPreview() {
     val navController = rememberNavController()
     val viewModel = remember { RegisterViewModel() }
 
-    SelectTypeScreen(navController = navController, rootNavController = navController,viewModel = viewModel)
+    SelectTypeScreen(navController = navController,viewModel = viewModel, onBackClick = {})
 }
