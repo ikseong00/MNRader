@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.navigation.MainTab
 import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.theme.Green1
@@ -49,7 +50,8 @@ fun SubmitSuccessScreen(
                     onClick = {
                         viewModel.reset()
                         rootNavController.navigate(Routes.MAIN) {
-                            popUpTo(Routes.MAIN) { inclusive = true }
+                            popUpTo(0) { inclusive = true } // 전체 스택 제거
+                            launchSingleTop = true
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Green1),
