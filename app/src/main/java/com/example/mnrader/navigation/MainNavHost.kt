@@ -45,6 +45,8 @@ fun MainNavHost(
     padding: PaddingValues,
     onLoginSuccess: () -> Unit
 ) {
+    // 등록 화면 이전 경로 저장용 객체를 mainNavHost에서 생성
+    val registerBackEntryManager = remember { RegisterBackEntryManager() }
 
     NavHost(
         navController = navController,
@@ -89,6 +91,9 @@ fun MainNavHost(
 //                    navController.navigate(Routes.MAIN) {
 //                        popUpTo(Routes.LOGIN) { inclusive = true }
 //                    }
+                    navController.navigate(Routes.MAIN) {
+                        popUpTo(Routes.ONBOARDING) { inclusive = true }
+                    }
                 },
                 onNavigateToRegister = {
                     navController.navigate(Routes.REGISTER)
@@ -219,33 +224,9 @@ fun MainNavHost(
         composable(
             route = Routes.ADD
         ) {
-            val registerNavController = rememberNavController()
-            val registerViewModel = remember { RegisterViewModel() }
-
-            NavHost(
-                navController = registerNavController,
-                startDestination = RegisterScreens.SelectType.route
-            ) {
-                composable(RegisterScreens.SelectType.route) {
-                    SelectTypeScreen(
-                        navController = registerNavController,
-                        rootNavController = navController,
-                        viewModel = registerViewModel
-                    )
-                }
-                composable(RegisterScreens.RegisterInfo.route) {
-                    RegisterInfoScreen(registerNavController, registerViewModel)
-                }
-                composable(RegisterScreens.AnimalType.route) {
-                    AnimalTypeScreen(registerNavController, registerViewModel)
-                }
-                composable(RegisterScreens.ReportOrLost.route) {
-                    ReportOrLostScreen(registerNavController, registerViewModel)
-                }
-                composable(RegisterScreens.SubmitSuccess.route) {
-                    SubmitSuccessScreen(rootNavController = navController, registerViewModel)
-                }
-            }
+            AnimalRegister( rootNavController = navController,
+                registerBackEntryManager = registerBackEntryManager
+            )
         }
 
         // 마이페이지
@@ -319,4 +300,59 @@ object Routes {
     const val MYPAGE = "mypage"
     const val SETTING = "setting"
     const val ADD_MY_PET = "add_my_pet"
+}
+
+@Composable
+fun AnimalRegister(
+    rootNavController: NavHostController,
+    registerBackEntryManager: RegisterBackEntryManager
+) {
+    val navController = rememberNavController()
+    val viewModel: RegisterViewModel = viewModel()
+    LaunchedEffect(Unit) {
+        if (registerBackEntryManager.prevRoute == null) {
+            // 이전 경로가 설정되지 않았으면 기본값 지정
+            registerBackEntryManager.prevRoute = Routes.MAIN
+        }
+    }
+    NavHost(
+        navController = navController,
+        startDestination = RegisterScreens.SelectType.route
+    ) {
+        composable(RegisterScreens.SelectType.route) {
+            SelectTypeScreen(
+                navController = navController,
+                rootNavController = rootNavController,
+                viewModel = viewModel,
+                onBackClick = {
+                    registerBackEntryManager.prevRoute?.let {
+                        rootNavController.navigate(it) {
+                            popUpTo(Routes.ADD) { inclusive = true }
+                        }
+                    } ?: run {
+                        if (!rootNavController.popBackStack()) {
+                            rootNavController.navigate(Routes.MAIN)
+                        }
+                    }
+                }
+            )
+        }
+        composable(RegisterScreens.RegisterInfo.route) {
+            RegisterInfoScreen(navController, viewModel)
+        }
+        composable(RegisterScreens.AnimalType.route) {
+            AnimalTypeScreen(navController, viewModel)
+        }
+        composable(RegisterScreens.ReportOrLost.route) {
+            ReportOrLostScreen(navController, viewModel)
+        }
+        composable(RegisterScreens.SubmitSuccess.route) {
+            SubmitSuccessScreen(rootNavController,viewModel)
+        }
+    }
+}
+
+// 등록 화면 이전 경로 저장용
+class RegisterBackEntryManager {
+    var prevRoute: String? = null
 }
