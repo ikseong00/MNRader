@@ -70,7 +70,7 @@ fun MainNavHost(
         ) {
             UserRegisterScreen(
                 navController = navController,
-                onRegisterClick = { region, email, password ->
+                onRegisterClick = { _, _, _ ->
                     // 회원가입 처리 후 로그인 화면으로 이동
                     navController.navigate(Routes.LOGIN) {
                         popUpTo(Routes.REGISTER) { inclusive = true }
@@ -85,7 +85,7 @@ fun MainNavHost(
         ) {
             LoginScreen(
                 navController = navController,
-                onLoginClick = { email, password ->
+                onLoginClick = { _, _ ->
                     // 로그인 로직 처리 후 홈으로 이동
                     onLoginSuccess()
 //                    navController.navigate(Routes.MAIN) {
@@ -322,7 +322,6 @@ fun AnimalRegister(
         composable(RegisterScreens.SelectType.route) {
             SelectTypeScreen(
                 navController = navController,
-                rootNavController = rootNavController,
                 viewModel = viewModel,
                 onBackClick = {
                     registerBackEntryManager.prevRoute?.let {

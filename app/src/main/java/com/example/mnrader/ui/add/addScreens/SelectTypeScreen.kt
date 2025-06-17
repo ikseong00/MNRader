@@ -19,16 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
 
 @Composable
 fun SelectTypeScreen(
     navController: NavController,
-    rootNavController: NavHostController,
     viewModel: RegisterViewModel,
     onBackClick: () -> Unit
 ) {
@@ -81,5 +78,5 @@ fun SelectTypeScreenPreview() {
     val navController = rememberNavController()
     val viewModel = remember { RegisterViewModel() }
 
-    SelectTypeScreen(navController = navController, rootNavController = navController,viewModel = viewModel, onBackClick = {})
+    SelectTypeScreen(navController = navController,viewModel = viewModel, onBackClick = {})
 }
