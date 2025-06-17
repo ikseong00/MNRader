@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.mnrader.ui.mypage.component.CommonTopBar
 import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
 import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun SettingScreen(
@@ -138,7 +139,7 @@ fun SettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFA5D6A7))
+            colors = ButtonDefaults.buttonColors(containerColor = Green1)
         ) {
             Text("저장하기")
         }
