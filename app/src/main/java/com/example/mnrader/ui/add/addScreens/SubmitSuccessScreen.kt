@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.navigation.MainTab
 import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.theme.Green1
