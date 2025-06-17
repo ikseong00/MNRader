@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
                 var isLoggedIn by rememberSaveable { mutableStateOf(false) }
 
-                var navigationBarVisible = remember(currentDestination, isLoggedIn) {
+                val navigationBarVisible = remember(currentDestination, isLoggedIn) {
                     derivedStateOf {
                         isLoggedIn&&MainTab.entries.any { tab ->
                             tab.route == currentDestination
