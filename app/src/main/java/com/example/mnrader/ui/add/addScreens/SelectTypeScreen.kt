@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
 
@@ -37,8 +38,14 @@ fun SelectTypeScreen(
         modifier = Modifier.fillMaxSize()) {
         RegisterTopBar(
             onBackClick = {//Home화면으로 이동
-                rootNavController.popBackStack()  // 또는 rootNavController.navigate(Routes.MAIN)
-                },
+//                rootNavController.popBackStack()  // 또는 rootNavController.navigate(Routes.MAIN)
+                if (!navController.popBackStack()) {
+                    // 이전 화면이 없으면 홈으로
+                    rootNavController.navigate(Routes.MAIN) {
+                        popUpTo(Routes.ADD) { inclusive = true } // ADD 스택에서 제거
+                    }
+                }
+            },
             currentStep = 1 // 여기서 단계 조정: 1~5
         )
         Box(modifier = Modifier.fillMaxSize()

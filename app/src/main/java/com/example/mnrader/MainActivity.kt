@@ -10,6 +10,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -18,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.navigation.MainNavHost
 import com.example.mnrader.navigation.MainTab
 import com.example.mnrader.navigation.NavigationBar
+import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.theme.MNRaderTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,9 +33,12 @@ class MainActivity : ComponentActivity() {
                 val navBackStack by
                     navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStack?.destination?.route
-                var navigationBarVisible = remember(currentDestination) {
+
+                var isLoggedIn by rememberSaveable { mutableStateOf(false) }
+
+                var navigationBarVisible = remember(currentDestination, isLoggedIn) {
                     derivedStateOf {
-                        MainTab.entries.any { tab ->
+                        isLoggedIn&&MainTab.entries.any { tab ->
                             tab.route == currentDestination
                         }&& currentDestination != "add"
                     }
@@ -64,6 +69,18 @@ class MainActivity : ComponentActivity() {
                     MainNavHost(
                         navController = navController,
                         padding = innerPadding,
+                        onLoginSuccess = {
+                            isLoggedIn = true
+                            navController.navigate(MainTab.HOME.route) {
+                                popUpTo(Routes.LOGIN) { inclusive = true }
+                            }
+                        },
+                        onLogout = {
+                            isLoggedIn = false
+                            navController.navigate(Routes.LOGIN) {
+                                popUpTo(0) // 처음부터 시작
+                            }
+                        }
                     )
                 }
             }

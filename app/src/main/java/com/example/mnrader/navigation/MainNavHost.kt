@@ -35,17 +35,21 @@ import com.example.mnrader.ui.settings.screen.AddMyPetScreen
 import com.example.mnrader.ui.settings.screen.SettingScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
+import com.example.mnrader.ui.userRegisterOrLogin.userRegisterScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MainNavHost(
     navController: NavHostController,
     padding: PaddingValues,
+    onLoginSuccess: () -> Unit,
+    onLogout: () -> Unit
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN,
+        startDestination = Routes.ONBOARDING,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -62,12 +66,36 @@ fun MainNavHost(
         // 회원가입
         composable(
             route = Routes.REGISTER
-        ) { }
+        ) {
+            userRegisterScreen(
+                navController = navController,
+                onRegisterClick = { region, email, password ->
+                    // 회원가입 처리 후 로그인 화면으로 이동
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.REGISTER) { inclusive = true }
+                    }
+                }
+            )
+        }
 
         // 로그인
         composable(
             route = Routes.LOGIN
-        ) { }
+        ) {
+            LoginScreen(
+                navController = navController,
+                onLoginClick = { email, password ->
+                    // 로그인 로직 처리 후 홈으로 이동
+                    onLoginSuccess()
+//                    navController.navigate(Routes.MAIN) {
+//                        popUpTo(Routes.LOGIN) { inclusive = true }
+//                    }
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Routes.REGISTER)
+                }
+            )
+        }
 
         // 메인화면
         composable(
@@ -192,7 +220,33 @@ fun MainNavHost(
         composable(
             route = Routes.ADD
         ) {
-            AnimalRegister(navController)
+            val registerNavController = rememberNavController()
+            val registerViewModel = remember { RegisterViewModel() }
+
+            NavHost(
+                navController = registerNavController,
+                startDestination = RegisterScreens.SelectType.route
+            ) {
+                composable(RegisterScreens.SelectType.route) {
+                    SelectTypeScreen(
+                        navController = registerNavController,
+                        rootNavController = navController,
+                        viewModel = registerViewModel
+                    )
+                }
+                composable(RegisterScreens.RegisterInfo.route) {
+                    RegisterInfoScreen(registerNavController, registerViewModel)
+                }
+                composable(RegisterScreens.AnimalType.route) {
+                    AnimalTypeScreen(registerNavController, registerViewModel)
+                }
+                composable(RegisterScreens.ReportOrLost.route) {
+                    ReportOrLostScreen(registerNavController, registerViewModel)
+                }
+                composable(RegisterScreens.SubmitSuccess.route) {
+                    SubmitSuccessScreen(rootNavController = navController, registerViewModel)
+                }
+            }
         }
 
         // 마이페이지
@@ -269,31 +323,31 @@ object Routes {
 }
 
 
-@Composable
-fun AnimalRegister(
-    rootNavController: NavHostController,
-    viewModel: RegisterViewModel = RegisterViewModel()
-) {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = RegisterScreens.SelectType.route
-    ) {
-        composable(RegisterScreens.SelectType.route) {
-            SelectTypeScreen(navController,rootNavController, viewModel)
-        }
-        composable(RegisterScreens.RegisterInfo.route) {
-            RegisterInfoScreen(navController, viewModel)
-        }
-        composable(RegisterScreens.AnimalType.route) {
-            AnimalTypeScreen(navController, viewModel)
-        }
-        composable(RegisterScreens.ReportOrLost.route) {
-            ReportOrLostScreen(navController, viewModel)
-        }
-        composable(RegisterScreens.SubmitSuccess.route) {
-            SubmitSuccessScreen(rootNavController,viewModel)
-        }
-    }
-}
+//@Composable
+//fun AnimalRegister(
+//    rootNavController: NavHostController,
+//    viewModel: RegisterViewModel = RegisterViewModel()
+//) {
+//    val navController = rememberNavController()
+//
+//    NavHost(
+//        navController = navController,
+//        startDestination = RegisterScreens.SelectType.route
+//    ) {
+//        composable(RegisterScreens.SelectType.route) {
+//            SelectTypeScreen(navController,rootNavController, viewModel)
+//        }
+//        composable(RegisterScreens.RegisterInfo.route) {
+//            RegisterInfoScreen(navController, viewModel)
+//        }
+//        composable(RegisterScreens.AnimalType.route) {
+//            AnimalTypeScreen(navController, viewModel)
+//        }
+//        composable(RegisterScreens.ReportOrLost.route) {
+//            ReportOrLostScreen(navController, viewModel)
+//        }
+//        composable(RegisterScreens.SubmitSuccess.route) {
+//            SubmitSuccessScreen(rootNavController,viewModel)
+//        }
+//    }
+//}
