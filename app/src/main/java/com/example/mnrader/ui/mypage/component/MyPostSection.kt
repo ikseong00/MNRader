@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.mnrader.ui.mypage.dataclass.Pet
 import com.example.mnrader.ui.mypage.dataclass.Post
@@ -38,7 +39,7 @@ fun MyPostSection(
     allPostsClick: () -> Unit
 ) {
 
-    Column(modifier = Modifier.padding(top = 12.dp)) {
+    Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,9 +47,9 @@ fun MyPostSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("내가 올린 게시물", style = MaterialTheme.typography.titleMedium)
+            Text("내가 올린 게시물", fontSize = 18.sp)
             TextButton(onClick = allPostsClick) {
-                Text("전체보기", color = Color(0xFF8E8E93))
+                Text("전체보기", color = Color(0xFF8E8E93),fontSize = 14.sp)
                 Icon(
                     imageVector = Icons.Default.ChevronRight,
                     contentDescription = null,

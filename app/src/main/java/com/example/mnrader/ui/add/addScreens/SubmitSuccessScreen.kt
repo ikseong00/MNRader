@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,13 +25,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.navigation.Routes
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun SubmitSuccessScreen(
     rootNavController: NavHostController,
     viewModel: RegisterViewModel
 ) {
-    val customButtonColor = Color(0xFF89C5A9)
     Scaffold(
         topBar = {
             RegisterTopBar(
@@ -50,10 +49,11 @@ fun SubmitSuccessScreen(
                     onClick = {
                         viewModel.reset()
                         rootNavController.navigate(Routes.MAIN) {
-                            popUpTo(Routes.MAIN) { inclusive = true }
+                            popUpTo(0) { inclusive = true } // 전체 스택 제거
+                            launchSingleTop = true
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                    colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("완료")
@@ -78,7 +78,7 @@ fun SubmitSuccessScreen(
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = null,
-                    tint = Color(0xff90c5aa),
+                    tint = Green1,
                     modifier = Modifier.size(80.dp)
                 )
                 Text("제출 성공!", fontSize = 24.sp, modifier = Modifier.padding(16.dp))

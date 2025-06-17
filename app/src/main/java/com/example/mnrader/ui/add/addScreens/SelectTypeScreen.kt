@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun SelectTypeScreen(
@@ -29,8 +29,6 @@ fun SelectTypeScreen(
     viewModel: RegisterViewModel,
     onBackClick: () -> Unit
 ) {
-
-    val customButtonColor = Color(0xFF89C5A9)
 
     Column(
         modifier = Modifier.fillMaxSize()) {
@@ -51,7 +49,7 @@ fun SelectTypeScreen(
                     viewModel.registerData = viewModel.registerData.copy(type = "report")
                     navController.navigate(RegisterScreens.RegisterInfo.route)
                 },
-                    colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                    colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     modifier = Modifier
                         .fillMaxWidth()) {
                     Text("유기동물 신고하기")
@@ -61,7 +59,7 @@ fun SelectTypeScreen(
                     viewModel.registerData = viewModel.registerData.copy(type = "lost")
                     navController.navigate(RegisterScreens.RegisterInfo.route)
                 },
-                    colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                    colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     modifier = Modifier
                         .fillMaxWidth()) {
                     Text("실종동물 등록하기")

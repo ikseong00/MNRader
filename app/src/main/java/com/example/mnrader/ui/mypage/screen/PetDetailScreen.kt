@@ -234,7 +234,6 @@ fun PetDetailScreen(
             Text("저장")
         }
 
-
         Spacer(modifier = Modifier.height(24.dp))
     }
 }

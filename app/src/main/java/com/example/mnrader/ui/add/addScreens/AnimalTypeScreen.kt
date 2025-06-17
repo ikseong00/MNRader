@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.add.addScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.RadioButton
@@ -25,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +38,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.theme.Gray
+import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun AnimalTypeScreen(
@@ -42,7 +47,7 @@ fun AnimalTypeScreen(
     viewModel: RegisterViewModel
 ) {
     var selected by remember { mutableStateOf("") }
-    val customButtonColor = Color(0xFF89C5A9)
+
     val animalList = listOf(
         Pair("강아지", R.drawable.dog),
         Pair("고양이", R.drawable.cat),
@@ -68,7 +73,7 @@ fun AnimalTypeScreen(
                                 viewModel.registerData.copy(animalType = selected)
                             navController.navigate(RegisterScreens.ReportOrLost.route)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = customButtonColor),
+                        colors = ButtonDefaults.buttonColors(containerColor = Green1),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("다음")
@@ -105,7 +110,8 @@ fun AnimalTypeScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .background(color = Color.LightGray)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(color = Gray)
                             .clickable {
                                 selected = label
                             }
@@ -121,9 +127,9 @@ fun AnimalTypeScreen(
                                 onClick = { selected = label }
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(text = label)
-                            Spacer(modifier = Modifier.weight(0.5f))
-                            androidx.compose.foundation.Image(
+                            Text(text = label,fontSize = 16.sp)
+                            Spacer(modifier = Modifier.width(60.dp))
+                            Image(
                                 painter = painterResource(id = imageRes),
                                 contentDescription = label,
                                 modifier = Modifier.size(80.dp)

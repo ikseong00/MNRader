@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.mnrader.ui.theme.Green1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +80,7 @@ fun StepProgressIndicator(currentStep: Int, totalSteps: Int) {
                     .height(8.dp)
                     .weight(1f)
                     .clip(CircleShape)
-                    .background(if (isActive) Color(0xFF89C5A9) else Color.LightGray)
+                    .background(if (isActive) Green1 else Color.LightGray)
             )
             if (index != totalSteps - 1) {
                 Spacer(modifier = Modifier.width(8.dp))

@@ -36,11 +36,18 @@ class MainActivity : ComponentActivity() {
 
                 var isLoggedIn by rememberSaveable { mutableStateOf(false) }
 
+                // 현재 라우트 기반으로 currentTab을 자동 업데이트
+                currentDestination?.let { route ->
+                    MainTab.entries.find { it.route == route }?.let {
+                        if (currentTab != it) currentTab = it
+                    }
+                }
+
                 val navigationBarVisible = remember(currentDestination, isLoggedIn) {
                     derivedStateOf {
                         isLoggedIn&&MainTab.entries.any { tab ->
                             tab.route == currentDestination
-                        }&& currentDestination != "add"
+                        }&& currentDestination != Routes.ADD
                     }
                 }
 
