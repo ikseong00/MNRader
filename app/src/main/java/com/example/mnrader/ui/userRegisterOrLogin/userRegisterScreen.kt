@@ -43,7 +43,7 @@ import com.example.mnrader.ui.theme.Green1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun userRegisterScreen(navController: NavController,
+fun UserRegisterScreen(navController: NavController,
                        onRegisterClick: (region: String, email: String, password: String) -> Unit
 ) {
     val regionList = listOf(
@@ -185,7 +185,7 @@ fun userRegisterScreen(navController: NavController,
 fun UserRegisterScreenPreview() {
     val navController = rememberNavController()
 
-    userRegisterScreen(
+    UserRegisterScreen(
         navController = navController,
         onRegisterClick = { _, _, _ -> }
     )

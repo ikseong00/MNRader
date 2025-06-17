@@ -36,7 +36,7 @@ import com.example.mnrader.ui.settings.screen.SettingScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
-import com.example.mnrader.ui.userRegisterOrLogin.userRegisterScreen
+import com.example.mnrader.ui.userRegisterOrLogin.UserRegisterScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -68,7 +68,7 @@ fun MainNavHost(
         composable(
             route = Routes.REGISTER
         ) {
-            userRegisterScreen(
+            UserRegisterScreen(
                 navController = navController,
                 onRegisterClick = { region, email, password ->
                     // 회원가입 처리 후 로그인 화면으로 이동
