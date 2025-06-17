@@ -74,12 +74,6 @@ class MainActivity : ComponentActivity() {
                             navController.navigate(MainTab.HOME.route) {
                                 popUpTo(Routes.LOGIN) { inclusive = true }
                             }
-                        },
-                        onLogout = {
-                            isLoggedIn = false
-                            navController.navigate(Routes.LOGIN) {
-                                popUpTo(0) // 처음부터 시작
-                            }
                         }
                     )
                 }

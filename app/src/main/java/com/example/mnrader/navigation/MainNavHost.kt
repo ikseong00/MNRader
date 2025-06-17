@@ -43,8 +43,7 @@ import com.example.mnrader.ui.userRegisterOrLogin.userRegisterScreen
 fun MainNavHost(
     navController: NavHostController,
     padding: PaddingValues,
-    onLoginSuccess: () -> Unit,
-    onLogout: () -> Unit
+    onLoginSuccess: () -> Unit
 ) {
 
     NavHost(
@@ -321,33 +320,3 @@ object Routes {
     const val SETTING = "setting"
     const val ADD_MY_PET = "add_my_pet"
 }
-
-
-//@Composable
-//fun AnimalRegister(
-//    rootNavController: NavHostController,
-//    viewModel: RegisterViewModel = RegisterViewModel()
-//) {
-//    val navController = rememberNavController()
-//
-//    NavHost(
-//        navController = navController,
-//        startDestination = RegisterScreens.SelectType.route
-//    ) {
-//        composable(RegisterScreens.SelectType.route) {
-//            SelectTypeScreen(navController,rootNavController, viewModel)
-//        }
-//        composable(RegisterScreens.RegisterInfo.route) {
-//            RegisterInfoScreen(navController, viewModel)
-//        }
-//        composable(RegisterScreens.AnimalType.route) {
-//            AnimalTypeScreen(navController, viewModel)
-//        }
-//        composable(RegisterScreens.ReportOrLost.route) {
-//            ReportOrLostScreen(navController, viewModel)
-//        }
-//        composable(RegisterScreens.SubmitSuccess.route) {
-//            SubmitSuccessScreen(rootNavController,viewModel)
-//        }
-//    }
-//}
