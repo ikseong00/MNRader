@@ -14,6 +14,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mnrader.ui.add.addScreens.AnimalTypeScreen
 import com.example.mnrader.ui.add.addScreens.RegisterInfoScreen
 import com.example.mnrader.ui.add.addScreens.ReportOrLostScreen
@@ -21,18 +22,8 @@ import com.example.mnrader.ui.add.addScreens.SelectTypeScreen
 import com.example.mnrader.ui.add.addScreens.SubmitSuccessScreen
 import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
-import androidx.navigation.navArgument
 import com.example.mnrader.ui.home.component.AnimalDetailScreen
 import com.example.mnrader.ui.home.screen.HomeScreen
-import com.example.mnrader.ui.mypage.screen.MyPageScreen
-import com.example.mnrader.ui.mypage.screen.PetDetailScreen
-import com.example.mnrader.ui.mypage.screen.PostListScreen
-import com.example.mnrader.ui.mypage.screen.ScrapListScreen
-import com.example.mnrader.ui.mypage.viewmodel.MyPageViewModel
-import com.example.mnrader.ui.mypage.viewmodel.PetUploadViewModel
-import com.example.mnrader.ui.setting.viewmodel.SettingViewModel
-import com.example.mnrader.ui.settings.screen.AddMyPetScreen
-import com.example.mnrader.ui.settings.screen.SettingScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
@@ -132,81 +123,25 @@ fun MainNavHost(
             }
         }
 
-        // 동물 상세보기 페이지
-        composable(
-            route = Routes.ANIMAL_DETAIL_WITH_ARG,
-            arguments = listOf(navArgument("petId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val petId = backStackEntry.arguments?.getString("petId")?.toIntOrNull()
-
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(Routes.MYPAGE)
-            }
-            val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
-            val uploadViewModel: PetUploadViewModel = viewModel() // 새로 생성
-
-            val pet = myPageViewModel.pets.value.find { it.id == petId }
-
-            if (pet != null) {
-                PetDetailScreen(
-                    pet = pet,
-                    viewModel = uploadViewModel,
-                    myPageViewModel = myPageViewModel,
-                    onBackClick = { navController.popBackStack() }
-                )
-            } else {
-                Text("해당 동물을 찾을 수 없습니다.")
-            }
-        }
-
 
         // 내가 올린 게시물
         composable(
             route = Routes.POST_LIST
         ) {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(Routes.MYPAGE)
-            }
-            val viewModel: MyPageViewModel = viewModel(parentEntry)
-            PostListScreen(
-                viewModel = viewModel,
-                onBackClick = { navController.popBackStack() },
-                onPostClick = { postId -> navController.navigate("animal_post_detail/$postId") }
-            )
+
         }
 
         // 내가 스크랩 한 게시물
         composable(
             route = Routes.SCRAP_LIST
         ) {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(Routes.MYPAGE)
-            }
-            val viewModel: MyPageViewModel = viewModel(parentEntry)
-            ScrapListScreen(
-                viewModel = viewModel,
-                onBackClick = { navController.popBackStack() },
-                onScrapClick = { postId -> navController.navigate("animal_post_detail/$postId") }
-            )
+
         }
 
-        // todo 동물 상세 페이지 (figma: AnimalPage) 컴포저블 구현 이후 처리 예정
         composable(
             route = Routes.ANIMAL_POST_DETAIL,
-            arguments = listOf(navArgument("postId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val postIdStr = backStackEntry.arguments?.getString("postId")
-            val postId = postIdStr?.toLongOrNull()
+        ) {
 
-            if (postId != null) {
-                AnimalDetailScreen(
-                    animalId = postId,
-                    navController = navController,
-                    onBack = { navController.popBackStack() }
-                )
-            } else {
-                Text("잘못된 접근입니다. 게시물 ID가 유효하지 않습니다.")
-            }
         }
 
         // 알림
@@ -233,51 +168,15 @@ fun MainNavHost(
         composable(
             Routes.MYPAGE
         ) {
-            MyPageScreen(
-                onNavigateToPetDetail = { petId -> navController.navigate("animal_detail/$petId") },
-                onNavigateToPostDetail = { postId -> navController.navigate("animal_post_detail/$postId") },
-                onNavigateToScrapDetail = { scrapId -> navController.navigate("animal_post_detail/$scrapId") },
-                onNavigateToAllPosts = { navController.navigate(Routes.POST_LIST) },
-                onNavigateToAllScraps = { navController.navigate(Routes.SCRAP_LIST) },
-                onNavigateToSetting = { navController.navigate(Routes.SETTING) }
-            )
+
         }
 
-        // 설정
-        // MainNavHost.kt
         composable(route = Routes.SETTING) {
-            val parentEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
-            val myPageViewModel: MyPageViewModel = viewModel(parentEntry)
-            val settingViewModel: SettingViewModel = viewModel()
 
-            LaunchedEffect(true) {
-                settingViewModel.initWithMyPagePets(
-                    email = myPageViewModel.user.value.email,
-                    pets = myPageViewModel.pets.value
-                )
-            }
-
-            SettingScreen(
-                viewModel = settingViewModel,
-                myPageViewModel = myPageViewModel,
-                onNavigateToAddPet = { navController.navigate(Routes.ADD_MY_PET) },
-                onBackClick = { navController.popBackStack() }
-            )
         }
 
         composable(route = Routes.ADD_MY_PET) {
-            val settingEntry = remember(it) { navController.getBackStackEntry(Routes.SETTING) }
-            val myPageEntry = remember(it) { navController.getBackStackEntry(Routes.MYPAGE) }
 
-            val settingViewModel: SettingViewModel = viewModel(settingEntry)
-            val myPageViewModel: MyPageViewModel = viewModel(myPageEntry)
-
-            AddMyPetScreen(
-                viewModel = settingViewModel,
-                myPageViewModel = myPageViewModel,
-                onBackClick = { navController.popBackStack() },
-                onSaveComplete = { navController.popBackStack() }
-            )
         }
 
 
