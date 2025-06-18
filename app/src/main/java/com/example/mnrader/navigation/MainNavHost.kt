@@ -25,8 +25,10 @@ import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.ui.home.component.AnimalDetailScreen
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
+import com.example.mnrader.ui.mypost.MyPostScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.scrap.ScrapScreen
 import com.example.mnrader.ui.setting.screen.AddMyPetScreen
 import com.example.mnrader.ui.setting.screen.SettingScreen
 import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
@@ -131,14 +133,29 @@ fun MainNavHost(
         composable(
             route = Routes.POST_LIST
         ) {
-
+            MyPostScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+                onItemClick = { animalId ->
+                    navController.navigate("animal_detail/$animalId")
+                },
+                onAddPostClick = {
+                    navController.navigate(Routes.ADD)
+                }
+            )
         }
 
         // 내가 스크랩 한 게시물
         composable(
             route = Routes.SCRAP_LIST
         ) {
-
+            ScrapScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+                onItemClick = { animalId ->
+                    navController.navigate("animal_detail/$animalId")
+                }
+            )
         }
 
         composable(
