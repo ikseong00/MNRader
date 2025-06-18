@@ -1,6 +1,10 @@
 package com.example.mnrader.ui.mypage.viewmodel
 
-//data class MyUiState()
+data class MyUiState(
+    val email: String = "",
+    val address: String = "",
+    val myAnimalList: List<MyAnimal> = emptyList(),
+)
 
 
 data class MyAnimal(
