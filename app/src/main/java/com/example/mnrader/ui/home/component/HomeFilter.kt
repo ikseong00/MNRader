@@ -6,6 +6,8 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
@@ -33,8 +35,8 @@ import com.example.mnrader.ui.common.FilterChip
 @Composable
 fun HomeFilter(
     modifier: Modifier = Modifier,
-    city: City?,
-    breed: String = "",
+    city: City? = null,
+    breed: String? = null,
     onLocationUpdate: (City) -> Unit = {},
     onBreedUpdate: (String) -> Unit = {},
     isWitnessShown: Boolean,
@@ -90,12 +92,15 @@ fun HomeAddressDropdown(
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 8.dp)
+            .wrapContentWidth()
+            .widthIn(min = 120.dp),
         expanded = expanded,
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
-            value = selectedCity?.displayName ?: "지역을 선택하세요",
+            value = selectedCity?.displayName ?: "지역",
             onValueChange = {},
             readOnly = true,
             trailingIcon = {
@@ -103,6 +108,8 @@ fun HomeAddressDropdown(
             },
             modifier = Modifier
                 .menuAnchor()
+                .wrapContentWidth()
+                .widthIn(min = 120.dp)
                 .border(
                     width = 1.dp,
                     color = Color(0xFFCAC4D0),
@@ -146,12 +153,15 @@ fun HomeBreedDropdown(
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 8.dp)
+            .wrapContentWidth()
+            .widthIn(min = 120.dp), // 기본은 120dp, 내용이 크면 자동 확장,
         expanded = expanded,
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
-            value = selectedBreed ?: "지역을 선택하세요",
+            value = selectedBreed ?: "품종",
             onValueChange = {},
             readOnly = true,
             trailingIcon = {
@@ -159,6 +169,8 @@ fun HomeBreedDropdown(
             },
             modifier = Modifier
                 .menuAnchor()
+                .wrapContentWidth()
+                .widthIn(min = 120.dp)
                 .border(
                     width = 1.dp,
                     color = Color(0xFFCAC4D0),
@@ -181,9 +193,9 @@ fun HomeBreedDropdown(
             DogBreed.entries.forEach { dog ->
                 DropdownMenuItem(
                     modifier = Modifier.background(Color.White),
-                    text = { Text(dog.name) },
+                    text = { Text(dog.breedName) },
                     onClick = {
-                        onBreedSelected(dog.name)
+                        onBreedSelected(dog.breedName)
                         expanded = false
                     }
                 )
@@ -191,9 +203,9 @@ fun HomeBreedDropdown(
             CatBreed.entries.forEach { cat ->
                 DropdownMenuItem(
                     modifier = Modifier.background(Color.White),
-                    text = { Text(cat.name) },
+                    text = { Text(cat.breedName) },
                     onClick = {
-                        onBreedSelected(cat.name)
+                        onBreedSelected(cat.breedName)
                         expanded = false
                     }
                 )

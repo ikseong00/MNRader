@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.home.viewmodel
 
+import com.example.mnrader.model.City
 import com.example.mnrader.ui.home.model.HomeAnimalData
 import com.example.mnrader.ui.home.model.MapAnimalData
 import com.naver.maps.geometry.LatLng
@@ -7,8 +8,8 @@ import com.naver.maps.geometry.LatLng
 data class HomeUiState(
     var mLocation: String = "",
     val animalDataList: List<HomeAnimalData> = emptyList(),
-    var locationFilter: String = "",
-    var breedFilter: String= "",
+    var locationFilter: City? = null,
+    var breedFilter: String? = null,
     var isLostShown: Boolean = true,
     var isProtectShown: Boolean = true,
     var isWitnessShown: Boolean = true,

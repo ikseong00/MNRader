@@ -190,7 +190,7 @@ class HomeViewModel(
     fun setLocation(location: City) {
         _uiState.update { currentState ->
             currentState.copy(
-                locationFilter = location.name,
+                locationFilter = location,
             )
         }
     }

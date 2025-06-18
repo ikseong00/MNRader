@@ -47,9 +47,8 @@ class MainActivity : ComponentActivity() {
 
                 val navigationBarVisible = remember(currentDestination, isLoggedIn) {
                     derivedStateOf {
-                        MainTab.entries.any { tab ->
-                            tab.route == currentDestination
-                        }
+                        currentDestination == MainTab.HOME.route ||
+                            currentDestination == MainTab.MY.route
                     }
                 }
 

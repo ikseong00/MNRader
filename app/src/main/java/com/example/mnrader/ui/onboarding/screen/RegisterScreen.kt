@@ -1,5 +1,7 @@
 package com.example.mnrader.ui.onboarding.screen
 
+import android.app.Application
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -46,13 +49,23 @@ import com.example.mnrader.ui.theme.Green1
 fun RegisterScreen(
     navController: NavController,
     navigateToLogin: () -> Unit = {},
-    viewModel: RegisterViewModel = viewModel(factory = RegisterViewModelFactory())
+    viewModel: RegisterViewModel = viewModel(
+        factory = RegisterViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(uiState.isRegistered) {
         if (uiState.isRegistered) {
             navigateToLogin()
+        }
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearError()
         }
     }
 
@@ -150,6 +163,11 @@ fun RegisterScreen(
                     Text("회원가입", fontSize = 16.sp)
                 }
             }
+
+            Text("email: 이메일 형식이어야 합니다.", fontSize = 12.sp)
+            Text("password: 최소 8자리 ~ 최대 20자리까지 가능합니다. ", fontSize = 12.sp)
+            Text("password: 소문자, 숫자, 특수문자가 적어도 하나씩은 있어야 합니다.", fontSize = 12.sp)
+
         }
     }
 }

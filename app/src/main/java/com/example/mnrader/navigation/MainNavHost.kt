@@ -46,7 +46,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ONBOARDING,
+        startDestination = Routes.MAIN,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -67,7 +67,7 @@ fun MainNavHost(
             RegisterScreen(
                 navController = navController,
                 navigateToLogin = {
-                    navController.navigate(Routes.LOGIN) {
+                    navController.navigate(Routes.ONBOARDING) {
                         popUpTo(Routes.REGISTER) { inclusive = true }
                     }
                 }
@@ -80,12 +80,9 @@ fun MainNavHost(
         ) {
             LoginScreen(
                 navController = navController,
-                onLoginClick = { _, _ ->
-                    // 로그인 로직 처리 후 홈으로 이동
+                onLoginSuccess = {
+                    // 로그인 성공 후 홈으로 이동 - 모든 백스택 제거
                     onLoginSuccess()
-//                    navController.navigate(Routes.MAIN) {
-//                        popUpTo(Routes.LOGIN) { inclusive = true }
-//                    }
                     navController.navigate(Routes.MAIN) {
                         popUpTo(Routes.ONBOARDING) { inclusive = true }
                     }

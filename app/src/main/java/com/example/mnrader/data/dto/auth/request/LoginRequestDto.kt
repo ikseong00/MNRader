@@ -1,5 +1,4 @@
-package com.example.mnrader.data.dto.auth
-
+package com.example.mnrader.data.dto.auth.request
 
 import com.google.gson.annotations.SerializedName
 
@@ -8,4 +7,4 @@ data class LoginRequestDto(
     val email: String,
     @SerializedName("password")
     val password: String
-)
+) 

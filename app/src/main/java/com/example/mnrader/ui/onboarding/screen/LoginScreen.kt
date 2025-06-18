@@ -24,9 +24,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import android.widget.Toast
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -46,11 +49,27 @@ import com.example.mnrader.ui.theme.Green1
 @Composable
 fun LoginScreen(
     navController: NavController,
-    onLoginClick: (email: String, password: String) -> Unit,
+    onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory())
+    viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(LocalContext.current.applicationContext as android.app.Application)
+    )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(uiState.isLoggedIn) {
+        if (uiState.isLoggedIn) {
+            onLoginSuccess()
+        }
+    }
+    
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearError()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -116,7 +135,9 @@ fun LoginScreen(
 
                 // 로그인 버튼
                 Button(
-                    onClick = { onLoginClick(uiState.email, uiState.password) },
+                    onClick = { 
+                        viewModel.login()
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
@@ -151,7 +172,7 @@ fun LoginScreenPreview() {
     val navController = rememberNavController()
     LoginScreen(
         navController = navController,
-        onLoginClick = { _, _ -> },
+        onLoginSuccess = { },
         onNavigateToRegister = {}
     )
 } 

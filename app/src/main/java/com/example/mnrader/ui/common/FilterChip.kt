@@ -29,7 +29,7 @@ fun FilterChip(
 ) {
     Row(
         modifier = modifier
-            .height(32.dp)
+            .height(56.dp)
             .border(
                 width = 1.dp,
                 shape = RoundedCornerShape(8.dp),
