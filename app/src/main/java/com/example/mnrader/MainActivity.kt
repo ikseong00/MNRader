@@ -3,8 +3,11 @@ package com.example.mnrader
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -25,13 +28,12 @@ import com.example.mnrader.ui.theme.MNRaderTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             MNRaderTheme {
                 val navController = rememberNavController()
                 var currentTab by remember { mutableStateOf(MainTab.HOME) }
                 val navBackStack by
-                    navController.currentBackStackEntryAsState()
+                navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStack?.destination?.route
 
                 var isLoggedIn by rememberSaveable { mutableStateOf(false) }
@@ -45,14 +47,16 @@ class MainActivity : ComponentActivity() {
 
                 val navigationBarVisible = remember(currentDestination, isLoggedIn) {
                     derivedStateOf {
-                        isLoggedIn&&MainTab.entries.any { tab ->
+                        MainTab.entries.any { tab ->
                             tab.route == currentDestination
-                        }&& currentDestination != Routes.ADD
+                        }
                     }
                 }
 
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(WindowInsets.systemBars.asPaddingValues()),
                     bottomBar = {
                         NavigationBar(
                             modifier = Modifier,

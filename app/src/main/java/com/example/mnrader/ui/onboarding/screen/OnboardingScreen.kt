@@ -33,6 +33,14 @@ fun OnboardingScreen(
             .padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+//        AsyncImage(
+//            model = ImageRequest.Builder(LocalContext.current)
+//                .data("http://openapi.animal.go.kr/openapi/service/rest/fileDownloadSrvc/files/shelter/2025/05/202506181306142.jpg")
+//                .crossfade(true)
+//                .build(),
+//            contentDescription = null,
+//            modifier = Modifier.size(100.dp),
+//        )
         Spacer(Modifier.weight(276f))
         Image(
             painter = painterResource(R.drawable.img_logo_onboarding),

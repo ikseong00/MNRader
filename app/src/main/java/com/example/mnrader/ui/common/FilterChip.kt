@@ -52,7 +52,7 @@ fun FilterChip(
 fun DropdownFilterChip(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: (String) -> Unit = { }
+    onClick: () -> Unit = { }
 ) {
     Row(
         modifier = modifier
@@ -62,7 +62,7 @@ fun DropdownFilterChip(
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFFCAC4D0)
             )
-//            .clickable(onClick = onClick) // TODO
+            .clickable(onClick = onClick)
         ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
