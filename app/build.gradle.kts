@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("kapt")
     kotlin("plugin.parcelize")
+    id("com.google.devtools.ksp")
 }
 
 val properties = Properties().apply {
@@ -26,6 +26,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Naver Map API 키 설정
         manifestPlaceholders["NAVER_CLIENT_ID"] = properties["NAVER_CLIENT_ID"].toString()
+        buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
         buildConfigField("String", "DATA_PORTAL_BASE_URL", properties["DATA_PORTAL_BASE_URL"].toString())
         buildConfigField("String", "DATA_PORTAL_SERVICE_KEY", properties["DATA_PORTAL_SERVICE_KEY"].toString())
         buildConfigField("String", "NAVER_BASE_URL", properties["NAVER_BASE_URL"].toString())
@@ -106,6 +107,9 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 
 }
