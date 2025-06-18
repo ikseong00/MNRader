@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 var currentTab by remember { mutableStateOf(MainTab.HOME) }
                 val navBackStack by
-                    navController.currentBackStackEntryAsState()
+                navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStack?.destination?.route
 
                 var isLoggedIn by rememberSaveable { mutableStateOf(false) }
@@ -45,9 +45,9 @@ class MainActivity : ComponentActivity() {
 
                 val navigationBarVisible = remember(currentDestination, isLoggedIn) {
                     derivedStateOf {
-                        isLoggedIn&&MainTab.entries.any { tab ->
+                        MainTab.entries.any { tab ->
                             tab.route == currentDestination
-                        }&& currentDestination != Routes.ADD
+                        }
                     }
                 }
 

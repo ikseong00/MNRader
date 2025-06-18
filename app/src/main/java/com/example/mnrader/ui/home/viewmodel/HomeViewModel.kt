@@ -189,7 +189,7 @@ class HomeViewModel(
 
 }
 
-class HomeVieWModelFactory(
+class HomeViewModelFactory(
     private val dataPortalRepository: DataPortalRepository,
     private val naverRepository: NaverRepository
 ) :

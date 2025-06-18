@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mnrader.ui.common.DropdownFilterChip
 import com.example.mnrader.ui.common.FilterChip
 
 @Composable
@@ -33,14 +32,14 @@ fun HomeFilter(
             .padding(vertical = 7.dp, horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        DropdownFilterChip(
-            text = "지역",
-            onClick = { onLocationClick(it) }
-        )
-        DropdownFilterChip(
-            text = "품종",
-            onClick = { onBreedClick(it) }
-        )
+//        DropdownFilterChip(
+//            text = "지역",
+//            onClick = { onLocationClick() }
+//        )
+//        DropdownFilterChip(
+//            text = "품종",
+//            onClick = { onBreedClick() }
+//        )
         FilterChip(
             text = "목격한 동물",
             isShown = isWitnessShown,

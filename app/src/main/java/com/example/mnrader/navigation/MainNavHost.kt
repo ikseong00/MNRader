@@ -27,6 +27,7 @@ import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.setting.screen.SettingScreen
 import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
 import com.example.mnrader.ui.userRegisterOrLogin.UserRegisterScreen
 
@@ -178,7 +179,12 @@ fun MainNavHost(
         }
 
         composable(route = Routes.SETTING) {
-
+            SettingScreen(
+                padding = padding,
+                onBack = { navController.popBackStack() },
+                navigateToMyAnimalDetail = { navController.navigate("${Routes.MY_PET_DETAIL}/${it.id}") },
+                navigateToAddMyAnimal = { navController.navigate(Routes.ADD_MY_PET) },
+            )
         }
 
         composable(route = Routes.ADD_MY_PET) {
@@ -196,7 +202,6 @@ object Routes {
     const val LOGIN = "login"
     const val MAIN = "main"
     const val ANIMAL_DETAIL = "animal_detail/{animalId}"
-    const val ANIMAL_DETAIL_WITH_ARG = "animal_detail/{petId}"
     const val ANIMAL_POST_DETAIL = "animal_post_detail/{postId}"
     const val POST_LIST = "post_list"
     const val SCRAP_LIST = "scrap_list"
@@ -205,6 +210,8 @@ object Routes {
     const val MYPAGE = "mypage"
     const val SETTING = "setting"
     const val ADD_MY_PET = "add_my_pet"
+    const val MY_PET_DETAIL = "my_pet_detail"
+    const val MY_PET_DETAIL_WITH_ARG = "my_pet_detail/{petId}"
 }
 
 @Composable

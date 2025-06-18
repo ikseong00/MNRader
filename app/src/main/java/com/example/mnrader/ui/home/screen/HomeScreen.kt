@@ -35,7 +35,7 @@ import com.example.mnrader.ui.home.component.HomeFilter
 import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
-import com.example.mnrader.ui.home.viewmodel.HomeVieWModelFactory
+import com.example.mnrader.ui.home.viewmodel.HomeViewModelFactory
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.theme.Green2
 import com.naver.maps.map.CameraPosition
@@ -46,7 +46,7 @@ fun HomeScreen(
     padding: PaddingValues,
     navigateToAnimalDetail: (Int) -> Unit = {},
     viewModel: HomeViewModel = viewModel(
-        factory = HomeVieWModelFactory(
+        factory = HomeViewModelFactory(
             DataPortalRepository(LocalContext.current), NaverRepository()
         )
     ),
