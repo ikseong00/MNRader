@@ -35,8 +35,8 @@ import com.example.mnrader.ui.home.component.HomeFilter
 import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
-import com.example.mnrader.ui.home.viewmodel.HomeViewModelFactory
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
+import com.example.mnrader.ui.home.viewmodel.HomeViewModelFactory
 import com.example.mnrader.ui.theme.Green2
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.rememberCameraPositionState
@@ -67,7 +67,6 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
             .then(
                 if (uiState.isExpanded) {
                     Modifier

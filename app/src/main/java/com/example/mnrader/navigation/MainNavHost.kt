@@ -27,6 +27,7 @@ import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.setting.screen.AddMyPetScreen
 import com.example.mnrader.ui.setting.screen.SettingScreen
 import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
 import com.example.mnrader.ui.userRegisterOrLogin.UserRegisterScreen
@@ -153,7 +154,7 @@ fun MainNavHost(
             NotificationScreen(
                 padding = padding,
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { /* TODO : 상세 페이지로 이동 */},
+                onItemClick = { /* TODO : 상세 페이지로 이동 */ },
             )
         }
 
@@ -161,7 +162,8 @@ fun MainNavHost(
         composable(
             route = Routes.ADD
         ) {
-            AnimalRegister( rootNavController = navController,
+            AnimalRegister(
+                rootNavController = navController,
                 registerBackEntryManager = registerBackEntryManager
             )
         }
@@ -188,10 +190,11 @@ fun MainNavHost(
         }
 
         composable(route = Routes.ADD_MY_PET) {
-
+            AddMyPetScreen(
+                padding = padding,
+                onBack = { navController.popBackStack() },
+            )
         }
-
-
 
     }
 }
@@ -258,7 +261,7 @@ fun AnimalRegister(
             ReportOrLostScreen(navController, viewModel)
         }
         composable(RegisterScreens.SubmitSuccess.route) {
-            SubmitSuccessScreen(rootNavController,viewModel)
+            SubmitSuccessScreen(rootNavController, viewModel)
         }
     }
 }

@@ -2,5 +2,6 @@
 <network-security-config xmlns:android="http://schemas.android.com/apk/res/android">
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">52.79.164.43</domain>
+        <domain includeSubdomains="true">openapi.animal.go.kr</domain>
     </domain-config>
 </network-security-config>
