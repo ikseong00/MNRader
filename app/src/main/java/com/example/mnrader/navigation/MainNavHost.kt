@@ -24,6 +24,7 @@ import com.example.mnrader.ui.add.model.RegisterScreens
 import com.example.mnrader.ui.add.model.RegisterViewModel
 import com.example.mnrader.ui.home.component.AnimalDetailScreen
 import com.example.mnrader.ui.home.screen.HomeScreen
+import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.notification.NotificationScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
 import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
@@ -168,7 +169,12 @@ fun MainNavHost(
         composable(
             Routes.MYPAGE
         ) {
-
+            MyPageScreen(
+                padding = padding,
+                navigateToSettings = { navController.navigate(Routes.SETTING) },
+                navigateToMyArticles = { navController.navigate(Routes.POST_LIST) },
+                navigateToScrap = { navController.navigate(Routes.SCRAP_LIST) },
+            )
         }
 
         composable(route = Routes.SETTING) {
