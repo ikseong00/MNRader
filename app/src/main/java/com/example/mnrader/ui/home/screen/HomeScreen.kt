@@ -81,14 +81,15 @@ fun HomeScreen(
         )
         Spacer(Modifier.height(5.dp))
         HomeFilter(
-            onLocationClick = { /*TODO*/ },
-            onBreedClick = { /*TODO*/ },
+            onLocationUpdate = { viewModel.setLocation(it) },
+            onBreedUpdate = { viewModel.setBreed(it) },
             onWitnessClick = { viewModel.setWitnessShown(it) },
             onLostClick = { viewModel.setLostShown(it) },
             onProtectClick = { viewModel.setProtectShown(it) },
             isWitnessShown = uiState.isWitnessShown,
             isLostShown = uiState.isLostShown,
             isProtectShown = uiState.isProtectShown,
+            city = null,
         )
         Spacer(Modifier.height(15.dp))
         MapComponent(

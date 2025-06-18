@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mnrader.data.repository.DataPortalRepository
 import com.example.mnrader.data.repository.NaverRepository
 import com.example.mnrader.mapper.toUiModel
+import com.example.mnrader.model.City
 import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.model.HomeAnimalData
 import com.example.mnrader.ui.home.model.MapAnimalData
@@ -186,7 +187,21 @@ class HomeViewModel(
         }
     }
 
+    fun setLocation(location: City) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                locationFilter = location.name,
+            )
+        }
+    }
 
+    fun setBreed(breed: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                breedFilter = breed,
+            )
+        }
+    }
 }
 
 class HomeViewModelFactory(

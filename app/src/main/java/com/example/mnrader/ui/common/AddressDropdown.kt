@@ -28,7 +28,7 @@ import com.example.mnrader.model.City
 @Composable
 fun AddressDropdown(
     modifier: Modifier = Modifier,
-    selectedCity: City,
+    selectedCity: City?,
     onCitySelected: (City) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -39,7 +39,7 @@ fun AddressDropdown(
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
-            value = selectedCity.displayName,
+            value = selectedCity?.displayName ?: "지역을 선택하세요",
             onValueChange = {},
             readOnly = true,
             trailingIcon = {

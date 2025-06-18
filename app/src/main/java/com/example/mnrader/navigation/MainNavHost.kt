@@ -27,12 +27,12 @@ import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.mypost.MyPostScreen
 import com.example.mnrader.ui.notification.NotificationScreen
+import com.example.mnrader.ui.onboarding.screen.LoginScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.onboarding.screen.RegisterScreen
 import com.example.mnrader.ui.scrap.ScrapScreen
 import com.example.mnrader.ui.setting.screen.AddMyPetScreen
 import com.example.mnrader.ui.setting.screen.SettingScreen
-import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
-import com.example.mnrader.ui.userRegisterOrLogin.UserRegisterScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -64,10 +64,9 @@ fun MainNavHost(
         composable(
             route = Routes.REGISTER
         ) {
-            UserRegisterScreen(
+            RegisterScreen(
                 navController = navController,
-                onRegisterClick = { _, _, _ ->
-                    // 회원가입 처리 후 로그인 화면으로 이동
+                navigateToLogin = {
                     navController.navigate(Routes.LOGIN) {
                         popUpTo(Routes.REGISTER) { inclusive = true }
                     }

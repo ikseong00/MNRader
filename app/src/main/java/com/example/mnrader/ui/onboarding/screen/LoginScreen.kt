@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.userRegisterOrLogin
+package com.example.mnrader.ui.onboarding.screen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,10 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -37,8 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.mnrader.ui.onboarding.viewmodel.LoginViewModel
+import com.example.mnrader.ui.onboarding.viewmodel.LoginViewModelFactory
 import com.example.mnrader.ui.theme.Green1
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,10 +47,10 @@ import com.example.mnrader.ui.theme.Green1
 fun LoginScreen(
     navController: NavController,
     onLoginClick: (email: String, password: String) -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory())
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -89,8 +90,8 @@ fun LoginScreen(
                 Text("이메일", fontWeight = FontWeight.Bold, fontSize = 16.sp,
                     modifier = Modifier.padding(start = 4.dp,top=10.dp, bottom = 4.dp))
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = uiState.email,
+                    onValueChange = { viewModel.updateEmail(it) },
                     placeholder = { Text("이메일을 입력해주세요", color = Color.Gray) },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
@@ -102,8 +103,8 @@ fun LoginScreen(
                 Text("비밀번호", fontWeight = FontWeight.Bold, fontSize = 16.sp,
                     modifier = Modifier.padding(start = 4.dp, bottom = 4.dp))
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = uiState.password,
+                    onValueChange = { viewModel.updatePassword(it) },
                     placeholder = { Text("비밀번호를 입력해주세요", color = Color.Gray) },
                     visualTransformation = PasswordVisualTransformation(),
                     shape = RoundedCornerShape(8.dp),
@@ -115,7 +116,7 @@ fun LoginScreen(
 
                 // 로그인 버튼
                 Button(
-                    onClick = { onLoginClick(email, password) },
+                    onClick = { onLoginClick(uiState.email, uiState.password) },
                     colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
@@ -153,5 +154,4 @@ fun LoginScreenPreview() {
         onLoginClick = { _, _ -> },
         onNavigateToRegister = {}
     )
-}
-
+} 
