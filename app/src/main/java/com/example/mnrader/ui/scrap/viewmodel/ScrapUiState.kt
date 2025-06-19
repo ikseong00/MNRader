@@ -14,7 +14,7 @@ data class ScrapUiState(
                 name = "말티즈",
                 address = "서울특별시",
                 date = "2024-01-15",
-                type = AnimalDataType.LOST,
+                type = AnimalDataType.PORTAL_LOST,
                 imageUrl = ""
             ),
             ScrapModel(
@@ -22,7 +22,7 @@ data class ScrapUiState(
                 name = "페르시안 고양이",
                 address = "서울특별시",
                 date = "2024-01-16",
-                type = AnimalDataType.PROTECT,
+                type = AnimalDataType.PORTAL_PROTECT,
                 imageUrl = ""
             ),
             ScrapModel(
@@ -30,7 +30,7 @@ data class ScrapUiState(
                 name = "골든 리트리버",
                 address = "서울특별시",
                 date = "2024-01-17",
-                type = AnimalDataType.WITNESS,
+                type = AnimalDataType.MY_WITNESS,
                 imageUrl = ""
             ),
             ScrapModel(
@@ -38,7 +38,7 @@ data class ScrapUiState(
                 name = "스코티시 폴드",
                 address = "서울특별시",
                 date = "2024-01-18",
-                type = AnimalDataType.LOST,
+                type = AnimalDataType.PORTAL_LOST,
                 imageUrl = ""
             ),
         )
@@ -51,5 +51,5 @@ data class ScrapModel(
     val address: String = "",
     val date: String = "",
     val imageUrl: String = "",
-    val type: AnimalDataType = AnimalDataType.LOST,
+    val type: AnimalDataType = AnimalDataType.PORTAL_LOST,
 ) 

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,10 +23,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.ui.common.AddressDropdown
 import com.example.mnrader.ui.common.CommonTopBar
 import com.example.mnrader.ui.common.MNRaderButton
@@ -45,11 +46,12 @@ fun SettingScreen(
     navigateToMyAnimalDetail: (MyAnimal) -> Unit = {},
     navigateToAddMyAnimal: () -> Unit = {},
     viewModel: SettingViewModel = viewModel(
-        factory = SettingViewModelFactory()
+        factory = SettingViewModelFactory(
+            userRepository = UserRepository(LocalContext.current)
+        )
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -108,24 +110,33 @@ fun SettingScreen(
                 isExpanded = uiState.isEmailExpanded,
                 onClick = { viewModel.setEmailExpanded() },
             ) {
-                OutlinedTextField(
-                    value = uiState.email,
-                    onValueChange = { viewModel.onEmailChange(it) },
-                    label = { Text("이메일") },
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
-                    singleLine = true,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                MNRaderButton(
-                    text = "저장",
-                    cornerShape = 8.dp,
-                    onClick = {
-                        viewModel.saveEmail()
-                        viewModel.setEmailExpanded()
-                    },
-                )
+                        .padding(vertical = 12.dp)
+                ) {
+                    OutlinedTextField(
+                        value = uiState.email,
+                        onValueChange = { viewModel.onEmailChange(it) },
+                        label = { Text("이메일") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        singleLine = true,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MNRaderButton(
+                        text = "저장",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        cornerShape = 8.dp,
+                        onClick = {
+                            viewModel.saveEmail()
+                            viewModel.setEmailExpanded()
+                        },
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -134,21 +145,30 @@ fun SettingScreen(
                 isExpanded = uiState.isAddressExpanded,
                 onClick = { viewModel.setAddressExpanded() },
             ) {
-                AddressDropdown(
-                    modifier = Modifier.padding(16.dp),
-                    selectedCity = uiState.address,
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
                 ) {
-                    viewModel.onAddressChange(it)
+                    AddressDropdown(
+                        modifier = Modifier.padding(16.dp),
+                        selectedCity = uiState.address,
+                    ) {
+                        viewModel.onAddressChange(it)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MNRaderButton(
+                        text = "저장",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        cornerShape = 8.dp,
+                        onClick = {
+                            viewModel.saveCity()
+                            viewModel.setAddressExpanded()
+                        },
+                    )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                MNRaderButton(
-                    text = "저장",
-                    cornerShape = 8.dp,
-                    onClick = {
-                        viewModel.saveCity()
-                        viewModel.setAddressExpanded()
-                    },
-                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))

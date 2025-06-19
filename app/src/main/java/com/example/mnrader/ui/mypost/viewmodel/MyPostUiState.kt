@@ -15,7 +15,7 @@ data class MyPostUiState(
                 name = "뽀미",
                 address = "서울특별시",
                 date = "2024-01-20",
-                type = AnimalDataType.LOST,
+                type = AnimalDataType.PORTAL_LOST,
                 imageUrl = "",
             ),
             MyPostModel(
@@ -23,7 +23,7 @@ data class MyPostUiState(
                 name = "나비",
                 address = "서울특별시",
                 date = "2024-01-19",
-                type = AnimalDataType.PROTECT,
+                type = AnimalDataType.PORTAL_PROTECT,
                 imageUrl = "",
             ),
             MyPostModel(
@@ -31,7 +31,7 @@ data class MyPostUiState(
                 name = "골댕이",
                 address = "서울특별시",
                 date = "2024-01-18",
-                type = AnimalDataType.WITNESS,
+                type = AnimalDataType.MY_WITNESS,
                 imageUrl = "",
             ),
             MyPostModel(
@@ -39,7 +39,7 @@ data class MyPostUiState(
                 name = "치즈",
                 address = "서울특별시",
                 date = "2024-01-17",
-                type = AnimalDataType.LOST,
+                type = AnimalDataType.PORTAL_LOST,
                 imageUrl = "",
             ),
         )
@@ -53,5 +53,5 @@ data class MyPostModel(
     val date: String = "",
     val imageUrl: String = "",
     val gender: Gender = Gender.MALE,
-    val type: AnimalDataType = AnimalDataType.LOST,
+    val type: AnimalDataType = AnimalDataType.PORTAL_LOST,
 )

@@ -10,12 +10,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.ui.common.CommonTopBar
 import com.example.mnrader.ui.mypage.component.MyAnimalCardList
 import com.example.mnrader.ui.mypage.component.MyPageColumn
@@ -32,10 +35,15 @@ fun MyPageScreen(
     navigateToScrap: () -> Unit = {},
     viewModel: MyViewModel = viewModel(
         factory = MyViewModelFactory(
+            userRepository = UserRepository(LocalContext.current)
         )
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadMyPageData()
+    }
 
     Scaffold(
         topBar = {

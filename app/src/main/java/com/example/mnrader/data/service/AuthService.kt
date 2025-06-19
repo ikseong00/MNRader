@@ -1,8 +1,8 @@
 package com.example.mnrader.data.service
 
-import com.example.mnrader.data.dto.auth.LoginRequestDto
-import com.example.mnrader.data.dto.auth.LoginResponseDto
-import com.example.mnrader.data.dto.auth.SignupRequestDto
+import com.example.mnrader.data.dto.auth.request.LoginRequestDto
+import com.example.mnrader.data.dto.auth.request.SignupRequestDto
+import com.example.mnrader.data.dto.auth.response.LoginResponseDto
 import com.example.mnrader.data.dto.base.BaseResponse
 import retrofit2.http.Body
 import retrofit2.http.POST

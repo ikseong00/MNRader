@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+레트로핏을 사용
+
+새로운 서비스 사용 시 RetrofitClient 에 선언해서 사용,
+
+리스폰스, 리퀘스트는
+
+data/dto 디렉토리에
+해당 도메인의 디렉토리를 만든 후, response , request 디렉토리 생성
+
+서비스에서 해당 리퀘스트와 리스폰스 사용, BaseResponse 로 감싸서 사용하길 바람 , 제네릭으로
+
+해당 서비스의 suspend 함수를 Repository 에서 호출하고 , 둘은 같은 도메인을 사용함.
+
+Repository 를 ViewModel 에서 호출하는데, 뷰모델팩토리를 통해서 레포지토리를 얻어오고, 뷰모델의 생성자로 설정함.
+
+리스폰스, 리퀘스트 <-> UiState , UiModel , Model 로의 매핑이 필요함, 해당 매핑함수는 mapper 디렉토리에 존재

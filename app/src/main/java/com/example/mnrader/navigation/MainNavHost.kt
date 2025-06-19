@@ -15,24 +15,28 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.mnrader.ui.add.addScreens.AnimalTypeScreen
-import com.example.mnrader.ui.add.addScreens.RegisterInfoScreen
-import com.example.mnrader.ui.add.addScreens.ReportOrLostScreen
-import com.example.mnrader.ui.add.addScreens.SelectTypeScreen
-import com.example.mnrader.ui.add.addScreens.SubmitSuccessScreen
-import com.example.mnrader.ui.add.model.RegisterScreens
-import com.example.mnrader.ui.add.model.RegisterViewModel
-import com.example.mnrader.ui.home.component.AnimalDetailScreen
+import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.screen.AnimalTypeScreen
+import com.example.mnrader.ui.add.screen.RegisterInfoScreen
+import com.example.mnrader.ui.add.screen.ReportOrLostScreen
+import com.example.mnrader.ui.add.screen.SelectTypeScreen
+import com.example.mnrader.ui.add.screen.SubmitSuccessScreen
+import com.example.mnrader.ui.add.viewmodel.AddViewModel
+import com.example.mnrader.ui.animaldetail.screen.MNAnimalDetailScreen
+import com.example.mnrader.ui.animaldetail.screen.PortalAnimalDetailScreen
+import com.example.mnrader.ui.animaldetail.screen.PortalLostDetailScreen
+import com.example.mnrader.ui.animaldetail.screen.PortalProtectDetailScreen
+import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.screen.HomeScreen
 import com.example.mnrader.ui.mypage.screen.MyPageScreen
 import com.example.mnrader.ui.mypost.MyPostScreen
 import com.example.mnrader.ui.notification.NotificationScreen
+import com.example.mnrader.ui.onboarding.screen.LoginScreen
 import com.example.mnrader.ui.onboarding.screen.OnboardingScreen
+import com.example.mnrader.ui.onboarding.screen.RegisterScreen
 import com.example.mnrader.ui.scrap.ScrapScreen
 import com.example.mnrader.ui.setting.screen.AddMyPetScreen
 import com.example.mnrader.ui.setting.screen.SettingScreen
-import com.example.mnrader.ui.userRegisterOrLogin.LoginScreen
-import com.example.mnrader.ui.userRegisterOrLogin.UserRegisterScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -46,7 +50,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ONBOARDING,
+        startDestination = Routes.MAIN,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
@@ -64,11 +68,10 @@ fun MainNavHost(
         composable(
             route = Routes.REGISTER
         ) {
-            UserRegisterScreen(
+            RegisterScreen(
                 navController = navController,
-                onRegisterClick = { _, _, _ ->
-                    // 회원가입 처리 후 로그인 화면으로 이동
-                    navController.navigate(Routes.LOGIN) {
+                navigateToLogin = {
+                    navController.navigate(Routes.ONBOARDING) {
                         popUpTo(Routes.REGISTER) { inclusive = true }
                     }
                 }
@@ -81,12 +84,9 @@ fun MainNavHost(
         ) {
             LoginScreen(
                 navController = navController,
-                onLoginClick = { _, _ ->
-                    // 로그인 로직 처리 후 홈으로 이동
+                onLoginSuccess = {
+                    // 로그인 성공 후 홈으로 이동 - 모든 백스택 제거
                     onLoginSuccess()
-//                    navController.navigate(Routes.MAIN) {
-//                        popUpTo(Routes.LOGIN) { inclusive = true }
-//                    }
                     navController.navigate(Routes.MAIN) {
                         popUpTo(Routes.ONBOARDING) { inclusive = true }
                     }
@@ -103,24 +103,85 @@ fun MainNavHost(
         ) {
             HomeScreen(
                 padding = padding,
-                navigateToAnimalDetail = { animalId ->
-                    navController.navigate("animal_detail/$animalId")
-                }
+                navigateToMNAnimalDetail = { animalId ->
+                    navController.navigate("${Routes.MN_ANIMAL_DETAIL}/$animalId")
+                },
+                navigateToPortalLostDetail = { animalId ->
+                    navController.navigate("${Routes.PORTAL_LOST_DETAIL}/$animalId")
+                },
+                navigateToPortalProtectDetail = { animalId ->
+                    navController.navigate("${Routes.PORTAL_PROTECT_DETAIL}/$animalId")
+                },
             )
         }
 
-        // 애니멀페이지
+
+        // MN 애니멀페이지
         composable(
-            route = Routes.ANIMAL_DETAIL + "/{animalId}",
-            arguments = listOf(navArgument("animalId") { type = NavType.StringType })
+            route = Routes.MN_ANIMAL_DETAIL + "/{animalId}",
+            arguments = listOf(navArgument("animalId") { type = NavType.LongType })
         ) { navBackStackEntry ->
 
             // 애니멀 ID를 가져오기
-            val animalId = navBackStackEntry.arguments?.getString("animalId")?.toLongOrNull()
+            val animalId = navBackStackEntry.arguments?.getLong("animalId")
             if (animalId != null) {
-                AnimalDetailScreen(
+                MNAnimalDetailScreen(
                     animalId = animalId,
                     navController = navController,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 동물 ID입니다.")
+            }
+        }
+
+        // Portal 애니멀페이지 (레거시 - 타입 알 수 없는 경우)
+        composable(
+            route = Routes.PORTAL_ANIMAL_DETAIL + "/{postId}",
+            arguments = listOf(navArgument("postId") { type = NavType.LongType })
+        ) { navBackStackEntry ->
+
+            // 포털 애니멀 ID를 가져오기
+            val postId = navBackStackEntry.arguments?.getLong("postId")
+            if (postId != null) {
+                PortalAnimalDetailScreen(
+                    animalId = postId,
+                    animalType = AnimalDataType.PORTAL_PROTECT, // 기본값으로 PROTECT 사용
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 게시물 ID입니다.")
+            }
+
+        }
+
+        // Portal 실종동물 상세페이지
+        composable(
+            route = Routes.PORTAL_LOST_DETAIL + "/{animalId}",
+            arguments = listOf(navArgument("animalId") { type = NavType.LongType })
+        ) { navBackStackEntry ->
+
+            val animalId = navBackStackEntry.arguments?.getLong("animalId")
+            if (animalId != null) {
+                PortalLostDetailScreen(
+                    animalId = animalId,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("잘못된 동물 ID입니다.")
+            }
+        }
+
+        // Portal 보호동물 상세페이지
+        composable(
+            route = Routes.PORTAL_PROTECT_DETAIL + "/{animalId}",
+            arguments = listOf(navArgument("animalId") { type = NavType.LongType })
+        ) { navBackStackEntry ->
+
+            val animalId = navBackStackEntry.arguments?.getLong("animalId")
+            if (animalId != null) {
+                PortalProtectDetailScreen(
+                    animalId = animalId,
                     onBack = { navController.popBackStack() }
                 )
             } else {
@@ -134,14 +195,16 @@ fun MainNavHost(
             route = Routes.POST_LIST
         ) {
             MyPostScreen(
-                padding = padding,
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { animalId ->
-                    navController.navigate("animal_detail/$animalId")
+                onMNAnimalClick = { animalId ->
+                    navController.navigate("${Routes.MN_ANIMAL_DETAIL}/$animalId")
                 },
-                onAddPostClick = {
-                    navController.navigate(Routes.ADD)
-                }
+                onPortalLostClick = { animalId ->
+                    navController.navigate("${Routes.PORTAL_LOST_DETAIL}/$animalId")
+                },
+                onPortalProtectClick = { animalId ->
+                    navController.navigate("${Routes.PORTAL_PROTECT_DETAIL}/$animalId")
+                },
             )
         }
 
@@ -150,18 +213,17 @@ fun MainNavHost(
             route = Routes.SCRAP_LIST
         ) {
             ScrapScreen(
-                padding = padding,
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { animalId ->
-                    navController.navigate("animal_detail/$animalId")
+                onMNAnimalClick = { animalId ->
+                    navController.navigate("${Routes.MN_ANIMAL_DETAIL}/$animalId")
+                },
+                onPortalLostClick = { animalId ->
+                    navController.navigate("${Routes.PORTAL_LOST_DETAIL}/$animalId")
+                },
+                onPortalProtectClick = { animalId ->
+                    navController.navigate("${Routes.PORTAL_PROTECT_DETAIL}/$animalId")
                 }
             )
-        }
-
-        composable(
-            route = Routes.ANIMAL_POST_DETAIL,
-        ) {
-
         }
 
         // 알림
@@ -171,7 +233,15 @@ fun MainNavHost(
             NotificationScreen(
                 padding = padding,
                 onBackClick = { navController.popBackStack() },
-                onItemClick = { /* TODO : 상세 페이지로 이동 */ },
+                onMNAnimalClick = { animalId ->
+                    navController.navigate("${Routes.MN_ANIMAL_DETAIL}/$animalId")
+                },
+                onPortalLostClick = { animalId ->
+                    navController.navigate("${Routes.PORTAL_LOST_DETAIL}/$animalId")
+                },
+                onPortalProtectClick = { animalId ->
+                    navController.navigate("${Routes.PORTAL_PROTECT_DETAIL}/$animalId")
+                },
             )
         }
 
@@ -208,7 +278,6 @@ fun MainNavHost(
 
         composable(route = Routes.ADD_MY_PET) {
             AddMyPetScreen(
-                padding = padding,
                 onBack = { navController.popBackStack() },
             )
         }
@@ -221,8 +290,10 @@ object Routes {
     const val REGISTER = "register"
     const val LOGIN = "login"
     const val MAIN = "main"
-    const val ANIMAL_DETAIL = "animal_detail/{animalId}"
-    const val ANIMAL_POST_DETAIL = "animal_post_detail/{postId}"
+    const val MN_ANIMAL_DETAIL = "mn_animal_detail"
+    const val PORTAL_ANIMAL_DETAIL = "portal_animal_detail"
+    const val PORTAL_LOST_DETAIL = "portal_lost_detail"
+    const val PORTAL_PROTECT_DETAIL = "portal_protect_detail"
     const val POST_LIST = "post_list"
     const val SCRAP_LIST = "scrap_list"
     const val NOTIFICATION = "notification"
@@ -240,7 +311,7 @@ fun AnimalRegister(
     registerBackEntryManager: RegisterBackEntryManager
 ) {
     val navController = rememberNavController()
-    val viewModel: RegisterViewModel = viewModel()
+    val viewModel: AddViewModel = viewModel()
     LaunchedEffect(Unit) {
         if (registerBackEntryManager.prevRoute == null) {
             // 이전 경로가 설정되지 않았으면 기본값 지정
@@ -249,9 +320,9 @@ fun AnimalRegister(
     }
     NavHost(
         navController = navController,
-        startDestination = RegisterScreens.SelectType.route
+        startDestination = AddScreens.SelectType.route
     ) {
-        composable(RegisterScreens.SelectType.route) {
+        composable(AddScreens.SelectType.route) {
             SelectTypeScreen(
                 navController = navController,
                 viewModel = viewModel,
@@ -268,16 +339,16 @@ fun AnimalRegister(
                 }
             )
         }
-        composable(RegisterScreens.RegisterInfo.route) {
+        composable(AddScreens.AddInfo.route) {
             RegisterInfoScreen(navController, viewModel)
         }
-        composable(RegisterScreens.AnimalType.route) {
+        composable(AddScreens.AnimalType.route) {
             AnimalTypeScreen(navController, viewModel)
         }
-        composable(RegisterScreens.ReportOrLost.route) {
+        composable(AddScreens.ReportOrLost.route) {
             ReportOrLostScreen(navController, viewModel)
         }
-        composable(RegisterScreens.SubmitSuccess.route) {
+        composable(AddScreens.SubmitSuccess.route) {
             SubmitSuccessScreen(rootNavController, viewModel)
         }
     }

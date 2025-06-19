@@ -1,34 +1,52 @@
 package com.example.mnrader.ui.scrap
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.ui.common.CommonTopBar
+import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.scrap.component.ScrapAnimalCard
 import com.example.mnrader.ui.scrap.viewmodel.ScrapViewModel
+import com.example.mnrader.ui.scrap.viewmodel.ScrapViewModelFactory
 import com.example.mnrader.ui.theme.MNRaderTheme
 
 @Composable
 fun ScrapScreen(
-    padding: PaddingValues = PaddingValues(0.dp),
     onBackClick: () -> Unit = { },
-    onItemClick: (Long) -> Unit = { },
-    viewModel: ScrapViewModel = viewModel()
+    onMNAnimalClick: (Long) -> Unit = { },
+    onPortalLostClick: (Long) -> Unit = { },
+    onPortalProtectClick: (Long) -> Unit = { },
+    viewModel: ScrapViewModel = viewModel(
+        factory = ScrapViewModelFactory(
+            userRepository = UserRepository(LocalContext.current)
+        )
+    )
 ) {
     val lazyState = rememberLazyListState()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -109,9 +127,17 @@ fun ScrapScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(uiState.scrapList.size) { index ->
+                    val scrap = uiState.scrapList[index]
                     ScrapAnimalCard(
-                        scrapModel = uiState.scrapList[index],
-                        onClick = { id -> onItemClick(id) }
+                        scrapModel = scrap,
+                        onClick = { id -> 
+                            when (scrap.type) {
+                                AnimalDataType.PORTAL_LOST -> onPortalLostClick(id)
+                                AnimalDataType.PORTAL_PROTECT -> onPortalProtectClick(id)
+                                AnimalDataType.MN_LOST,
+                                AnimalDataType.MY_WITNESS -> onMNAnimalClick(id)
+                            }
+                        }
                     )
                 }
             }

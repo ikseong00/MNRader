@@ -9,7 +9,8 @@ enum class AnimalDataType(
     val type: String,
     val color: Color
 ) {
-    LOST("실종", Red),
-    PROTECT("보호중", SkyBlue),
-    WITNESS("목격", Green2);
+    PORTAL_LOST("실종", Red),
+    PORTAL_PROTECT("보호중", SkyBlue),
+    MY_WITNESS("목격", Green2),
+    MN_LOST("실종", Red),
 }

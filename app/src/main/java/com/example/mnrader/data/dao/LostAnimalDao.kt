@@ -20,4 +20,7 @@ interface LostAnimalDao {
     
     @Query("SELECT COUNT(*) FROM lost_animals")
     suspend fun getCount(): Int
+    
+    @Query("SELECT * FROM lost_animals WHERE id = :id")
+    suspend fun getLostAnimalById(id: Long): LostAnimalEntity?
 } 
