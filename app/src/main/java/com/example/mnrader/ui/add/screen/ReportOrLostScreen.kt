@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.add.addScreens
+package com.example.mnrader.ui.add.screen
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -38,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,22 +54,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
-import com.example.mnrader.ui.add.model.RegisterScreens
-import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.component.RegisterTopBar
+import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.viewmodel.AddViewModel
 import com.example.mnrader.ui.theme.Green1
 import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewModel) {
-    val isReport = viewModel.registerData.type == "report"
-    val selectedAnimalType = viewModel.registerData.animalType
-    var breed by remember { mutableStateOf("") }
-    var gender by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
-    var dateTime by remember { mutableStateOf(LocalDateTime.now()) }
-    var description by remember { mutableStateOf("") }
+fun ReportOrLostScreen(navController: NavController, viewModel: AddViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+    val isReport = uiState.type == "report"
+    val selectedAnimalType = uiState.animalType
 
     // 동물 타입에 따라 품종 리스트 설정
     val breedOptions = when (selectedAnimalType) {
@@ -96,14 +94,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                 Column {
                     Button(
                         onClick = {
-                            // 데이터 저장
-                            viewModel.registerData = viewModel.registerData.copy(
-                                breed = breed,
-                                gender = gender,
-                                location = location,
-                                dateTime = dateTime,
-                                description = description)
-                            navController.navigate(RegisterScreens.SubmitSuccess.route)
+                            navController.navigate(AddScreens.SubmitSuccess.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Green1),
                         modifier = Modifier.fillMaxWidth()
@@ -156,14 +147,14 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         onExpandedChange = { expanded = !expanded }
                     ) {
                         OutlinedTextField(
-                            value = breed,
-                            onValueChange = { breed = it },
+                            value = uiState.breed,
+                            onValueChange = { },
                             label = { Text("품종 선택") },
                             readOnly = true,
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().menuAnchor()
                         )
                         ExposedDropdownMenu(
                             expanded = expanded,
@@ -173,7 +164,7 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                                 DropdownMenuItem(
                                     text = { Text(option) },
                                     onClick = {
-                                        breed = option
+                                        viewModel.updateBreed(option)
                                         expanded = false
                                     }
                                 )
@@ -199,8 +190,8 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                                 modifier = Modifier.padding(end = 8.dp)
                             ) {
                                 RadioButton(
-                                    selected = gender == it,
-                                    onClick = { gender = it }
+                                    selected = uiState.gender == it,
+                                    onClick = { viewModel.updateGender(it) }
                                 )
                                 Text(it)
                             }
@@ -219,8 +210,8 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         OutlinedTextField(
-                            value = location,
-                            onValueChange = { location = it },
+                            value = uiState.location,
+                            onValueChange = { viewModel.updateLocation(it) },
                             leadingIcon = {
                                 Icon(
                                     painterResource(id = R.drawable.ic_add_search),
@@ -238,13 +229,13 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                     Text("날짜", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
 
                     OutlinedTextField(
-                        value = dateTime.toLocalDate().toString(),
+                        value = uiState.dateTime.toLocalDate().toString(),
                         onValueChange = {},
                         readOnly = true,
                         leadingIcon = {
                             IconButton(onClick = {
-                                showDatePickerDialog(context, dateTime) { selectedDate ->
-                                    dateTime = selectedDate
+                                showDatePickerDialog(context, uiState.dateTime) { selectedDate ->
+                                    viewModel.updateDateTime(selectedDate)
                                 }
                             }) {
                                 Icon(
@@ -267,8 +258,8 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         OutlinedTextField(
-                            value = description,
-                            onValueChange = { description = it },
+                            value = uiState.description,
+                            onValueChange = { viewModel.updateDescription(it) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp),
@@ -281,13 +272,12 @@ fun ReportOrLostScreen(navController: NavController, viewModel: RegisterViewMode
                 }
                 // 사진 추가 아이콘
                 item {
-//                    val context = LocalContext.current
                     val photoPickerLauncher = rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.GetContent()
                     ) { uri: Uri? ->
                         uri?.let {
                             Log.d("PhotoPicker", "사진 선택됨: $it")
-                            // 여기서 ViewModel이나 State에 저장해 UI에 표시
+                            viewModel.updateImageUri(it)
                         }
                     }
                     Row(
@@ -338,7 +328,7 @@ fun showDatePickerDialog(context: Context, currentDateTime: LocalDateTime, onDat
 @Composable
 fun ReportPreview() {
     val navController = rememberNavController()
-    val viewModel = remember { RegisterViewModel() }
+    val viewModel = AddViewModel()
 
     ReportOrLostScreen(navController = navController, viewModel = viewModel)
 }

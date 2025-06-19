@@ -19,20 +19,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.mnrader.ui.notification.viewmodel.NotificationModel
-import com.example.mnrader.ui.notification.viewmodel.NotificationUiState
+import com.example.mnrader.ui.home.model.AnimalDataType
+import com.example.mnrader.ui.home.model.Gender
+import com.example.mnrader.ui.notification.model.NotificationAnimalUiModel
 import com.example.mnrader.ui.theme.MNRaderTheme
 
 @Composable
 fun NotificationAnimalCard(
     modifier: Modifier = Modifier,
-    notificationModel: NotificationModel,
+    notificationModel: NotificationAnimalUiModel,
     onClick: (Long) -> Unit = { }
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(notificationModel.id) }
+            .clickable { onClick(notificationModel.animalId) }
             .padding(vertical = 12.dp)
     ) {
         AsyncImage(
@@ -70,6 +71,14 @@ fun NotificationAnimalCard(
 @Composable
 private fun NotificationAnimalCardPreview() {
     NotificationAnimalCard(
-        notificationModel = NotificationUiState.dummyList.first()
+        notificationModel = NotificationAnimalUiModel(
+            animalId = 1L,
+            type = AnimalDataType.PORTAL_LOST,
+            imageUrl = "https://example.com/image.jpg",
+            name = "강아지",
+            address = "서울시 강남구",
+            gender = Gender.MALE,
+            date = "2023-10-01"
+        )
     )
 }

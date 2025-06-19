@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.add.addScreens
+package com.example.mnrader.ui.add.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,10 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,17 +34,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
-import com.example.mnrader.ui.add.model.RegisterScreens
-import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.component.RegisterTopBar
+import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.viewmodel.AddViewModel
 import com.example.mnrader.ui.theme.Gray
 import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun AnimalTypeScreen(
     navController: NavController,
-    viewModel: RegisterViewModel
+    viewModel: AddViewModel
 ) {
-    var selected by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
 
     val animalList = listOf(
         Pair("강아지", R.drawable.dog),
@@ -69,9 +68,7 @@ fun AnimalTypeScreen(
                 Column {
                     Button(
                         onClick = {
-                            viewModel.registerData =
-                                viewModel.registerData.copy(animalType = selected)
-                            navController.navigate(RegisterScreens.ReportOrLost.route)
+                            navController.navigate(AddScreens.ReportOrLost.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Green1),
                         modifier = Modifier.fillMaxWidth()
@@ -113,7 +110,7 @@ fun AnimalTypeScreen(
                             .clip(RoundedCornerShape(10.dp))
                             .background(color = Gray)
                             .clickable {
-                                selected = label
+                                viewModel.updateAnimalType(label)
                             }
                     ) {
                         Row(
@@ -123,8 +120,8 @@ fun AnimalTypeScreen(
                                 .fillMaxWidth()
                         ) {
                             RadioButton(
-                                selected = selected == label,
-                                onClick = { selected = label }
+                                selected = uiState.animalType == label,
+                                onClick = { viewModel.updateAnimalType(label) }
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(text = label,fontSize = 16.sp)
@@ -146,7 +143,7 @@ fun AnimalTypeScreen(
 @Composable
 fun AnimalTypePreview() {
     val navController = rememberNavController()
-    val viewModel = remember { RegisterViewModel() }
+    val viewModel = AddViewModel()
 
     AnimalTypeScreen(navController = navController, viewModel = viewModel)
 }

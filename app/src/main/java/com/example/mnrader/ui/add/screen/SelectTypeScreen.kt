@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.add.addScreens
+package com.example.mnrader.ui.add.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,21 +19,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.ui.add.model.RegisterScreens
-import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.component.RegisterTopBar
+import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.viewmodel.AddViewModel
 import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun SelectTypeScreen(
     navController: NavController,
-    viewModel: RegisterViewModel,
+    viewModel: AddViewModel,
     onBackClick: () -> Unit
 ) {
 
     Column(
         modifier = Modifier.fillMaxSize()) {
         RegisterTopBar(
-            onBackClick = onBackClick,
             currentStep = 1 // 여기서 단계 조정: 1~5
         )
         Box(modifier = Modifier.fillMaxSize()
@@ -46,8 +46,8 @@ fun SelectTypeScreen(
                         .padding(16.dp)
                         .fillMaxWidth())
                 Button(onClick = {
-                    viewModel.registerData = viewModel.registerData.copy(type = "report")
-                    navController.navigate(RegisterScreens.RegisterInfo.route)
+                    viewModel.updateType("report")
+                    navController.navigate(AddScreens.AddInfo.route)
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     modifier = Modifier
@@ -56,8 +56,8 @@ fun SelectTypeScreen(
                 }
                 Spacer(Modifier.height(10.dp))
                 Button(onClick = {
-                    viewModel.registerData = viewModel.registerData.copy(type = "lost")
-                    navController.navigate(RegisterScreens.RegisterInfo.route)
+                    viewModel.updateType("lost")
+                    navController.navigate(AddScreens.AddInfo.route)
                 },
                     colors = ButtonDefaults.buttonColors(containerColor = Green1),
                     modifier = Modifier
@@ -74,7 +74,7 @@ fun SelectTypeScreen(
 @Composable
 fun SelectTypeScreenPreview() {
     val navController = rememberNavController()
-    val viewModel = remember { RegisterViewModel() }
+    val viewModel = remember { AddViewModel() }
 
     SelectTypeScreen(navController = navController,viewModel = viewModel, onBackClick = {})
 }

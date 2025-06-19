@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mnrader.data.repository.DataPortalRepository
+import com.example.mnrader.data.repository.HomeRepository
 import com.example.mnrader.data.repository.NaverRepository
 import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.home.component.HomeAnimalList
@@ -35,6 +36,7 @@ import com.example.mnrader.ui.home.component.HomeFilter
 import com.example.mnrader.ui.home.component.HomeTopBar
 import com.example.mnrader.ui.home.component.MapAnimalInfo
 import com.example.mnrader.ui.home.component.MapComponent
+import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.viewmodel.HomeViewModel
 import com.example.mnrader.ui.home.viewmodel.HomeViewModelFactory
 import com.example.mnrader.ui.theme.Green2
@@ -44,10 +46,14 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
-    navigateToAnimalDetail: (Int) -> Unit = {},
+    navigateToMNAnimalDetail: (Long) -> Unit = {},
+    navigateToPortalLostDetail: (Long) -> Unit = {},
+    navigateToPortalProtectDetail: (Long) -> Unit = {},
     viewModel: HomeViewModel = viewModel(
         factory = HomeViewModelFactory(
-            DataPortalRepository(LocalContext.current), NaverRepository()
+            DataPortalRepository(LocalContext.current),
+            NaverRepository(),
+            HomeRepository(LocalContext.current)
         )
     ),
 ) {
@@ -112,7 +118,18 @@ fun HomeScreen(
             HomeAnimalList(
                 animalDataList = uiState.shownAnimalDataList,
                 onAnimalClick = { animalData ->
-                    navigateToAnimalDetail(animalData.id.toInt())
+                    when (animalData.type) {
+                        AnimalDataType.PORTAL_LOST -> {
+                            navigateToPortalLostDetail(animalData.id)
+                        }
+                        AnimalDataType.PORTAL_PROTECT -> {
+                            navigateToPortalProtectDetail(animalData.id)
+                        }
+                        AnimalDataType.MN_LOST,
+                        AnimalDataType.MY_WITNESS -> {
+                            navigateToMNAnimalDetail(animalData.id)
+                        }
+                    }
                 },
                 onBookmarkClick = { animalData ->
                     viewModel.setBookmark(animalData)
@@ -134,7 +151,18 @@ fun HomeScreen(
                         .padding(bottom = 100.dp),
                     animalData = selectedAnimal,
                     onItemClick = { animalData ->
-                        navigateToAnimalDetail(animalData.id.toInt())
+                        when (animalData.type) {
+                            AnimalDataType.PORTAL_LOST -> {
+                                navigateToPortalLostDetail(animalData.id)
+                            }
+                            AnimalDataType.PORTAL_PROTECT -> {
+                                navigateToPortalProtectDetail(animalData.id)
+                            }
+                            AnimalDataType.MN_LOST,
+                            AnimalDataType.MY_WITNESS -> {
+                                navigateToMNAnimalDetail(animalData.id)
+                            }
+                        }
                     },
                 )
             }

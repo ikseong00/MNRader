@@ -19,7 +19,7 @@ data class HomeAnimalData(
             HomeAnimalData(
                 id = 1L,
                 name = "코코",
-                type = AnimalDataType.PROTECT,
+                type = AnimalDataType.PORTAL_PROTECT,
                 gender = Gender.MALE,
                 location = "서울 강남구",
                 date = "2023-10-01",
@@ -30,7 +30,7 @@ data class HomeAnimalData(
             HomeAnimalData(
                 id = 2L,
                 name = "바둑이2",
-                type = AnimalDataType.LOST,
+                type = AnimalDataType.PORTAL_LOST,
                 gender = Gender.MALE,
                 location = "서울 강서구",
                 date = "2023-10-02",
@@ -41,7 +41,7 @@ data class HomeAnimalData(
             HomeAnimalData(
                 id = 3L,
                 name = "바둑이3",
-                type = AnimalDataType.WITNESS,
+                type = AnimalDataType.MY_WITNESS,
                 gender = Gender.MALE,
                 location = "서울 강서구",
                 date = "2023-10-02",
@@ -52,7 +52,7 @@ data class HomeAnimalData(
             HomeAnimalData(
                 id = 4L,
                 name = "바둑이4",
-                type = AnimalDataType.LOST,
+                type = AnimalDataType.PORTAL_LOST,
                 gender = Gender.MALE,
                 location = "서울 강서구",
                 date = "2023-10-02",

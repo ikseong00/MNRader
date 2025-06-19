@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.add.addScreens
+package com.example.mnrader.ui.add.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,15 +30,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
-import com.example.mnrader.ui.add.model.RegisterViewModel
-import com.example.mnrader.ui.add.model.RegisterScreens
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.mnrader.ui.add.component.RegisterTopBar
+import com.example.mnrader.ui.add.viewmodel.AddViewModel
+import com.example.mnrader.ui.add.model.AddScreens
 import com.example.mnrader.ui.theme.Green1
 
 @Composable
-fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewModel) {
+fun RegisterInfoScreen(navController: NavController, viewModel: AddViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
 
-    val name = viewModel.registerData.name
-    val contact = viewModel.registerData.contact
+    val name = uiState.name
+    val contact = uiState.contact
 
     val isFormValid = name.isNotBlank() && contact.isNotBlank()
 
@@ -58,7 +62,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                 Column {
                     Button(
                         onClick = {
-                            navController.navigate(RegisterScreens.AnimalType.route)
+                            navController.navigate(AddScreens.AnimalType.route)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Green1),
                         modifier = Modifier.fillMaxWidth(),
@@ -108,7 +112,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                     OutlinedTextField(
                         value = name,
                         onValueChange = {
-                            viewModel.registerData = viewModel.registerData.copy(name = it)
+                            viewModel.updateName(it)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("이름") }
@@ -127,7 +131,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
                         onValueChange = {
                             // 숫자만 남기도록 필터링
                             val filtered = it.filter { char -> char.isDigit() }
-                            viewModel.registerData = viewModel.registerData.copy(contact = filtered)
+                            viewModel.updateContact(filtered)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         label = { Text("전화번호") },
@@ -143,7 +147,7 @@ fun RegisterInfoScreen(navController: NavController, viewModel: RegisterViewMode
 @Composable
 fun PreviewRegisterInfoScreen() {
     val navController = rememberNavController()
-    val viewModel = remember { RegisterViewModel() }
+    val viewModel = remember { AddViewModel() }
 
     RegisterInfoScreen(navController = navController, viewModel = viewModel)
 }

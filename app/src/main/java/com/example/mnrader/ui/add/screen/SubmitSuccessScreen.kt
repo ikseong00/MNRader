@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.add.addScreens
+package com.example.mnrader.ui.add.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,14 +22,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.mnrader.ui.add.model.RegisterViewModel
+import com.example.mnrader.ui.add.component.RegisterTopBar
+import com.example.mnrader.ui.add.viewmodel.AddViewModel
 import com.example.mnrader.navigation.Routes
 import com.example.mnrader.ui.theme.Green1
 
 @Composable
 fun SubmitSuccessScreen(
     rootNavController: NavHostController,
-    viewModel: RegisterViewModel
+    viewModel: AddViewModel
 ) {
     Scaffold(
         topBar = {
@@ -90,7 +90,7 @@ fun SubmitSuccessScreen(
 @Composable
 fun SubmitPreview() {
     val navController = rememberNavController()
-    val viewModel = remember { RegisterViewModel() }
+    val viewModel = AddViewModel()
 
     SubmitSuccessScreen(rootNavController = navController, viewModel = viewModel)
 }

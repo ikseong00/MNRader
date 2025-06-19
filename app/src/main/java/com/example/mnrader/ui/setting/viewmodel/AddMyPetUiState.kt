@@ -16,5 +16,6 @@ data class AddMyPetUiState(
     val isBreedExpanded: Boolean = false,
     val isGenderExpanded: Boolean = false,
     val isLoading: Boolean = false,
+    val addSuccess: Boolean = false,
     val errorMessage: String? = null
 ) 

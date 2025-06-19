@@ -22,6 +22,7 @@ enum class City(val code: Int, val displayName: String, val orgCd: String) {
     override fun toString(): String = displayName
 
     companion object {
+        fun fromCode(code: Int): City = City.entries.find { it.code == code } ?: SEOUL
         fun fromOrgCd(orgCd: String): City? = City.entries.find { it.orgCd == orgCd }
         fun fromDisplayName(name: String): City? = City.entries.find { it.displayName == name }
     }

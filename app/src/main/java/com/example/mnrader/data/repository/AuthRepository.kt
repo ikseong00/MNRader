@@ -21,7 +21,9 @@ class AuthRepository(private val context: Context) {
         val response = service.login(request)
         
         // 토큰 저장
-        tokenDataStore.saveTokens(response.result.accessToken, response.result.refreshToken)
+        response.result?.let { result ->
+            tokenDataStore.saveTokens(result.accessToken, result.refreshToken)
+        }
 
         response
     }

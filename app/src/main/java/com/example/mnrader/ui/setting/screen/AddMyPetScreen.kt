@@ -1,7 +1,6 @@
 package com.example.mnrader.ui.setting.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,12 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.repository.UserAnimalRepository
 import com.example.mnrader.ui.common.CommonTopBar
 import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.setting.component.AnimalTypeDropdown
@@ -35,13 +37,21 @@ enum class AnimalType(val displayName: String) {
 
 @Composable
 fun AddMyPetScreen(
-    padding: PaddingValues,
     onBack: () -> Unit = {},
     viewModel: AddMyPetViewModel = viewModel(
-        factory = AddMyPetViewModelFactory()
+        factory = AddMyPetViewModelFactory(
+            userAnimalRepository = UserAnimalRepository(),
+            context = LocalContext.current
+        )
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.addSuccess) {
+        if (uiState.addSuccess) {
+            onBack()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -158,7 +168,6 @@ fun AddMyPetScreen(
             cornerShape = 8.dp,
             onClick = {
                 viewModel.savePet()
-                onBack()
             },
         )
     }
