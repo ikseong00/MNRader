@@ -51,7 +51,7 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MAIN,
+        startDestination = Routes.ONBOARDING,
         modifier = Modifier.padding(padding),
     ) {
         // 온보딩
