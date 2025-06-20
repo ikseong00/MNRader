@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.common
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -33,9 +34,11 @@ fun AnimalCard(
                 shape = RoundedCornerShape(6.dp)
             )
             .padding(vertical = 8.dp)
+            .padding(horizontal = 30.dp)
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Log.d("AnimalCard", "Animal: ${animal.name}, Image URL: ${animal.imgUrl}")
         AsyncImage(
             model = animal.imgUrl,
             contentDescription = "Animal Image",

@@ -1,6 +1,5 @@
 package com.example.mnrader.ui.animaldetail.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,22 +27,27 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil3.compose.AsyncImage
 import com.example.mnrader.R
+import com.example.mnrader.data.repository.AnimalRepository
+import com.example.mnrader.ui.animaldetail.viewmodel.MNAnimalDetail
+import com.example.mnrader.ui.animaldetail.viewmodel.MNAnimalDetailViewModel
+import com.example.mnrader.ui.animaldetail.viewmodel.MNAnimalDetailViewModelFactory
 import com.example.mnrader.ui.home.model.HomeAnimalData
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,50 +55,28 @@ import com.example.mnrader.ui.home.model.HomeAnimalData
 fun MNAnimalDetailScreen(
     animalId: Long,
     navController: NavController,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    viewModel: MNAnimalDetailViewModel = viewModel(
+        factory = MNAnimalDetailViewModelFactory(
+            animalRepository = AnimalRepository(),
+            animalId = animalId
+        )
+    )
 ) {
 
-    val animal = remember {
-        HomeAnimalData.dummyHomeAnimalData.find { it.id == animalId }
+    LaunchedEffect(animalId) {
+        viewModel.loadAnimalDetail(animalId)
     }
 
-    if (animal == null) {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text("상세페이지")},
-                    navigationIcon = {
-                        IconButton(onClick = { onBack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                                contentDescription = "back"
-                            )
-                        }
-                    }
-                )
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("동물 정보를 찾을 수 없습니다.")
-            }
-        }
-        return
-    }
-
-    var isBookmarked by remember { mutableStateOf(animal.isBookmarked) }
-
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val animal = uiState.animalDetail
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("상세페이지")},
+                    Text("상세페이지")
+                },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         Icon(
@@ -112,11 +94,11 @@ fun MNAnimalDetailScreen(
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { isBookmarked = !isBookmarked }) {
+                IconButton(onClick = { viewModel.toggleScrap() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_animal_stars),
                         contentDescription = "Bookmark",
-                        tint = if (isBookmarked) Color(0xFF90c5aa) else Color.Gray,
+                        tint = if (uiState.animalDetail.isScrapped) Color(0xFF90c5aa) else Color.Gray,
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -146,18 +128,20 @@ fun MNAnimalDetailScreen(
                         .size(360.dp)
                 ) {
                     // 동물 이미지
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground), // 실제 동물 이미지를 볼러오기
+                    AsyncImage(
+                        model = animal.img,
                         contentDescription = "Animal Image",
                         contentScale = ContentScale.Crop,
+                        error = painterResource(R.drawable.img_logo_onboarding),
                         modifier = Modifier
                             .size(360.dp)
                             .clip(CircleShape)
                             .border(
                                 width = 10.dp,
                                 shape = CircleShape,
-                                color = animal.type.color
-                            )
+                                color = uiState.animalDetail.status.color
+                            ),
+                        placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
                     )
                 }
 
@@ -173,23 +157,24 @@ fun MNAnimalDetailScreen(
 
 
 @Composable
-fun AnimalInfoSection(animal: HomeAnimalData) {
+private fun AnimalInfoSection(animal: MNAnimalDetail) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(animal.name,
+        Text(
+            animal.breed,
             fontSize = 24.sp,
-            color = Color.Black)
-        Text("성별 "+animal.gender.value,
+            color = Color.Black
+        )
+        Text(
+            "성별 " + animal.gender,
             fontSize = 16.sp,
-            color = Color.Gray)
-        Text("품종 breed",
-            fontSize = 16.sp,
-            color = Color.Gray)
-        InfoRow(label = "장소", value = animal.location)
+            color = Color.Gray
+        )
+        InfoRow(label = "장소", value = animal.address)
         InfoRow(label = "등록 날짜", value = animal.date)
-        InfoRow(label = "연락처", value = "")//contact
-        InfoRow(label = "상세 내용", value = "")//description
+        InfoRow(label = "연락처", value = animal.contact)
+        InfoRow(label = "상세 내용", value = animal.detail)
     }
 }
 
@@ -207,7 +192,7 @@ fun InfoRow(label: String, value: String) {
         )
         OutlinedTextField(
             value = value,
-            onValueChange ={},
+            onValueChange = {},
             readOnly = true,
             modifier = Modifier.fillMaxWidth()
         )

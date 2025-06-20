@@ -24,7 +24,7 @@ class MyViewModel(
                 .onSuccess { response ->
                     _uiState.value = _uiState.value.copy(
                         email = response.result!!.email,
-                        address = fromCode(response.result.city)!!.name,
+                        address = fromCode(response.result.city).displayName,
                         myAnimalList = response.result.toMyAnimals()
                     )
                 }
@@ -33,23 +33,6 @@ class MyViewModel(
                 }
         }
     }
-
-    fun updateEmail(newEmail: String) {
-        viewModelScope.launch {
-            userRepository.updateEmail(newEmail)
-                .onSuccess { response ->
-                    // 이메일 업데이트 성공 시 UI 상태 업데이트
-                    _uiState.value = _uiState.value.copy(
-                        email = newEmail
-                    )
-                    // TODO: 성공 메시지 표시
-                }
-                .onFailure { exception ->
-                    // TODO: 에러 처리
-                }
-        }
-    }
-
 }
 
 class MyViewModelFactory(

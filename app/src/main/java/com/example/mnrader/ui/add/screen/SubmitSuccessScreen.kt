@@ -86,11 +86,4 @@ fun SubmitSuccessScreen(
         }
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun SubmitPreview() {
-    val navController = rememberNavController()
-    val viewModel = AddViewModel()
-
-    SubmitSuccessScreen(rootNavController = navController, viewModel = viewModel)
-}
+// Preview는 AddViewModel의 의존성 때문에 제거

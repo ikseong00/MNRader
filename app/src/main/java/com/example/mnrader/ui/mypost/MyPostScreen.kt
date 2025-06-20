@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.ui.common.CommonTopBar
+import com.example.mnrader.ui.common.MNRaderButton
 import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.mypost.component.MyPostAnimalCard
 import com.example.mnrader.ui.mypost.viewmodel.MyPostViewModel
@@ -56,50 +59,84 @@ fun MyPostScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (uiState.myPostList.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+        when {
+            uiState.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "작성한 게시글이 없습니다",
-                        style = MNRaderTheme.typography.medium.copy(
-                            fontSize = 16.sp,
-                            color = Color.Gray
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "첫 번째 게시글을 작성해보세요",
-                        style = MNRaderTheme.typography.regular.copy(
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
-                    )
+                    CircularProgressIndicator()
                 }
             }
-        } else {
-            LazyColumn(
-                state = lazyState,
-                contentPadding = PaddingValues(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(uiState.myPostList.size) { index ->
-                    val myPost = uiState.myPostList[index]
-                    MyPostAnimalCard(
-                        myPostModel = myPost,
-                        onClick = { id -> 
-                            when (myPost.type) {
-                                AnimalDataType.PORTAL_LOST -> onPortalLostClick(id)
-                                AnimalDataType.PORTAL_PROTECT -> onPortalProtectClick(id)
-                                AnimalDataType.MN_LOST,
-                                AnimalDataType.MY_WITNESS -> onMNAnimalClick(id)
+            uiState.errorMessage != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = uiState.errorMessage!!,
+                            style = MNRaderTheme.typography.medium.copy(
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        MNRaderButton(
+                            text = "다시 시도",
+                            onClick = { viewModel.getMyPostList() }
+                        )
+                    }
+                }
+            }
+            uiState.myPostList.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "작성한 게시글이 없습니다",
+                            style = MNRaderTheme.typography.medium.copy(
+                                fontSize = 16.sp,
+                                color = Color.Gray
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "첫 번째 게시글을 작성해보세요",
+                            style = MNRaderTheme.typography.regular.copy(
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
+                        )
+                    }
+                }
+            }
+            else -> {
+                LazyColumn(
+                    state = lazyState,
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(uiState.myPostList.size) { index ->
+                        val myPost = uiState.myPostList[index]
+                        MyPostAnimalCard(
+                            myPostModel = myPost,
+                            onClick = { id -> 
+                                when (myPost.type) {
+                                    AnimalDataType.PORTAL_LOST -> onPortalLostClick(id)
+                                    AnimalDataType.PORTAL_PROTECT -> onPortalProtectClick(id)
+                                    AnimalDataType.MN_LOST,
+                                    AnimalDataType.MY_WITNESS -> onMNAnimalClick(id)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

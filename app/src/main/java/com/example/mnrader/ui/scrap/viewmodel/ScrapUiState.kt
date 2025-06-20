@@ -4,8 +4,6 @@ import com.example.mnrader.ui.home.model.AnimalDataType
 
 data class ScrapUiState(
     val scrapList: List<ScrapModel> = emptyList(),
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null
 ) {
     companion object {
         val dummyList = listOf(

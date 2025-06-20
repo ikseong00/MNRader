@@ -12,9 +12,10 @@ import com.example.mnrader.data.dto.user.response.UserAnimalDetailResponseDto
 import com.example.mnrader.data.dto.user.response.UserMyPageResponseDto
 import com.example.mnrader.data.dto.user.response.UserMyPostResponseDto
 import com.example.mnrader.data.dto.user.response.UserScrapAnimalDto
-import com.example.mnrader.data.dto.user.response.UserScrapResponseDto
 import com.example.mnrader.data.entity.LostAnimalEntity
+import com.example.mnrader.data.entity.ScrapEntity
 import com.example.mnrader.model.City.Companion.fromCode
+import com.example.mnrader.ui.animaldetail.model.PortalAnimalDetailData
 import com.example.mnrader.ui.animaldetail.viewmodel.MNAnimalDetail
 import com.example.mnrader.ui.home.model.AnimalDataType
 import com.example.mnrader.ui.home.model.Gender
@@ -71,8 +72,8 @@ fun UserMyPageResponseDto.toMyAnimals(): List<MyAnimal> =
 fun UserScrapAnimalDto.toUiModel(): ScrapModel =
     ScrapModel(
         id = this.animalId,
-        name = this.name,
-        address = fromCode(this.city).name,
+        name = this.breed,
+        address = fromCode(this.city).displayName,
         date = this.occurredAt,
         imageUrl = this.img,
         type = when (this.status) {
@@ -83,8 +84,8 @@ fun UserScrapAnimalDto.toUiModel(): ScrapModel =
         }
     )
 
-fun UserScrapResponseDto.toScrapModels(): List<ScrapModel> =
-    this.scrapList?.map { it.toUiModel() } ?: emptyList()
+fun List<UserScrapAnimalDto>.toScrapModels(): List<ScrapModel> =
+    this.map { it.toUiModel() }
 
 fun HomeAnimalDto.toUiModel(): HomeAnimalData =
     HomeAnimalData(
@@ -95,13 +96,11 @@ fun HomeAnimalDto.toUiModel(): HomeAnimalData =
             "FEMALE" -> Gender.FEMALE
             else -> Gender.MALE
         },
-        location = fromCode(this.city).name,
+        location = fromCode(this.city).displayName,
         date = this.occurredAt,
         type = when (this.status) {
             "LOST" -> AnimalDataType.MN_LOST
-            "PROTECTED" -> AnimalDataType.PORTAL_PROTECT
-            "SIGHTING" -> AnimalDataType.MY_WITNESS
-            else -> AnimalDataType.PORTAL_LOST
+            else -> AnimalDataType.MY_WITNESS
         },
         latLng = LatLng(0.0, 0.0), // TODO: 위치 정보를 업데이트해야함.
         isBookmarked = false // TODO: 나중에 북마크 정보를 다시 할당해야함.
@@ -113,19 +112,24 @@ fun HomeResponseDto.toHomeAnimalList(): List<HomeAnimalData> =
 fun MyPostAnimalDto.toUiModel(): MyPostModel =
     MyPostModel(
         id = this.animalId.toLong(),
-        name = this.name,
-        address = fromCode(this.city).name,
-        date = this.occurredAt,
-        imageUrl = this.img,
-        gender = when (this.gender) {
+        name = this.name?.takeIf { it.isNotBlank() } ?: "이름 없음",
+        address = try {
+            fromCode(this.city).displayName
+        } catch (e: Exception) {
+            "위치 정보 없음"
+        },
+        date = this.occurredAt?.takeIf { it.isNotBlank() } ?: "",
+        imageUrl = this.img?.takeIf { it.isNotBlank() } ?: "",
+        gender = when (this.gender?.uppercase()) {
             "FEMALE" -> Gender.FEMALE
+            "MALE" -> Gender.MALE
             else -> Gender.MALE
         },
-        type = when (this.status) {
-            "LOST" -> AnimalDataType.PORTAL_LOST
-            "PROTECTED" -> AnimalDataType.PORTAL_PROTECT
+        type = when (this.status?.uppercase()) {
+            "LOST" -> AnimalDataType.MN_LOST
+            "PROTECTED" -> AnimalDataType.MN_LOST
             "SIGHTING" -> AnimalDataType.MY_WITNESS
-            else -> AnimalDataType.PORTAL_LOST
+            else -> AnimalDataType.MN_LOST
         }
     )
 
@@ -134,14 +138,18 @@ fun UserMyPostResponseDto.toMyPostModelList(): List<MyPostModel> =
 
 fun AnimalDetailResponseDto.toMNAnimalDetail(): MNAnimalDetail =
     MNAnimalDetail(
-        status = this.status,
+        status = when (this.status) {
+            "LOST" -> AnimalDataType.MN_LOST
+            else -> AnimalDataType.MY_WITNESS
+        },
         img = this.img,
         gender = this.gender,
         breed = this.breed,
         address = this.address,
         contact = this.contact,
         detail = this.detail,
-        isScrapped = false // 기본값으로 설정, 추후 스크랩 상태 API에서 가져와야 함
+        isScrapped = this.isScrapped,
+        date = this.occurredAt
     )
 
 fun UserAnimalDetailResponseDto.toUserAnimalDetailUiModel(): UserAnimalDetailUiModel =
@@ -172,7 +180,7 @@ fun AlarmAnimalDto.toNotificationAnimalUiModel(): NotificationAnimalUiModel =
         },
         imageUrl = this.img,
         name = this.name,
-        address = fromCode(this.city).name,
+        address = fromCode(this.city).displayName,
         gender = when (this.gender) {
             "FEMALE" -> Gender.FEMALE
             else -> Gender.MALE
@@ -183,3 +191,48 @@ fun AlarmAnimalDto.toNotificationAnimalUiModel(): NotificationAnimalUiModel =
 fun UserAlarmResponseDto.toNotificationAnimals(): List<NotificationAnimalUiModel> =
     this.animal?.map { it.toNotificationAnimalUiModel() } ?: emptyList()
 
+// Portal Lost Detail을 위한 mapper
+fun LostAnimalEntity.toPortalAnimalDetailData(): PortalAnimalDetailData =
+    PortalAnimalDetailData(
+        breed = this.kindCd,
+        gender = when (this.sexCd) {
+            Gender.FEMALE -> "암컷"
+            Gender.MALE -> "수컷"
+        },
+        location = this.happenAddr,
+        date = this.happenDate,
+        contact = this.callTel,
+        detail = this.specialMark,
+        imageUrl = this.popfile
+    )
+
+// Portal Protect Detail을 위한 mapper (AbandonedResponseDto에서 단일 아이템으로)
+fun AbandonedResponseDto.toPortalAnimalDetailData(): PortalAnimalDetailData {
+    val item = this.response.body.items.item.first()
+
+    return PortalAnimalDetailData(
+        breed = item.kindFullNm,
+        gender = when (item.sexCd) {
+            "F" -> "암컷"
+            "M" -> "수컷"
+            else -> "성별 미상"
+        },
+        location = item.careAddr,
+        date = item.noticeSdt,
+        contact = item.careTel,
+        detail = item.specialMark,
+        imageUrl = item.popfile1.toString()
+    )
+
+}
+
+// ScrapEntity를 ScrapModel로 변환하는 매퍼
+fun ScrapEntity.toScrapModel(): ScrapModel =
+    ScrapModel(
+        id = this.animalId.toLongOrNull() ?: 0L,
+        name = this.name,
+        address = this.location,
+        date = this.date,
+        imageUrl = this.imageUrl ?: "",
+        type = this.animalType
+    )

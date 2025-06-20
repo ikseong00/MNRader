@@ -12,4 +12,5 @@ data class MapAnimalData(
     var latLng: LatLng = LatLng(37.5407, 127.0791),
     val type: AnimalDataType,
     val count: Int = 0,
+    var isBookmarked: Boolean = false
 )

@@ -88,3 +88,25 @@ fun StepProgressIndicator(currentStep: Int, totalSteps: Int) {
         }
     }
 }
+
+/*
+AddViewModel 사용 예시:
+
+@Composable
+fun YourAddScreen() {
+    val context = LocalContext.current
+    val addViewModel: AddViewModel = viewModel(
+        factory = AddViewModelFactory(
+            animalRepository = AnimalRepository(context),
+            context = context
+        )
+    )
+    
+    // 화면에서 ViewModel 사용
+    val uiState by addViewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading by addViewModel.isLoading.collectAsStateWithLifecycle()
+    val errorMessage by addViewModel.errorMessage.collectAsStateWithLifecycle()
+    
+    // UI 구성
+}
+*/

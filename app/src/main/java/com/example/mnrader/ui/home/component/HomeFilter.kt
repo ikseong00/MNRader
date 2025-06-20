@@ -38,7 +38,7 @@ fun HomeFilter(
     city: City? = null,
     breed: String? = null,
     onLocationUpdate: (City) -> Unit = {},
-    onBreedUpdate: (String) -> Unit = {},
+    onBreedUpdate: (String?) -> Unit = {},
     isWitnessShown: Boolean,
     onWitnessClick: (Boolean) -> Unit = {},
     isLostShown: Boolean,
@@ -148,7 +148,7 @@ fun HomeAddressDropdown(
 fun HomeBreedDropdown(
     modifier: Modifier = Modifier,
     selectedBreed: String?,
-    onBreedSelected: (String) -> Unit
+    onBreedSelected: (String?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -190,6 +190,14 @@ fun HomeBreedDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
+            DropdownMenuItem(
+                modifier = Modifier.background(Color.White),
+                text = { Text("전체") },
+                onClick = {
+                    onBreedSelected(null)
+                    expanded = false
+                }
+            )
             DogBreed.entries.forEach { dog ->
                 DropdownMenuItem(
                     modifier = Modifier.background(Color.White),

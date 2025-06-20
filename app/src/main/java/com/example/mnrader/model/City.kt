@@ -1,6 +1,7 @@
 package com.example.mnrader.model
 
 enum class City(val code: Int, val displayName: String, val orgCd: String) {
+    ALL(0, "전체", "0000000"),
     SEOUL(1, "서울특별시", "6110000"),
     BUSAN(2, "부산광역시", "6260000"),
     DAEGU(3, "대구광역시", "6270000"),

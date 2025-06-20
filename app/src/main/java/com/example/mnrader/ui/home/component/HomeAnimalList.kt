@@ -161,7 +161,7 @@ fun HomeAnimalList(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                AnimalDataType.entries.forEach { type ->
+                AnimalDataType.entries.take(3).forEach { type ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically,

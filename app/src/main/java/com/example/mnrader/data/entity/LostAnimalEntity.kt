@@ -11,6 +11,7 @@ data class LostAnimalEntity(
     val kindCd: String,
     val orgNm: String,
     val popfile: String,
+    val callTel: String,
     val sexCd: Gender,
     val specialMark: String,
     val location: String,

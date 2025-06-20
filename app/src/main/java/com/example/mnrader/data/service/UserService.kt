@@ -1,6 +1,7 @@
 package com.example.mnrader.data.service
 
 import com.example.mnrader.data.dto.base.BaseResponse
+import com.example.mnrader.data.dto.user.request.FcmTokenRequestDto
 import com.example.mnrader.data.dto.user.request.UpdateAlarmRequestDto
 import com.example.mnrader.data.dto.user.request.UpdateCityRequestDto
 import com.example.mnrader.data.dto.user.request.UpdateEmailRequestDto
@@ -12,6 +13,7 @@ import com.example.mnrader.data.dto.user.response.UserScrapResponseDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface UserService {
@@ -43,4 +45,9 @@ interface UserService {
     suspend fun getAlarmList(
         @Query("last") last: Int
     ): BaseResponse<UserAlarmResponseDto>
+
+    @POST("users/alarmToken")
+    suspend fun sendFcmToken(
+        @Body request: FcmTokenRequestDto
+    ): BaseResponse<Unit>
 } 

@@ -16,7 +16,7 @@ data class HomeAnimalDto(
     val status: String,
     @SerializedName("img")
     val img: String,
-    @SerializedName("name")
+    @SerializedName("breed")
     val name: String,
     @SerializedName("city")
     val city: Int,
