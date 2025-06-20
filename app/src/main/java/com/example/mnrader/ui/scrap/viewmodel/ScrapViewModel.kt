@@ -1,5 +1,6 @@
 package com.example.mnrader.ui.scrap.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -23,26 +24,21 @@ class ScrapViewModel(
 
     private fun getScrapList() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-
-            userRepository.getScrapList()
-                .onSuccess { response ->
+            userRepository.getScrapList().fold(
+                onSuccess = { scrapDtoList ->
+                    Log.d("ScrapViewModel", "Scrap list loaded successfully: ${scrapDtoList.size} items")
                     _uiState.update {
                         it.copy(
-                            scrapList = response.result?.toScrapModels() ?: emptyList(),
-                            isLoading = false,
-                            errorMessage = null
+                            scrapList = scrapDtoList.toScrapModels(),
                         )
                     }
-                }
-                .onFailure { exception ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = exception.message
-                        )
-                    }
-                }
+                },
+                onFailure = { exception ->
+                    Log.e(
+                        "ScrapViewModel",
+                        "Error loading scrap list: ${exception.message}"
+                    )
+                })
         }
     }
 }
@@ -56,4 +52,4 @@ class ScrapViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-} 
+}

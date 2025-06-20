@@ -1,11 +1,9 @@
 package com.example.mnrader.ui.mypage.viewmodel
 
-import com.example.mnrader.ui.mypage.viewmodel.MyAnimal.Companion.dummyMyAnimalList
-
 data class MyUiState(
     val email: String = "email",
     val address: String = "seoul",
-    val myAnimalList: List<MyAnimal> = dummyMyAnimalList,
+    val myAnimalList: List<MyAnimal> = emptyList(),
 )
 
 

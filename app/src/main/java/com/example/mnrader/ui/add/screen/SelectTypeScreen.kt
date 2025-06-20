@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.ui.add.component.RegisterTopBar
-import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.viewmodel.AddScreens
 import com.example.mnrader.ui.add.viewmodel.AddViewModel
 import com.example.mnrader.ui.theme.Green1
 
@@ -70,11 +70,4 @@ fun SelectTypeScreen(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SelectTypeScreenPreview() {
-    val navController = rememberNavController()
-    val viewModel = remember { AddViewModel() }
-
-    SelectTypeScreen(navController = navController,viewModel = viewModel, onBackClick = {})
-}
+// Preview는 AddViewModel의 의존성 때문에 제거

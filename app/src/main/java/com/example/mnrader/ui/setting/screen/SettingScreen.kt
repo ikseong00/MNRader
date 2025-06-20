@@ -1,8 +1,8 @@
 package com.example.mnrader.ui.setting.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,22 +12,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.R
 import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.ui.common.AddressDropdown
 import com.example.mnrader.ui.common.CommonTopBar
@@ -47,11 +51,17 @@ fun SettingScreen(
     navigateToAddMyAnimal: () -> Unit = {},
     viewModel: SettingViewModel = viewModel(
         factory = SettingViewModelFactory(
-            userRepository = UserRepository(LocalContext.current)
+            userRepository = UserRepository(LocalContext.current),
+            context = LocalContext.current
         )
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadMyPageData()
+    }
 
     Scaffold(
         topBar = {
@@ -65,30 +75,26 @@ fun SettingScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(padding)
                 .padding(innerPadding)
                 .padding(horizontal = 12.dp)
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray),
+            Image(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray),
+                painter = painterResource(R.drawable.img_logo_onboarding),
+                contentDescription = "User Profile Image"
+            )
+            Text(
+                text = uiState.email,
+                style = MNRaderTheme.typography.medium.copy(
+                    fontSize = 24.sp
                 )
-                Spacer(modifier = Modifier.width(20.dp))
-                Text(
-                    text = uiState.email,
-                    style = MNRaderTheme.typography.medium.copy(
-                        fontSize = 16.sp,
-                        color = Color.Black
-                    )
-                )
-            }
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
             SettingExpandable(

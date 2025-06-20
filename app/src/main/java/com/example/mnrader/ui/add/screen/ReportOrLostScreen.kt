@@ -21,8 +21,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -48,14 +50,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.mnrader.R
+import com.example.mnrader.model.CatBreed
+import com.example.mnrader.model.DogBreed
 import com.example.mnrader.ui.add.component.RegisterTopBar
-import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.viewmodel.AddScreens
 import com.example.mnrader.ui.add.viewmodel.AddViewModel
 import com.example.mnrader.ui.theme.Green1
 import java.time.LocalDateTime
@@ -65,16 +68,16 @@ import java.time.LocalDateTime
 @Composable
 fun ReportOrLostScreen(navController: NavController, viewModel: AddViewModel) {
     val uiState by viewModel.uiState.collectAsState()
-    val isReport = uiState.type == "report"
-    val selectedAnimalType = uiState.animalType
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
-    // 동물 타입에 따라 품종 리스트 설정
-    val breedOptions = when (selectedAnimalType) {
-        "강아지" -> listOf("푸들", "말티즈", "진돗개")
-        "고양이" -> listOf("코리안숏헤어", "러시안블루", "샴")
-        "기타동물" -> listOf("햄스터", "토끼", "기타")
-        else -> listOf("품종 없음")
+    val breedOptions = when (uiState.animalType) {
+        "강아지" -> DogBreed.entries.map { it.breedName }
+        "고양이" -> CatBreed.entries.map { it.breedName }
+        else -> listOf("기타")
     }
+
+    val isReport = uiState.type == "report"
     //날짜/시간 context
     val context = LocalContext.current
 
@@ -94,21 +97,40 @@ fun ReportOrLostScreen(navController: NavController, viewModel: AddViewModel) {
                 Column {
                     Button(
                         onClick = {
-                            navController.navigate(AddScreens.SubmitSuccess.route)
+                            // UserAnimalService로 POST 요청 보내기
+                            viewModel.submitUserAnimal(
+                                onSuccess = {
+                                    navController.navigate(AddScreens.SubmitSuccess.route)
+                                },
+                                onError = { errorMessage ->
+                                    // 에러 처리 (Toast 또는 Snackbar로 에러 메시지 표시 가능)
+                                    Log.e("ReportOrLostScreen", "동물 등록 실패: $errorMessage")
+                                }
+                            )
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Green1),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading // 로딩 중일 때 버튼 비활성화
                     ) {
-                        Text("다음")
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = Color.White
+                            )
+                        } else {
+                            Text("다음")
+                        }
                     }
                     TextButton(
                         onClick = { navController.popBackStack() },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading // 로딩 중일 때 뒤로가기도 비활성화
                     ) {
                         Text(
                             text = "되돌아가기",
                             fontSize = 12.sp,
-                            color = Color.Black
+                            color = if (isLoading) Color.Gray else Color.Black
                         )
                     }
                 }
@@ -199,6 +221,24 @@ fun ReportOrLostScreen(navController: NavController, viewModel: AddViewModel) {
                     }
                 }
                 }
+                
+                // 나이
+                item {
+                    Text("나이", modifier = Modifier.padding(top = 16.dp, start = 4.dp))
+                    OutlinedTextField(
+                        value = uiState.age.toString(),
+                        onValueChange = { newValue ->
+                            val age = newValue.toIntOrNull() ?: 1
+                            if (age in 1..30) { // 나이 범위 제한
+                                viewModel.updateAge(age)
+                            }
+                        },
+                        label = { Text("나이 (년)") },
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                
                 // 장소
                 item {
                     Text(
@@ -324,11 +364,4 @@ fun showDatePickerDialog(context: Context, currentDateTime: LocalDateTime, onDat
     }.show()
 }
 
-@Preview
-@Composable
-fun ReportPreview() {
-    val navController = rememberNavController()
-    val viewModel = AddViewModel()
-
-    ReportOrLostScreen(navController = navController, viewModel = viewModel)
-}
+// Preview는 AddViewModel의 의존성 때문에 제거

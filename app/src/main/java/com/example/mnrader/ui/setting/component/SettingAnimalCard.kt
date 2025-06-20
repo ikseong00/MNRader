@@ -5,12 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,29 +36,22 @@ fun SettingAnimalCardList(
     onAddAnimalClick: () -> Unit = { }
 ) {
 
-    val columnCount = when {
-        animalList.size < 3 -> animalList.size + 1
-        else -> 3
-    }
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columnCount),
+    FlowRow(
         modifier = modifier,
+        maxItemsInEachRow = 3,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(animalList.size) { index ->
+        animalList.forEach { animal ->
             AnimalCard(
                 modifier = Modifier,
-                animal = animalList[index],
-                onClick = { onAnimalClick(animalList[index]) }
+                animal = animal,
+                onClick = { onAnimalClick(animal) }
             )
         }
-        item {
-            AddAnimalButton(
-                onClick = { onAddAnimalClick() },
-            )
-        }
+        AddAnimalButton(
+            onClick = { onAddAnimalClick() },
+        )
     }
 }
 
@@ -77,6 +69,7 @@ fun AddAnimalButton(
                 shape = RoundedCornerShape(6.dp)
             )
             .padding(vertical = 8.dp)
+            .padding(horizontal = 30.dp)
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -1,4 +1,4 @@
-package com.example.mnrader.ui.add.model
+package com.example.mnrader.ui.add.viewmodel
 
 sealed class AddScreens(val route: String) {
     object SelectType : AddScreens("select_type")

@@ -13,12 +13,16 @@ data class HomeUiState(
     var isLostShown: Boolean = true,
     var isProtectShown: Boolean = true,
     var isWitnessShown: Boolean = true,
+    val lastAnimal: Int = 0,
     var isExpanded: Boolean = false,
     val selectedAnimal: MapAnimalData? = null,
     val notificationCount: Int = 0,
+    val hasNewNotification: Boolean = false,
     var currentPinAnimal: HomeAnimalData? = null,
     val shownAnimalDataList: List<HomeAnimalData> = emptyList(),
     val mapAnimalDataList: List<MapAnimalData> = emptyList(),
     val shownMapAnimalDataList: List<MapAnimalData> = emptyList(),
-    val cameraLatLng: LatLng = LatLng(37.5407, 127.0791)
+    val cameraLatLng: LatLng = LatLng(37.5407, 127.0791),
+    val isLoading: Boolean = false,
+    val showNotificationPermissionDialog: Boolean = false
 )

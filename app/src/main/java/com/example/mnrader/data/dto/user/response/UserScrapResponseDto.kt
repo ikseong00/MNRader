@@ -3,8 +3,8 @@ package com.example.mnrader.data.dto.user.response
 import com.google.gson.annotations.SerializedName
 
 data class UserScrapResponseDto(
-    @SerializedName("scrapList")
-    val scrapList: List<UserScrapAnimalDto>?
+    @SerializedName("postAnimal")
+    val postAnimal: List<UserScrapAnimalDto>?
 )
 
 data class UserScrapAnimalDto(
@@ -14,8 +14,8 @@ data class UserScrapAnimalDto(
     val status: String,
     @SerializedName("img")
     val img: String,
-    @SerializedName("name")
-    val name: String,
+    @SerializedName("breed")
+    val breed: String,
     @SerializedName("city")
     val city: Int,
     @SerializedName("gender")

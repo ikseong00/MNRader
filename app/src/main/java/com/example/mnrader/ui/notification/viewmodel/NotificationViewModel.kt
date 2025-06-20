@@ -3,6 +3,7 @@ package com.example.mnrader.ui.notification.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.mnrader.data.datastore.LastAnimalDataStore
 import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.mapper.toNotificationAnimals
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NotificationViewModel(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val lastAnimalDataStore: LastAnimalDataStore,
+    private val lastAnimal: Int
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NotificationUiState())
@@ -74,14 +77,21 @@ class NotificationViewModel(
             it.copy(errorMessage = null)
         }
     }
+
+    // lastAnimal 값을 SharedPreferences에 저장
+    fun saveLastAnimal() {
+        lastAnimalDataStore.saveLastAnimal(lastAnimal)
+    }
 }
 
 class NotificationViewModelFactory(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val lastAnimalDataStore: LastAnimalDataStore,
+    private val lastAnimal: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NotificationViewModel::class.java)) {
-            return NotificationViewModel(userRepository) as T
+            return NotificationViewModel(userRepository, lastAnimalDataStore, lastAnimal) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -11,6 +11,7 @@ fun LostPortalResponseDto.toEntityList(): List<LostAnimalEntity> =
             orgNm = item.orgNm,
             popfile = item.popfile,
             specialMark = item.specialMark,
+            callTel = item.callTel,
             sexCd = when (item.sexCd) {
                 "F" -> Gender.FEMALE
                 else -> Gender.MALE

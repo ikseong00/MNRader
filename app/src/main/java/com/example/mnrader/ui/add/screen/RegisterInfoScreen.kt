@@ -34,7 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.mnrader.ui.add.component.RegisterTopBar
 import com.example.mnrader.ui.add.viewmodel.AddViewModel
-import com.example.mnrader.ui.add.model.AddScreens
+import com.example.mnrader.ui.add.viewmodel.AddScreens
 import com.example.mnrader.ui.theme.Green1
 
 @Composable
@@ -143,11 +143,4 @@ fun RegisterInfoScreen(navController: NavController, viewModel: AddViewModel) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegisterInfoScreen() {
-    val navController = rememberNavController()
-    val viewModel = remember { AddViewModel() }
-
-    RegisterInfoScreen(navController = navController, viewModel = viewModel)
-}
+// Preview는 AddViewModel의 의존성 때문에 제거

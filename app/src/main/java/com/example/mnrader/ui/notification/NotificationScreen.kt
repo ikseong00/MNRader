@@ -18,6 +18,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mnrader.data.datastore.LastAnimalDataStore
+import com.example.mnrader.data.manager.NotificationManager
 import com.example.mnrader.data.repository.UserRepository
 import com.example.mnrader.ui.common.CommonTopBar
 import com.example.mnrader.ui.common.MNRaderButton
@@ -40,18 +43,27 @@ import com.example.mnrader.ui.theme.MNRaderTheme
 @Composable
 fun NotificationScreen(
     padding: PaddingValues = PaddingValues(0.dp),
+    lastAnimal: Int = 0,
     onBackClick: () -> Unit = { },
     onMNAnimalClick: (Long) -> Unit = { },
     onPortalLostClick: (Long) -> Unit = { },
     onPortalProtectClick: (Long) -> Unit = { },
     viewModel: NotificationViewModel = viewModel(
         factory = NotificationViewModelFactory(
-            userRepository = UserRepository(LocalContext.current)
+            userRepository = UserRepository(LocalContext.current),
+            lastAnimalDataStore = LastAnimalDataStore(LocalContext.current),
+            lastAnimal = lastAnimal
         )
     )
 ) {
     val lazyState = rememberLazyListState()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // 알림 화면에 진입하면 모든 알림을 읽음으로 표시하고 lastAnimal 값을 저장
+    LaunchedEffect(Unit) {
+        NotificationManager.markAllAsRead()
+        viewModel.saveLastAnimal()
+    }
 
     Column(
         modifier = Modifier
